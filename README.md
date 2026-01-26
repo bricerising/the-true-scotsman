@@ -4,8 +4,6 @@
 
 This repo is a tongue-in-cheek set of **agent skills** meant to teach code assistants to write what humans tend to consider **clean code**: readable, maintainable, testable, and safe to change.
 
-The name is a joke on the “No true Scotsman” fallacy: there will always be someone who declares your code “not *really* clean.” These skills are an attempt to encode the *practical*, human-aligned habits that usually survive that argument in real codebases.
-
 Each skill is a small, self-contained playbook (workflow + checklists + examples) stored in a `SKILL.md` file. Some skills include **language/framework snippets** and **style guides** so an agent can apply the ideas consistently across stacks.
 
 ## What’s in here
