@@ -36,6 +36,11 @@ Create objects without hard-coding concrete classes into callers. Use these patt
 - Validate invariants at creation time; fail fast with actionable errors.
 - Keep object graphs shallow in tests by injecting fakes/mocks (avoid global state).
 
+## Snippets (optional)
+
+- TypeScript: `references/snippets/typescript.md`
+- React: `references/snippets/react.md`
+
 ## References
 
 Read the relevant reference file before implementing or refactoring toward the pattern:

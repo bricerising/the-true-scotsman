@@ -41,6 +41,11 @@ Shape object relationships to reduce coupling without rewriting everything. Use 
 - For proxies: define clear caching/invalidations, error propagation, and concurrency semantics.
 - For flyweights: prove the memory win and define ownership/lifetime of shared state.
 
+## Snippets (optional)
+
+- TypeScript: `references/snippets/typescript.md`
+- React: `references/snippets/react.md`
+
 ## References
 
 Read the relevant reference file before implementing or refactoring toward the pattern:

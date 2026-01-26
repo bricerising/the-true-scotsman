@@ -36,6 +36,11 @@ Manage algorithms and collaboration without turning your code into nested condit
 - Prefer composition for Strategy/State; reserve Template Method for cases where inheritance is already a fit.
 - For Command/Memento: define serialization and persistence needs early (in-memory vs durable).
 
+## Snippets (optional)
+
+- TypeScript: `references/snippets/typescript.md`
+- React: `references/snippets/react.md`
+
 ## References
 
 Read the relevant reference file before implementing or refactoring toward the pattern:
