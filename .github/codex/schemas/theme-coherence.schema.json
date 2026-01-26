@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ThemeCoherenceResult",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "verdict",
+    "coherence_score",
+    "consistency_score",
+    "summary",
+    "reasons",
+    "theme_violations",
+    "consistency_issues",
+    "suggested_fixes"
+  ],
+  "properties": {
+    "verdict": {
+      "type": "string",
+      "enum": ["pass", "warn", "fail"]
+    },
+    "coherence_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "consistency_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reasons": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 30
+    },
+    "theme_violations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["file", "details"],
+        "properties": {
+          "file": { "type": "string" },
+          "details": { "type": "string" }
+        }
+      }
+    },
+    "consistency_issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["category", "details", "files"],
+        "properties": {
+          "category": { "type": "string" },
+          "details": { "type": "string" },
+          "files": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "suggested_fixes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "maxItems": 30
+    }
+  }
+}
+
