@@ -161,16 +161,16 @@ export const withTracingUserRepo = (inner: UserRepo, log: (line: string) => void
 });
 
 export const withCachingUserRepo = (inner: UserRepo): UserRepo => {
-  const cache = new Map<string, Promise<{ id: string; name: string } | null>>();
+  const c = new Map<string, Promise<{ id: string; name: string } | null>>();
   return {
     getById: async (id) => {
-      const existing = cache.get(id);
+      const existing = c.get(id);
       if (existing) return existing;
       const value = inner.getById(id).catch((error) => {
-        cache.delete(id);
+        c.delete(id);
         return Promise.reject(toError(error));
       });
-      cache.set(id, value);
+      c.set(id, value);
       return value;
     },
   };
