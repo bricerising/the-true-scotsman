@@ -15,19 +15,19 @@ Each skill is a small, self-contained playbook (workflow + checklists + examples
 - `apply-behavioral-patterns/`: How to apply Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, and Visitor.
 - `consumer-test-coverage/`: Guidance for adding consumer-focused tests that raise coverage without asserting implementation details.
 
+## Philosophy
+
+These skills bias toward practices that make codebases easier for humans to operate over time:
+
+- Prefer clarity over cleverness; optimize for the next reader.
+- Make boundaries explicit; validate external inputs at the edges.
+- Keep dependencies and lifetimes explicit; avoid hidden globals.
+- Treat expected failures as data (typed results) instead of exceptions.
+- Use design patterns as names for proven structures, not as goals.
+
 ## Install & integrate
 
 This repo is designed to be used directly with **Codex CLI**, but you can also integrate it with other popular code assistants by copying/linking the relevant guides into their “project rules / instructions” mechanism.
-
-### Tool-agnostic (recommended): vendor it into your project
-
-Many assistants can only reliably follow rules that live *inside the repo they’re editing*. A simple approach is to add this repo as a submodule (or just copy the files), then point your assistant at the specific skill(s) you want.
-
-```sh
-git submodule add <this-repo-url> tools/the-true-scotsman
-```
-
-Then reference files like `tools/the-true-scotsman/typescript-style-guide/SKILL.md` in your assistant’s project instructions.
 
 ### Codex CLI (skills)
 
@@ -42,50 +42,28 @@ mkdir -p ~/.codex/skills
 ln -s ~/the-true-scotsman/{apply-*,consumer-test-coverage,select-design-pattern,typescript-style-guide} ~/.codex/skills/
 ```
 
-Usage: in a Codex session, invoke a skill by name in your prompt, e.g. `$typescript-style-guide`.
-
-### GitHub Copilot Chat (VS Code / JetBrains)
-
-Copilot supports “custom instructions” (the exact UI/file name varies by editor/version). The usual pattern is:
-
-1. Create a project instruction file (often under `.github/`) or set workspace instructions in your editor settings.
-2. Add a short “rule” that tells Copilot which guide(s) to follow.
-
-Starter snippet:
-
-```md
-Follow the-true-scotsman guidelines.
-When writing TypeScript, apply `typescript-style-guide/SKILL.md`.
-Prefer explicit boundaries, typed errors, and small functions.
-```
-
-### Cursor
-
-Add Cursor project rules (commonly via a `.cursorrules` file or the editor’s “Rules” UI) and paste the relevant guidance (for example, the TypeScript style guide’s “Workflow” + “Guidelines” sections).
-
 ### Claude Code
 
-Add a project instructions file (commonly `CLAUDE.md`) with the relevant rules (same idea as Cursor). Keep it short and point to the specific skill file(s) you want it to follow.
+1. Clone this repo anywhere you like.
+2. Symlink (or copy) the skill folders into `~/.claude/skills`.
 
-### Continue.dev / other assistants
+Example (symlinks):
 
-If your tool supports a repo-level “rules/instructions” file or a “system prompt” configuration, copy in the relevant guidance from the skill you want (start with `typescript-style-guide/SKILL.md`).
+```sh
+git clone <this-repo-url> ~/the-true-scotsman
+mkdir -p ~/.claude/skills
+ln -s ~/the-true-scotsman/{apply-*,consumer-test-coverage,select-design-pattern,typescript-style-guide} ~/.claude/skills/
+```
 
-If it supports “always include these files as context”, include one or more of:
+### Tool-agnostic: vendor it into your project
 
-- `typescript-style-guide/SKILL.md`
-- `apply-*/SKILL.md`
-- `select-design-pattern/SKILL.md`
+Many assistants can only reliably follow rules that live *inside the repo they’re editing*. A simple approach is to add this repo as a submodule (or just copy the files), then point your assistant at the specific skill(s) you want.
 
-## Philosophy
+```sh
+git submodule add <this-repo-url> tools/the-true-scotsman
+```
 
-These skills bias toward practices that make codebases easier for humans to operate over time:
-
-- Prefer clarity over cleverness; optimize for the next reader.
-- Make boundaries explicit; validate external inputs at the edges.
-- Keep dependencies and lifetimes explicit; avoid hidden globals.
-- Treat expected failures as data (typed results) instead of exceptions.
-- Use design patterns as names for proven structures, not as goals.
+Then reference files like `tools/the-true-scotsman/typescript-style-guide/SKILL.md` in your assistant’s project instructions.
 
 ## Growing this repo
 
