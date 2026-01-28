@@ -9,12 +9,15 @@ description: Apply behavioral GoF design patterns (Chain of Responsibility, Comm
 
 Manage algorithms and collaboration without turning your code into nested conditionals and tight coupling. Behavioral patterns help you route requests, encapsulate actions, and swap behavior safely.
 
+A note on scope: these guidelines assume **systemic** TypeScript (long‑lived apps/services). For short‑lived scripts, you can often simplify (fewer abstractions, more `throw`) as long as the blast radius stays small.
+
 ## Workflow
 
-1. Identify the interaction pressure: pipelines, events, undo, state machines, or algorithm selection.
-2. Draw a quick responsibility map: who triggers actions, who owns state, who receives outcomes?
-3. Pick a pattern that makes responsibilities explicit (interfaces + concrete behaviors).
-4. Implement with clear contracts and tests for ordering, error semantics (Result vs throw), and lifetimes (unsubscribe/shutdown).
+1. Decide “scriptic vs systemic” and set policies (error semantics, boundary validation, ownership/lifetimes).
+2. Identify the interaction pressure: pipelines, events, undo, state machines, or algorithm selection.
+3. Draw a quick responsibility map: who triggers actions, who owns state, who receives outcomes?
+4. Pick a pattern that makes responsibilities explicit (interfaces + concrete behaviors).
+5. Implement with clear contracts and tests for ordering, error semantics (Result vs throw), and lifetimes (unsubscribe/shutdown).
 
 ## Chooser
 
@@ -26,7 +29,7 @@ Manage algorithms and collaboration without turning your code into nested condit
 - **Observer**: pub/sub updates; multiple listeners react to events.
 - **State**: state machine; behavior varies by state; transitions are explicit.
 - **Strategy**: swap algorithms behind a stable interface (runtime/config selection).
-- **Template Method**: inheritance-based algorithm skeleton; override steps.
+- **Template Method**: stable algorithm skeleton with overridable steps (often via hooks; use inheritance only when it already fits).
 - **Visitor**: add new operations across a stable object structure without changing element classes.
 
 ## Implementation Checklist

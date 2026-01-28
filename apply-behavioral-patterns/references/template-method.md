@@ -2,12 +2,12 @@
 
 ## Intent
 
-Define the skeleton of an algorithm in a base class and let subclasses override specific steps without changing the overall structure.
+Define the skeleton of an algorithm once and let callers override specific steps (“hooks”) without changing the overall structure.
 
 ## Use When
 
 - You already have an inheritance hierarchy and want to standardize the flow while allowing step customization.
-- You need consistent ordering and invariants enforced by the base type.
+- You need consistent ordering and invariants enforced by the skeleton.
 - “Hooks” are enough for extension and you don’t need runtime swapping.
 
 ## Prefer Something Else When
@@ -17,15 +17,15 @@ Define the skeleton of an algorithm in a base class and let subclasses override 
 
 ## Minimal Structure
 
-- Base class has `templateMethod()` that calls `step1()`, `step2()`, ...
-- Subclasses override selected steps; optional hooks have defaults in base class
+- **TypeScript-friendly (preferred)**: a `run(template, input)` function that calls `template.read/parse/validate/write` step functions (some optional with defaults).
+- **Classic GoF**: a base class `templateMethod()` calls overridable `step1()`, `step2()`, ... and subclasses override selected steps.
 
 ## Implementation Steps
 
-1. Extract the stable algorithm skeleton into the base class.
-2. Define steps as protected abstract methods (or overridable hooks).
-3. Keep base invariants enforced in the template method (validate before/after steps).
-4. Avoid exposing too many steps; keep the extension surface small.
+1. Extract the stable algorithm skeleton into one place (a function or a base class).
+2. Define step contracts (inputs/outputs/errors). For expected failures, prefer typed `Result`/tagged unions over `throw`.
+3. Keep invariants enforced in the skeleton (validate before/after steps).
+4. Avoid exposing too many steps; keep the extension surface small and testable.
 
 ## Pitfalls
 
@@ -36,6 +36,5 @@ Define the skeleton of an algorithm in a base class and let subclasses override 
 ## Testing Checklist
 
 - Base flow test: steps are invoked in correct order.
-- Subclass overrides test: overriding a step changes behavior without breaking invariants.
-- Hook default tests for subclasses that don’t override.
-
+- Override/hook tests: overriding a step changes behavior without breaking invariants.
+- Default-hook tests for implementations that don’t supply optional steps.

@@ -55,12 +55,17 @@ const isUser = (value: unknown): value is User => {
   return typeof record.id === "string" && typeof record.name === "string";
 };
 
+type UserProfileError =
+  | { kind: "bad-status"; status: number }
+  | { kind: "invalid-payload" }
+  | { kind: "network"; message: string };
+
 const toError = (value: unknown): Error => (value instanceof Error ? value : new Error(String(value)));
 
 export const useUserProfile = (userId: string) => {
   const [user, setUser] = React.useState<User | null>(null);
   const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState<string | null>(null);
+  const [error, setError] = React.useState<UserProfileError | null>(null);
 
   React.useEffect(() => {
     const controller = new AbortController();
@@ -73,14 +78,14 @@ export const useUserProfile = (userId: string) => {
         const res = await fetch(`/api/users/${userId}`, { signal: controller.signal });
         if (!res.ok) {
           setUser(null);
-          setError(`bad-status:${res.status}`);
+          setError({ kind: "bad-status", status: res.status });
           return;
         }
 
         const json: unknown = await res.json();
         if (!isUser(json)) {
           setUser(null);
-          setError("invalid-payload");
+          setError({ kind: "invalid-payload" });
           return;
         }
 
@@ -89,7 +94,7 @@ export const useUserProfile = (userId: string) => {
         const err = toError(e);
         if (err.name === "AbortError") return;
         setUser(null);
-        setError(err.message);
+        setError({ kind: "network", message: err.message });
       } finally {
         if (!controller.signal.aborted) setLoading(false);
       }
@@ -204,8 +209,21 @@ export const useToast = (): Result<ToastService, UseToastError> => {
 // Implementor #1: in-app host that renders toasts (common in web apps).
 export const ToastHost = ({ children }: { children: React.ReactNode }) => {
   const [toasts, setToasts] = React.useState<ToastItem[]>([]);
+  const timeoutsRef = React.useRef<Map<string, ReturnType<typeof globalThis.setTimeout>>>(new Map());
+
+  React.useEffect(() => {
+    return () => {
+      for (const timeoutId of timeoutsRef.current.values()) globalThis.clearTimeout(timeoutId);
+      timeoutsRef.current.clear();
+    };
+  }, []);
 
   const dismiss = React.useCallback((id: string) => {
+    const timeoutId = timeoutsRef.current.get(id);
+    if (timeoutId !== undefined) {
+      globalThis.clearTimeout(timeoutId);
+      timeoutsRef.current.delete(id);
+    }
     setToasts((existingToasts) => existingToasts.filter((toast) => toast.id !== id));
   }, []);
 
@@ -213,7 +231,8 @@ export const ToastHost = ({ children }: { children: React.ReactNode }) => {
     () => ({
       push: (toast) => {
         setToasts((existingToasts) => [...existingToasts, toast]);
-        globalThis.setTimeout(() => dismiss(toast.id), toast.durationMs);
+        const timeoutId = globalThis.setTimeout(() => dismiss(toast.id), toast.durationMs);
+        timeoutsRef.current.set(toast.id, timeoutId);
       },
       dismiss,
     }),

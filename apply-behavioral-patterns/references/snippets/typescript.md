@@ -59,7 +59,8 @@ export const withLogging = (name: string, inner: Strategy, log: (line: string) =
 export const createStrategy = (kind: Kind, dependencies: { log: (line: string) => void }): Strategy =>
   withLogging(kind, base[kind], dependencies.log);
 
-export const isKind = (value: string): value is Kind => value in base;
+// Avoid `value in base` here: it also matches inherited keys like "toString".
+export const isKind = (value: string): value is Kind => Object.prototype.hasOwnProperty.call(base, value);
 ```
 
 ## Chain of Responsibility (pipeline + adapter + decorator)

@@ -9,13 +9,16 @@ description: Apply creational GoF design patterns (Factory Method, Abstract Fact
 
 Create objects without hard-coding concrete classes into callers. Use these patterns to isolate construction, support multiple variants, and keep object creation testable.
 
+A note on scope: these guidelines assume **systemic** TypeScript (long‑lived apps/services). For short‑lived scripts, you can simplify (inline construction, fewer layers) as long as tests and change-cost stay acceptable.
+
 ## Workflow
 
-1. Identify the creation pressure: variant explosion, complex setup, environment wiring, or lifecycle constraints.
-2. Decide what must be stable for callers (interface and invariants), and what may vary (implementation, configuration, dependencies).
-3. Pick the smallest creational pattern that matches the pressure (see chooser).
-4. Implement with DI-friendly constructors or factory functions; keep creation as pure as possible.
-5. Add tests that assert:
+1. Decide “scriptic vs systemic” and set policies (boundary decoding, error semantics, ownership/lifetimes).
+2. Identify the creation pressure: variant explosion, complex setup, environment wiring, or lifecycle constraints.
+3. Decide what must be stable for callers (interface and invariants), and what may vary (implementation, configuration, dependencies).
+4. Pick the smallest creational pattern that matches the pressure (see chooser).
+5. Implement with DI-friendly constructors or factory functions; keep creation as pure as possible.
+6. Add tests that assert:
    - correct type selection for each variant
    - invariants validated during creation
    - callers depend only on interfaces/abstractions

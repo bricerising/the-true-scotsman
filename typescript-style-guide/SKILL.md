@@ -13,6 +13,11 @@ This guide synthesizes ideas from “Clean Code TypeScript” and Valand’s “
 
 A note on scope: these guidelines are optimized for **systemic** TypeScript (long‑lived apps/services/libraries where ownership, I/O boundaries, and runtime behavior matter). For short‑lived scripts, you can relax some constraints (e.g. more `throw`, fewer abstractions) as long as the blast radius stays small.
 
+Definitions:
+
+- **Scriptic**: short‑lived scripts/one‑offs; optimize for speed and simplicity; `throw` is usually fine.
+- **Systemic**: long‑lived apps/services/libraries; optimize for explicit boundaries, typed failures, and explicit lifetimes.
+
 ## Workflow (default)
 
 1. Decide “scriptic vs systemic” and set policies (error strategy, boundary validation, ownership/lifetimes).
@@ -34,7 +39,7 @@ A note on scope: these guidelines are optimized for **systemic** TypeScript (lon
 - **`throw` is untyped control flow**: don’t use it for expected failures; keep domain/application code effectively “throwless”.
 - **Serialization is not bijective**: JSON/env/DB rows lose information (`Date`, `BigInt`, `undefined`, prototypes); decode/encode explicitly at boundaries.
 - **Classes don’t serialize**: JSON round-trips strip prototypes; avoid using classes as data and avoid `JSON.parse(...) as MyClass`.
-- **No deterministic destructors**: make cleanup explicit (`dispose()` / `close()`), and enforce it via `try/finally` at ownership boundaries.
+- **No deterministic destructors**: make cleanup explicit (`dispose()` / `close()`), and enforce it via `try/finally` (or `using` / `await using` where supported) at ownership boundaries.
 - **Module initialization hides lifetimes**: avoid top-level side effects; create/start resources in a composition root so you can also stop them.
 - **Cyclic dependencies break systems**: enforce an import direction and refactor cycles early.
 - **Strings scale easily**: avoid representing large/structured data as long strings unless you’ve measured the cost.
@@ -63,11 +68,13 @@ A note on scope: these guidelines are optimized for **systemic** TypeScript (lon
 - Prefer `unknown` over `any`; narrow with type guards or runtime validators.
 - Avoid unchecked assertions (`as X`) for untrusted data (JSON, env, network); decode/validate at the boundary.
 - Prefer discriminated unions over boolean flags or “stringly-typed” states.
+- For discriminated unions, enforce exhaustiveness (`never` checks) instead of a catch‑all `default` that hides missing variants.
 - Keep “data” serializable and prototype-free (plain objects); don’t rely on class instances surviving JSON.
 - Keep “wire” shapes (JSON/env/DB rows) separate from domain types; decode/encode explicitly so round-trips don’t silently lose meaning.
 - Use the narrowest useful types (`'asc' | 'desc'`, `UserId` brand) to reduce invalid states.
 - Default to immutability (`readonly`, `ReadonlyArray`) unless mutation is a measured need.
 - For “closed sets”, prefer literal unions or `as const` objects; use `enum` only when you explicitly want a runtime object.
+- Prefer `satisfies` to validate object literals without widening inference.
 
 ### Functions
 
@@ -87,6 +94,7 @@ A note on scope: these guidelines are optimized for **systemic** TypeScript (lon
 - Avoid “sentinel” error signals (`null`, `false`, `-1`) and avoid using free-form strings as program logic; prefer structured error variants with context fields.
 - Never `throw` strings; throw `Error` (or subclasses) and attach context (use `cause` when wrapping).
 - Don’t swallow errors; handle, transform, or rethrow with context.
+- Log and translate errors at boundaries; avoid logging the same error repeatedly across layers (log once, then propagate as typed failure).
 - In `catch`, treat the value as `unknown` and narrow before reading `message/stack`.
 
 Minimal `Result` pattern:
@@ -120,6 +128,7 @@ export async function getUser(
 - Validate/parse once at the boundary; after that, internal code should accept well-typed values.
 - Keep parsing separate from effects: `decode(input) -> Result<Domain, DecodeError>`, then `apply(domain)`.
 - Prefer paired **decoders/encoders** at system edges so “wire” shapes and domain types don’t drift (especially around `Date`, `BigInt`, and optional fields).
+- Prefer a schema/decoder library (or hand‑rolled decoders) for boundary validation; keep decoders pure and test them directly.
 
 ### Async, resources, and lifetimes
 
@@ -160,6 +169,13 @@ export type Agent = {
 - Keep composition/wiring in one place (composition root); avoid cross-cutting “magic” imports.
 - Prefer readable imports (path aliases) over deep relative paths.
 - If you hit a cycle, break it by extracting shared *types* to a leaf module, inverting a dependency, or moving wiring to the composition root.
+- Be cautious with barrel exports (`index.ts`) across layers; they can hide dependencies and make cycles harder to spot.
+
+### Tooling defaults (if you control config)
+
+- Turn on TS strictness (`strict`) and prefer additional safety rails like `useUnknownInCatchVariables`, `exactOptionalPropertyTypes`, and `noUncheckedIndexedAccess` where feasible.
+- Prefer type-only imports via config (`verbatimModuleSyntax`) + linting (`consistent-type-imports`) to keep runtime dependencies explicit.
+- Add lint rules that prevent async footguns (`no-floating-promises`, `no-misused-promises`) and add cycle detection in larger repos.
 
 ### Formatting
 
@@ -178,10 +194,12 @@ Use this list when reviewing/refactoring TypeScript:
 
 - Names are precise; no mystery abbreviations or misleading types.
 - Functions are small, single-purpose, and mostly pure; few parameters; no boolean flags.
+- Discriminated unions are handled exhaustively; missing variants fail fast at compile time.
 - External input is validated/decoded at boundaries; no unsafe `as` casts from JSON/env/network input.
 - JSON/env/DB “wire” shapes are kept separate from domain types; round-trips don’t silently lose meaning.
 - Expected failures are signified (tagged unions / `Result`); no sentinel returns; internal code is effectively “throwless”.
 - Boundary code catches unknown throws and converts them to known error variants.
+- Errors aren’t logged repeatedly across layers; logging happens at boundaries with enough context.
 - Side effects are isolated; module dependencies are explicit and acyclic.
 - No top-level side effects; composition root owns startup/shutdown.
 - Resource ownership/cleanup is explicit; no “leaky” lifetimes; cancellation is threaded via `AbortSignal`.

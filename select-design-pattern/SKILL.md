@@ -64,7 +64,7 @@ In TypeScript systems, also watch for “complications” that patterns can acci
 - **Observer**: publish/subscribe updates; multiple listeners react to events.
 - **State**: behavior changes as state changes; states own transitions/behaviors.
 - **Strategy**: swap algorithms behind a stable interface; choose at runtime/config.
-- **Template Method**: stable algorithm skeleton with overridable steps (inheritance-based).
+- **Template Method**: stable algorithm skeleton with overridable steps (often via hooks; use inheritance only when it already fits).
 - **Visitor**: add new operations over a stable object structure without changing the element classes.
 
 ## Common Confusions
@@ -80,6 +80,7 @@ In TypeScript systems, also watch for “complications” that patterns can acci
 
 - Prefer simpler refactors first: extract functions, introduce interfaces, compose objects, use DI.
 - Avoid patterns that force inheritance when composition would do (especially Template Method/Singleton).
+- Remember Template Method can be implemented without inheritance in TS (template function + step hooks); don’t default to base classes.
 - Keep “pattern seams” small: a tiny interface plus focused implementations.
 - In systemic code, avoid top-level side effects; wire dependencies in a composition root and keep lifetimes explicit.
 - If the change axis is unclear, prototype with a simple interface + two implementations before formalizing.

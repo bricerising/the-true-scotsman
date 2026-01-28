@@ -9,10 +9,13 @@ description: Apply structural GoF design patterns (Adapter, Bridge, Composite, D
 
 Shape object relationships to reduce coupling without rewriting everything. Use structural patterns to compose behavior, hide complexity, and add indirection at boundaries.
 
+A note on scope: these guidelines assume **systemic** TypeScript (long‑lived apps/services). In scripts, you may not need full wrapper stacks; prefer the simplest boundary that keeps callers clean.
+
 ## Workflow
 
-1. Identify the boundary: what do callers want to depend on, and what do you want to hide?
-2. Decide if you’re changing:
+1. Decide “scriptic vs systemic” and set policies (boundary decoding, error semantics, ownership/lifetimes).
+2. Identify the boundary: what do callers want to depend on, and what do you want to hide?
+3. Decide if you’re changing:
    - **interface** (Adapter)
    - **abstraction vs implementation axes** (Bridge)
    - **object graph shape** (Composite)
@@ -20,8 +23,8 @@ Shape object relationships to reduce coupling without rewriting everything. Use 
    - **subsystem surface area** (Facade)
    - **memory footprint** (Flyweight)
    - **access policy/indirection** (Proxy)
-3. Keep the public surface small: one interface + a few implementations/wrappers.
-4. Add tests around the boundary (callers see stable behavior even as internals change).
+4. Keep the public surface small: one interface + a few implementations/wrappers.
+5. Add tests around the boundary (callers see stable behavior even as internals change).
 
 ## Chooser
 
