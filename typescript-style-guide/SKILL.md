@@ -9,7 +9,11 @@ description: Write, review, and refactor TypeScript code for readability, mainta
 
 Produce TypeScript that is easy to read, easy to change, and safe at runtime—by treating the codebase as a *system*: explicit boundaries, explicit dependencies, explicit errors, and explicit lifetimes.
 
-This guide synthesizes ideas from “Clean Code TypeScript” and Valand’s “Systemic TypeScript” series.
+Default objectives:
+
+- **Consistency**: prefer automated formatting and linting (Prettier + ESLint) to eliminate style drift.
+- **Readability**: reduce cognitive load with clear naming, shallow control flow, and explicit types.
+- **Maintainability**: keep modules cohesive and dependencies/lifetimes explicit so change stays local.
 
 A note on scope: these guidelines are optimized for **systemic** TypeScript (long‑lived apps/services/libraries where ownership, I/O boundaries, and runtime behavior matter). For short‑lived scripts, you can relax some constraints (e.g. more `throw`, fewer abstractions) as long as the blast radius stays small.
 
@@ -48,8 +52,12 @@ Definitions:
 
 - Prefer precise, searchable names; avoid abbreviations and “mental mapping”.
 - Avoid redundant context in names; let modules and types provide the scope.
-- Use `verbNoun` for functions (`parseUser`, `loadConfig`); use `is/has/can` for booleans (`isReady`).
+- Use `verbNoun` for functions (`parseUser`, `loadConfig`); use `is/has/can/should` for booleans (`isReady`, `shouldRetry`).
 - Use a consistent vocabulary; don’t alternate synonyms (`fetch/get/load`) unless you mean different semantics.
+- Avoid vague names like `data`, `value`, `handle`, `handler`; prefer names with domain meaning.
+- Avoid prefixing interfaces with `I` (prefer `User`, not `IUser`) and avoid leading/trailing underscores (use access modifiers instead).
+- Avoid Hungarian notation and redundant suffixes/prefixes (`FooClass`, `UserInterface`); types and scope already communicate that.
+- Avoid single-letter names outside small scopes (trivial lambdas, simple indices).
 - Use consistent casing:
   - `camelCase` for values, variables, and functions
   - `PascalCase` for types and exported components
@@ -59,7 +67,7 @@ Definitions:
 ### Variables
 
 - Use `const` by default; use `let` only when reassigned; avoid `var`.
-- Avoid magic numbers and sentinel values; introduce named constants.
+- Avoid magic numbers/strings and sentinel values; introduce named constants.
 - Keep scopes tight; declare variables close to where they’re used.
 - Use explanatory variables for complex conditions instead of repeating deep property access.
 
@@ -75,16 +83,28 @@ Definitions:
 - Default to immutability (`readonly`, `ReadonlyArray`) unless mutation is a measured need.
 - For “closed sets”, prefer literal unions or `as const` objects; use `enum` only when you explicitly want a runtime object.
 - Prefer `satisfies` to validate object literals without widening inference.
+- Prefer built-in utility types (`Pick`, `Omit`, `Partial`, `Required`, `ReturnType`, `Parameters`, `Awaited`) over duplicating shapes by hand.
+- Keep advanced types readable: split complex conditional/mapped types into named parts; avoid “type gymnastics” that obscures intent.
 
 ### Functions
 
-- Keep functions small and do one thing; name them after their single responsibility.
+- Keep functions small (ideally one screen / ~20–30 lines) and do one thing; name them after their single responsibility.
 - Minimize parameters; group related parameters into an options object; avoid boolean flags.
 - Prefer object parameters + destructuring for “named parameters” at the callsite.
-- Prefer default parameters over “falsy” fallbacks (`x || default`) when `0`, `""`, or `false` are valid.
+- Prefer default parameters or nullish coalescing (`x ?? default`) over “falsy” fallbacks (`x || default`) when `0`, `""`, or `false` are valid.
+- Prefer optional chaining (`?.`) over manual `&&` chains or deep `if` ladders when values may be missing.
 - Avoid hidden dependencies (global singletons, module state); pass dependencies in.
 - Prefer early returns; keep indentation shallow; extract helpers instead of nesting.
 - Avoid side effects in domain logic; isolate them in adapters (DB/HTTP/fs/clock).
+
+### Readability
+
+- Avoid deep nesting (>2–3 levels); prefer guard clauses (`return` / `continue`) and helper functions to flatten.
+- Prefer one statement per line; avoid comma operators and “packed” multi-statement lines.
+- Use ternaries only for simple expressions; avoid nested ternaries and avoid side effects in ternaries.
+- Use blank lines to separate logical phases (setup → core logic → return); avoid excessive blank lines.
+- Keep complexity low; if a function has many branches/paths, split it or model cases as a discriminated union.
+- Remove obvious duplication (DRY), but don’t over-abstract; optimize for clarity and allow divergence when semantics differ.
 
 ### Errors (known vs unknown)
 
@@ -127,6 +147,7 @@ export async function getUser(
 - Treat all external inputs as `unknown` (HTTP, DB rows, env vars, JSON files).
 - Validate/parse once at the boundary; after that, internal code should accept well-typed values.
 - Keep parsing separate from effects: `decode(input) -> Result<Domain, DecodeError>`, then `apply(domain)`.
+- Treat `JSON.parse` output as `unknown` (TS types it as `any`); validate before use.
 - Prefer paired **decoders/encoders** at system edges so “wire” shapes and domain types don’t drift (especially around `Date`, `BigInt`, and optional fields).
 - Prefer a schema/decoder library (or hand‑rolled decoders) for boundary validation; keep decoders pure and test them directly.
 
@@ -167,34 +188,48 @@ export type Agent = {
 
 - Prevent cyclic imports; refactor toward a clear dependency direction (domain → application → infrastructure).
 - Keep composition/wiring in one place (composition root); avoid cross-cutting “magic” imports.
+- Prefer one feature/module per file; avoid catch‑all `utils.ts` that mixes unrelated responsibilities.
+- Keep files small and cohesive (a few hundred lines max); split when responsibilities diverge or the file stops fitting in your head.
+- Separate concerns by layer (data access vs domain logic vs presentation) and depend on contracts (types/interfaces) rather than concrete implementations.
 - Prefer readable imports (path aliases) over deep relative paths.
 - If you hit a cycle, break it by extracting shared *types* to a leaf module, inverting a dependency, or moving wiring to the composition root.
 - Be cautious with barrel exports (`index.ts`) across layers; they can hide dependencies and make cycles harder to spot.
 
 ### Tooling defaults (if you control config)
 
-- Turn on TS strictness (`strict`) and prefer additional safety rails like `useUnknownInCatchVariables`, `exactOptionalPropertyTypes`, and `noUncheckedIndexedAccess` where feasible.
+- Enforce consistency with tooling: Prettier for formatting; ESLint (+ typescript-eslint) for correctness/style; run them in CI.
+- Turn on TS strictness (`strict`); if you can’t yet, at least enable `noImplicitAny` and `strictNullChecks` and migrate incrementally.
+- Add `@typescript-eslint/no-explicit-any` (with a small allowlist) so `any` stays a last resort.
+- Turn on additional correctness flags like `noUnusedLocals`, `noUnusedParameters`, `noImplicitReturns`, and `noFallthroughCasesInSwitch` to keep the codebase honest.
 - Prefer type-only imports via config (`verbatimModuleSyntax`) + linting (`consistent-type-imports`) to keep runtime dependencies explicit.
 - Add lint rules that prevent async footguns (`no-floating-promises`, `no-misused-promises`) and add cycle detection in larger repos.
 
 ### Formatting
 
 - Follow the project’s formatter/linter (often Prettier + ESLint); prefer automation over “style debates”.
+- If there’s no established house style, default to: 2-space indentation (no tabs), 1TBS braces for all control flow (even single statements), semicolons (avoid ASI surprises), trailing commas in multiline (clean diffs), and a ~100–120 character line limit (or the project’s formatter `printWidth`).
+- Default to single quotes in TS and double quotes in JSON (unless the project’s formatter says otherwise).
+- Keep imports grouped and sorted: built-ins → third-party → internal; blank lines between groups; alphabetize within groups; prefer named imports and avoid `import * as X` unless the library expects it.
+- Use consistent whitespace (space after commas, around operators, and after `:` in types/object entries); avoid trailing spaces.
 - Keep related code close: group by feature, keep callers/callees near, and keep files focused.
-- Keep imports consistent (group/order; use `import type` for type-only imports when configured).
+- Keep type-only imports explicit via `import type` when configured.
 
 ### Comments and documentation
 
 - Comment the “why” (constraints, trade-offs), not the “what”.
-- Keep public APIs self-documenting via naming/types; use JSDoc only where it improves usage.
+- Avoid redundant comments; delete/update comments when code changes.
+- Keep public APIs self-documenting via naming/types; use JSDoc/TSDoc only where it improves usage (constraints, examples, edge cases).
 
 ## Review checklist
 
 Use this list when reviewing/refactoring TypeScript:
 
 - Names are precise; no mystery abbreviations or misleading types.
+- Formatting/imports follow the formatter (Prettier/ESLint); import order is stable.
 - Functions are small, single-purpose, and mostly pure; few parameters; no boolean flags.
+- Control flow is readable: shallow indentation, no nested ternaries, and no “clever” one-liners.
 - Discriminated unions are handled exhaustively; missing variants fail fast at compile time.
+- No accidental `any`; `unknown` is narrowed/decoded before use.
 - External input is validated/decoded at boundaries; no unsafe `as` casts from JSON/env/network input.
 - JSON/env/DB “wire” shapes are kept separate from domain types; round-trips don’t silently lose meaning.
 - Expected failures are signified (tagged unions / `Result`); no sentinel returns; internal code is effectively “throwless”.
