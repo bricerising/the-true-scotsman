@@ -15,7 +15,7 @@ These examples assume a React environment (`react` installed, JSX enabled, `Reac
 ## Observer (useSyncExternalStore + adapter)
 
 ```tsx
-import * as React from "react";
+import * as React from 'react';
 
 type Listener = () => void;
 
@@ -59,18 +59,18 @@ export const useStore = <T,>(store: Store<T>) =>
 Represent user actions as objects; keep undo/redo in one place.
 
 ```tsx
-import * as React from "react";
+import * as React from 'react';
 
 type Command = { execute: () => void; undo: () => void };
 
 // Decorator: wrap a command with a policy (telemetry, confirmations, etc.).
 const withTelemetry = (name: string, inner: Command): Command => ({
   execute: () => {
-    console.log("run", name);
+    console.log('run', name);
     inner.execute();
   },
   undo: () => {
-    console.log("undo", name);
+    console.log('undo', name);
     inner.undo();
   },
 });
@@ -82,13 +82,13 @@ type History = {
 };
 
 type Action =
-  | { type: "push"; command: Command }
-  | { type: "undo" }
-  | { type: "redo" };
+  | { type: 'push'; command: Command }
+  | { type: 'undo' }
+  | { type: 'redo' };
 
 // Strategy registry: one state-transition strategy per action type.
 type Transitions = {
-  [K in Action["type"]]: (state: History, action: Extract<Action, { type: K }>) => History;
+  [K in Action['type']]: (state: History, action: Extract<Action, { type: K }>) => History;
 };
 
 const transitions = {
@@ -108,7 +108,9 @@ const transitions = {
   },
   redo: (state) => {
     const next = state.future[0] ?? null;
-    if (!next) return state;
+    if (!next) {
+      return state;
+    }
     return {
       past: [...state.past, ...(state.present ? [state.present] : [])],
       present: next,
@@ -123,24 +125,24 @@ const reducer = (state: History, action: Action): History =>
 
 export const useCommandHistory = () => {
   const [state, dispatch] = React.useReducer(reducer, { past: [], present: null, future: [] });
-  const decorate = React.useCallback((cmd: Command) => withTelemetry("ui", cmd), []);
+  const decorate = React.useCallback((command: Command) => withTelemetry('ui', command), []);
   const run = React.useCallback(
     (command: Command) => {
       const decorated = decorate(command);
       decorated.execute();
-      dispatch({ type: "push", command: decorated });
+      dispatch({ type: 'push', command: decorated });
     },
     [decorate, dispatch],
   );
 
   const undo = React.useCallback(() => {
     state.present?.undo();
-    dispatch({ type: "undo" });
+    dispatch({ type: 'undo' });
   }, [state.present, dispatch]);
 
   const redo = React.useCallback(() => {
     state.future[0]?.execute();
-    dispatch({ type: "redo" });
+    dispatch({ type: 'redo' });
   }, [state.future, dispatch]);
 
   return {
@@ -158,35 +160,43 @@ export const useCommandHistory = () => {
 You can keep state-specific behavior explicit instead of scattering `if/else` across components.
 
 ```tsx
-import * as React from "react";
+import * as React from 'react';
 
 type State =
-  | { kind: "idle" }
-  | { kind: "loading" }
-  | { kind: "error"; message: string };
+  | { kind: 'idle' }
+  | { kind: 'loading' }
+  | { kind: 'error'; message: string };
 
-type Action = { type: "load" } | { type: "ok" } | { type: "fail"; message: string };
+type Action = { type: 'load' } | { type: 'ok' } | { type: 'fail'; message: string };
 
 const stateReducer = (state: State, action: Action): State => {
   switch (state.kind) {
-    case "idle":
-      if (action.type === "load") return { kind: "loading" };
+    case 'idle':
+      if (action.type === 'load') {
+        return { kind: 'loading' };
+      }
       return state;
-    case "loading":
-      if (action.type === "ok") return { kind: "idle" };
-      if (action.type === "fail") return { kind: "error", message: action.message };
+    case 'loading':
+      if (action.type === 'ok') {
+        return { kind: 'idle' };
+      }
+      if (action.type === 'fail') {
+        return { kind: 'error', message: action.message };
+      }
       return state;
-    case "error":
-      if (action.type === "load") return { kind: "loading" };
+    case 'error':
+      if (action.type === 'load') {
+        return { kind: 'loading' };
+      }
       return state;
   }
 };
 
 export const Example = () => {
-  const [state, dispatch] = React.useReducer(stateReducer, { kind: "idle" });
+  const [state, dispatch] = React.useReducer(stateReducer, { kind: 'idle' });
   return (
     <div>
-      <button onClick={() => dispatch({ type: "load" })}>Load</button>
+      <button onClick={() => dispatch({ type: 'load' })}>Load</button>
       <pre>{JSON.stringify(state)}</pre>
     </div>
   );

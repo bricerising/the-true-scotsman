@@ -91,7 +91,7 @@ Definitions:
 - Keep functions small (ideally one screen / ~20–30 lines) and do one thing; name them after their single responsibility.
 - Minimize parameters; group related parameters into an options object; avoid boolean flags.
 - Prefer object parameters + destructuring for “named parameters” at the callsite.
-- Prefer default parameters or nullish coalescing (`x ?? default`) over “falsy” fallbacks (`x || default`) when `0`, `""`, or `false` are valid.
+- Prefer default parameters or nullish coalescing (`x ?? default`) over “falsy” fallbacks (`x || default`) when `0`, `''`, or `false` are valid.
 - Prefer optional chaining (`?.`) over manual `&&` chains or deep `if` ladders when values may be missing.
 - Avoid hidden dependencies (global singletons, module state); pass dependencies in.
 - Prefer early returns; keep indentation shallow; extract helpers instead of nesting.
@@ -109,7 +109,7 @@ Definitions:
 ### Errors (known vs unknown)
 
 - Treat expected failures as values, not exceptions (*Throwless Pact*):
-  - **Known errors**: return a typed `Result<T, E>` / tagged union with stable **signifiers** (e.g. `{ type: "NotFound"; ... }`).
+  - **Known errors**: return a typed `Result<T, E>` / tagged union with stable **signifiers** (e.g. `{ type: 'NotFound'; ... }`).
   - **Unknown errors**: `throw` `Error` and catch at the boundary to log/convert to a known error.
 - Avoid “sentinel” error signals (`null`, `false`, `-1`) and avoid using free-form strings as program logic; prefer structured error variants with context fields.
 - Never `throw` strings; throw `Error` (or subclasses) and attach context (use `cause` when wrapping).
@@ -132,8 +132,8 @@ Example known-error union (signified variants):
 
 ```ts
 export type GetUserError =
-  | { type: "NotFound"; userId: string }
-  | { type: "DbUnavailable" };
+  | { type: 'NotFound'; userId: string }
+  | { type: 'DbUnavailable' };
 
 export async function getUser(
   userId: string,
@@ -245,6 +245,6 @@ Use this list when reviewing/refactoring TypeScript:
 
 When asked to apply this guide, respond with:
 
-- Up to 10 of the highest-leverage changes (usually around boundaries, error signifiers, and lifetimes/ownership).
+- Start with the highest-leverage changes (usually around boundaries, error signifiers, and lifetimes/ownership).
 - Concrete refactors (diffs or patch-sized snippets).
 - Any trade-offs and clarifying questions (scriptic vs systemic scope, domain boundaries, lifetime/agent ownership, error policy).

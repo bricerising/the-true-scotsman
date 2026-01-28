@@ -18,7 +18,7 @@ These examples assume a React environment (`react` installed, JSX enabled, `Reac
 Wrap a component to add behavior (concern stays outside the core component). In React this often looks like “decorate children” with `React.cloneElement`.
 
 ```tsx
-import * as React from "react";
+import * as React from 'react';
 
 export const WithTracking = ({
   eventName,
@@ -30,7 +30,7 @@ export const WithTracking = ({
   const child = React.Children.only(children);
   const wrappedOnClick = React.useCallback<React.MouseEventHandler>(
     (e) => {
-      console.log("track", eventName);
+      console.log('track', eventName);
       child.props.onClick?.(e);
     },
     [eventName, child.props.onClick],
@@ -45,20 +45,22 @@ export const WithTracking = ({
 Hide data-fetching + caching + transformation behind a single hook.
 
 ```tsx
-import * as React from "react";
+import * as React from 'react';
 
 type User = { id: string; name: string };
 
 const isUser = (value: unknown): value is User => {
-  if (typeof value !== "object" || value === null) return false;
+  if (typeof value !== 'object' || value === null) {
+    return false;
+  }
   const record = value as Record<string, unknown>;
-  return typeof record.id === "string" && typeof record.name === "string";
+  return typeof record.id === 'string' && typeof record.name === 'string';
 };
 
 type UserProfileError =
-  | { kind: "bad-status"; status: number }
-  | { kind: "invalid-payload" }
-  | { kind: "network"; message: string };
+  | { kind: 'bad-status'; status: number }
+  | { kind: 'invalid-payload' }
+  | { kind: 'network'; message: string };
 
 const toError = (value: unknown): Error => (value instanceof Error ? value : new Error(String(value)));
 
@@ -78,25 +80,29 @@ export const useUserProfile = (userId: string) => {
         const res = await fetch(`/api/users/${userId}`, { signal: controller.signal });
         if (!res.ok) {
           setUser(null);
-          setError({ kind: "bad-status", status: res.status });
+          setError({ kind: 'bad-status', status: res.status });
           return;
         }
 
         const json: unknown = await res.json();
         if (!isUser(json)) {
           setUser(null);
-          setError({ kind: "invalid-payload" });
+          setError({ kind: 'invalid-payload' });
           return;
         }
 
         setUser(json);
-      } catch (e) {
-        const err = toError(e);
-        if (err.name === "AbortError") return;
+      } catch (error) {
+        const caughtError = toError(error);
+        if (caughtError.name === 'AbortError') {
+          return;
+        }
         setUser(null);
-        setError({ kind: "network", message: err.message });
+        setError({ kind: 'network', message: caughtError.message });
       } finally {
-        if (!controller.signal.aborted) setLoading(false);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
       }
     })();
 
@@ -112,16 +118,18 @@ export const useUserProfile = (userId: string) => {
 Use a component as a stand-in that controls access or defers loading.
 
 ```tsx
-import * as React from "react";
+import * as React from 'react';
 
-const SettingsPage = React.lazy(() => import("./SettingsPage"));
+const SettingsPage = React.lazy(() => import('./SettingsPage'));
 
 type ViewAccess =
-  | { kind: "allowed" }
-  | { kind: "denied"; reason?: string };
+  | { kind: 'allowed' }
+  | { kind: 'denied'; reason?: string };
 
 export const SettingsRoute = ({ access }: { access: ViewAccess }) => {
-  if (access.kind === "denied") return <div>Not authorized{access.reason ? `: ${access.reason}` : null}</div>;
+  if (access.kind === 'denied') {
+    return <div>Not authorized{access.reason ? `: ${access.reason}` : null}</div>;
+  }
   return (
     <React.Suspense fallback={<div>Loading…</div>}>
       <SettingsPage />
@@ -133,7 +141,7 @@ export const SettingsRoute = ({ access }: { access: ViewAccess }) => {
 `React.memo` acts like a caching proxy for rendering:
 
 ```tsx
-import * as React from "react";
+import * as React from 'react';
 
 export const memoize = <P,>(Component: React.FC<P>) => React.memo(Component);
 ```
@@ -143,9 +151,9 @@ export const memoize = <P,>(Component: React.FC<P>) => React.memo(Component);
 Two axes: the stable “toast API” your app depends on (abstraction) vs how toasts are actually rendered/delivered (implementor). Context selects the implementor; callers only use the abstraction.
 
 ```tsx
-import * as React from "react";
+import * as React from 'react';
 
-type ToastKind = "info" | "success" | "error";
+type ToastKind = 'info' | 'success' | 'error';
 
 type ToastItem = {
   id: string;
@@ -189,19 +197,21 @@ const createToastService = (implementor: ToastImplementor): ToastService => {
   };
 
   return {
-    info: (message, options) => pushToast({ kind: "info", message, durationMs: options?.durationMs }),
-    success: (message, options) => pushToast({ kind: "success", message, durationMs: options?.durationMs }),
-    error: (message, options) => pushToast({ kind: "error", message, durationMs: options?.durationMs }),
+    info: (message, options) => pushToast({ kind: 'info', message, durationMs: options?.durationMs }),
+    success: (message, options) => pushToast({ kind: 'success', message, durationMs: options?.durationMs }),
+    error: (message, options) => pushToast({ kind: 'error', message, durationMs: options?.durationMs }),
     dismiss: (id) => implementor.dismiss(id),
   };
 };
 
-type UseToastError = { kind: "missing-toast-provider" };
+type UseToastError = { kind: 'missing-toast-provider' };
 
 export const useToast = (): Result<ToastService, UseToastError> => {
   const implementor = React.useContext(ToastImplContext);
   return React.useMemo(() => {
-    if (!implementor) return err({ kind: "missing-toast-provider" });
+    if (!implementor) {
+      return err({ kind: 'missing-toast-provider' });
+    }
     return ok(createToastService(implementor));
   }, [implementor]);
 };
@@ -213,7 +223,9 @@ export const ToastHost = ({ children }: { children: React.ReactNode }) => {
 
   React.useEffect(() => {
     return () => {
-      for (const timeoutId of timeoutsRef.current.values()) globalThis.clearTimeout(timeoutId);
+      for (const timeoutId of timeoutsRef.current.values()) {
+        globalThis.clearTimeout(timeoutId);
+      }
       timeoutsRef.current.clear();
     };
   }, []);
@@ -242,7 +254,7 @@ export const ToastHost = ({ children }: { children: React.ReactNode }) => {
   return (
     <ToastProvider implementor={implementor}>
       {children}
-      <div role="region" aria-label="Notifications" style={{ position: "fixed", bottom: 12, right: 12 }}>
+      <div role="region" aria-label="Notifications" style={{ position: 'fixed', bottom: 12, right: 12 }}>
         {toasts.map((toast) => (
           <div key={toast.id} role="status">
             <strong>{toast.kind}</strong> {toast.message}
@@ -256,7 +268,7 @@ export const ToastHost = ({ children }: { children: React.ReactNode }) => {
 
 // Implementor #2: swap the renderer for tests/SSR/CLI without changing call sites.
 export const createConsoleToastImplementor = (): ToastImplementor => ({
-  push: (t) => console.log("[toast]", t.kind, t.message),
+  push: (toast) => console.log('[toast]', toast.kind, toast.message),
   dismiss: () => {},
 });
 ```

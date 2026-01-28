@@ -17,7 +17,7 @@ These examples assume a React environment (`react` installed, JSX enabled, `Reac
 Use when you need a compatible *family* of components (Button, Link, Modal) that must change together (white-labeling, multi-brand).
 
 ```tsx
-import * as React from "react";
+import * as React from 'react';
 
 type DesignSystem = {
   Button: React.FC<React.ButtonHTMLAttributes<HTMLButtonElement>>;
@@ -30,11 +30,11 @@ const err = <E,>(error: E): Result<never, E> => ({ ok: false, error });
 
 const DesignSystemContext = React.createContext<DesignSystem | null>(null);
 
-type UseDesignSystemError = { kind: "missing-design-system-provider" };
+type UseDesignSystemError = { kind: 'missing-design-system-provider' };
 
 export const useDesignSystem = (): Result<DesignSystem, UseDesignSystemError> => {
   const value = React.useContext(DesignSystemContext);
-  return value ? ok(value) : err({ kind: "missing-design-system-provider" });
+  return value ? ok(value) : err({ kind: 'missing-design-system-provider' });
 };
 
 export const DesignSystemProvider = ({
@@ -57,7 +57,7 @@ export const DesignSystemProvider = ({
 Use when configuration has many optional parts and must be built stepwise with validation/defaults.
 
 ```tsx
-import * as React from "react";
+import * as React from 'react';
 
 type Result<T, E> = { ok: true; value: T } | { ok: false; error: E };
 const ok = <T,>(value: T): Result<T, never> => ({ ok: true, value });
@@ -66,17 +66,17 @@ const err = <E,>(error: E): Result<never, E> => ({ ok: false, error });
 type QueryConfig = {
   page: number;
   pageSize: number;
-  sort?: "name" | "createdAt";
+  sort?: 'name' | 'createdAt';
 };
 
 type BuildError =
-  | { kind: "invalid-page"; page: number }
-  | { kind: "invalid-page-size"; pageSize: number };
+  | { kind: 'invalid-page'; page: number }
+  | { kind: 'invalid-page-size'; pageSize: number };
 
 type Draft = {
   page: number | null;
   pageSize: number | null;
-  sort?: QueryConfig["sort"];
+  sort?: QueryConfig['sort'];
 };
 
 const defaults: Draft = { page: null, pageSize: null };
@@ -85,14 +85,17 @@ const defaults: Draft = { page: null, pageSize: null };
 const queryBuilder = (draft: Draft = defaults) => ({
   withPage: (page: number) => queryBuilder({ ...draft, page }),
   withPageSize: (pageSize: number) => queryBuilder({ ...draft, pageSize }),
-  withSort: (sort: QueryConfig["sort"] | undefined) => queryBuilder({ ...draft, sort }),
+  withSort: (sort: QueryConfig['sort'] | undefined) => queryBuilder({ ...draft, sort }),
   build: (): Result<QueryConfig, BuildError> => {
     const page = draft.page ?? 1;
     const pageSize = draft.pageSize ?? 25;
 
-    if (!Number.isInteger(page) || page < 1) return err({ kind: "invalid-page", page });
-    if (!Number.isInteger(pageSize) || pageSize < 1 || pageSize > 100)
-      return err({ kind: "invalid-page-size", pageSize });
+    if (!Number.isInteger(page) || page < 1) {
+      return err({ kind: 'invalid-page', page });
+    }
+    if (!Number.isInteger(pageSize) || pageSize < 1 || pageSize > 100) {
+      return err({ kind: 'invalid-page-size', pageSize });
+    }
 
     return ok({ page, pageSize, sort: draft.sort });
   },
@@ -107,7 +110,9 @@ const buildQuery = (raw: Partial<QueryConfig>) =>
 
 export const Results = ({ rawConfig }: { rawConfig: Partial<QueryConfig> }) => {
   const result = React.useMemo(() => buildQuery(rawConfig), [rawConfig]);
-  if (!result.ok) return <div>Invalid config: {result.error.kind}</div>;
+  if (!result.ok) {
+    return <div>Invalid config: {result.error.kind}</div>;
+  }
   return <div>page={result.value.page}</div>;
 };
 ```
@@ -117,7 +122,7 @@ export const Results = ({ rawConfig }: { rawConfig: Partial<QueryConfig> }) => {
 Use when you need a single shared instance *for the React tree* (e.g., API client). Prefer Context + `useMemo` over module globals so tests and SSR are cleaner.
 
 ```tsx
-import * as React from "react";
+import * as React from 'react';
 
 type Result<T, E> = { ok: true; value: T } | { ok: false; error: E };
 const ok = <T,>(value: T): Result<T, never> => ({ ok: true, value });
@@ -125,10 +130,10 @@ const err = <E,>(error: E): Result<never, E> => ({ ok: false, error });
 const toError = (value: unknown): Error => (value instanceof Error ? value : new Error(String(value)));
 
 type ApiError =
-  | { kind: "aborted" }
-  | { kind: "network"; message: string }
-  | { kind: "bad-status"; status: number }
-  | { kind: "invalid-json"; message: string };
+  | { kind: 'aborted' }
+  | { kind: 'network'; message: string }
+  | { kind: 'bad-status'; status: number }
+  | { kind: 'invalid-json'; message: string };
 
 type ApiClient = {
   getJson: (path: string, options?: { signal?: AbortSignal }) => Promise<Result<unknown, ApiError>>;
@@ -148,18 +153,22 @@ export const ApiClientProvider = ({
       getJson: async (path, options) => {
         try {
           const res = await fetch(`${baseUrl}${path}`, { signal: options?.signal });
-          if (!res.ok) return err({ kind: "bad-status", status: res.status });
+          if (!res.ok) {
+            return err({ kind: 'bad-status', status: res.status });
+          }
 
           try {
             const json: unknown = await res.json();
             return ok(json);
           } catch (error) {
-            return err({ kind: "invalid-json", message: toError(error).message });
+            return err({ kind: 'invalid-json', message: toError(error).message });
           }
         } catch (error) {
           const e = toError(error);
-          if (e.name === "AbortError") return err({ kind: "aborted" });
-          return err({ kind: "network", message: e.message });
+          if (e.name === 'AbortError') {
+            return err({ kind: 'aborted' });
+          }
+          return err({ kind: 'network', message: e.message });
         }
       },
     };
@@ -168,10 +177,10 @@ export const ApiClientProvider = ({
   return <ApiClientContext.Provider value={client}>{children}</ApiClientContext.Provider>;
 };
 
-type UseApiClientError = { kind: "missing-api-client-provider" };
+type UseApiClientError = { kind: 'missing-api-client-provider' };
 
 export const useApiClient = (): Result<ApiClient, UseApiClientError> => {
   const value = React.useContext(ApiClientContext);
-  return value ? ok(value) : err({ kind: "missing-api-client-provider" });
+  return value ? ok(value) : err({ kind: 'missing-api-client-provider' });
 };
 ```

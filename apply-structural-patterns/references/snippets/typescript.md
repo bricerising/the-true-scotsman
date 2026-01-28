@@ -37,14 +37,18 @@ export const toError = (value: unknown): Error => (value instanceof Error ? valu
 - When adapting third-party/legacy payloads, normalize `unknown` into your domain types with small helpers. Supporting multiple field names is common during migrations.
 
 ```ts
-export const numberValue = (value: unknown, fallback = 0) => {
-  if (typeof value === "number" && Number.isFinite(value)) return value;
+export const numberValue = (value: unknown, fallback = 0): number => {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value;
+  }
   if (
-    typeof value === "string" &&
-    value.trim() !== "" &&
+    typeof value === 'string' &&
+    value.trim() !== '' &&
     Number.isFinite(Number(value))
   )
+  ) {
     return Number(value);
+  }
   return fallback;
 };
 ```
@@ -60,8 +64,8 @@ export interface PaymentsGateway {
 }
 
 type ChargeError =
-  | { kind: "network"; message: string }
-  | { kind: "unknown"; error: Error };
+  | { kind: 'network'; message: string }
+  | { kind: 'unknown'; error: Error };
 
 // Third-party SDK (Adaptee)
 type StripeLike = {
@@ -77,7 +81,7 @@ export const stripeGatewayAdapter = (stripe: StripeLike): PaymentsGateway => ({
       return ok(response);
     } catch (error) {
       return err({
-        kind: "network",
+        kind: 'network',
         message: toError(error).message,
       });
     }
@@ -91,10 +95,14 @@ export const withRetryGateway = (inner: PaymentsGateway, maxAttempts = 3): Payme
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       const result = await inner.charge(amountCents, token);
       last = result;
-      if (result.ok) return result;
-      if (result.error.kind !== "network") return result;
+      if (result.ok) {
+        return result;
+      }
+      if (result.error.kind !== 'network') {
+        return result;
+      }
     }
-    return last ?? err({ kind: "unknown", error: new Error("no-attempts") });
+    return last ?? err({ kind: 'unknown', error: new Error('no-attempts') });
   },
 });
 
@@ -149,7 +157,7 @@ export const bundle = (children: readonly Component[]): Component => ({
 ```ts
 export type User = { id: string; name: string };
 
-type UserRepoError = { kind: "unknown"; error: Error };
+type UserRepoError = { kind: 'unknown'; error: Error };
 export type UserRepoResult = Result<User | null, UserRepoError>;
 
 export interface UserRepo {
@@ -172,13 +180,17 @@ export const withCachingUserRepo = (inner: UserRepo): UserRepo => {
   return {
     getById: async (id) => {
       const existing = cache.get(id);
-      if (existing) return existing;
+      if (existing) {
+        return existing;
+      }
 
       const value = inner
         .getById(id)
-        .catch((error) => err({ kind: "unknown", error: toError(error) }))
+        .catch((error) => err({ kind: 'unknown', error: toError(error) }))
         .then((result) => {
-          if (!result.ok) cache.delete(id);
+          if (!result.ok) {
+            cache.delete(id);
+          }
           return result;
         });
 
@@ -196,7 +208,7 @@ export const createUserRepo = (base: UserRepo, dependencies: { log: (line: strin
 ## Facade (hide multi-client orchestration)
 
 ```ts
-type CheckoutError = { kind: "unknown"; error: Error };
+type CheckoutError = { kind: 'unknown'; error: Error };
 
 type Inventory = { reserve: (sku: string) => Promise<void> };
 type Payments = { charge: (amountCents: number) => Promise<void> };
@@ -214,7 +226,7 @@ export const createCheckoutFacade = (services: {
       const label = await services.shipping.createLabel(sku);
       return ok(label);
     } catch (error) {
-      return err({ kind: "unknown", error: toError(error) });
+      return err({ kind: 'unknown', error: toError(error) });
     }
   },
 });
@@ -230,7 +242,9 @@ export const createGlyphFactory = () => {
   return {
     get: (char: string): Glyph => {
       const existing = cache.get(char);
-      if (existing) return existing;
+      if (existing) {
+        return existing;
+      }
       const glyph: Glyph = { char, render: () => {} };
       cache.set(char, glyph);
       return glyph;
@@ -239,13 +253,13 @@ export const createGlyphFactory = () => {
 };
 
 // extrinsic state (x,y) supplied at call time:
-// glyphFactory.get("A").render(10, 20)
+// glyphFactory.get('A').render(10, 20)
 ```
 
 ## Proxy (lazy init + policy)
 
 ```ts
-type BlobStoreError = { kind: "unknown"; error: Error };
+type BlobStoreError = { kind: 'unknown'; error: Error };
 type BlobStoreResult = Result<Uint8Array | null, BlobStoreError>;
 
 export interface BlobStore {
@@ -259,10 +273,10 @@ export const lazyBlobStore = (create: () => BlobStore): BlobStore => {
       try {
         real ??= create();
       } catch (error) {
-        return err({ kind: "unknown", error: toError(error) });
+        return err({ kind: 'unknown', error: toError(error) });
       }
 
-      return real.get(key).catch((error) => err({ kind: "unknown", error: toError(error) }));
+      return real.get(key).catch((error) => err({ kind: 'unknown', error: toError(error) }));
     },
   };
 };
@@ -273,13 +287,17 @@ export const cachedBlobStore = (inner: BlobStore): BlobStore => {
   return {
     get: async (key) => {
       const existing = cache.get(key);
-      if (existing) return existing;
+      if (existing) {
+        return existing;
+      }
 
       const value = inner
         .get(key)
-        .catch((error) => err({ kind: "unknown", error: toError(error) }))
+        .catch((error) => err({ kind: 'unknown', error: toError(error) }))
         .then((result) => {
-          if (!result.ok) cache.delete(key);
+          if (!result.ok) {
+            cache.delete(key);
+          }
           return result;
         });
 

@@ -37,25 +37,26 @@ export const toError = (value: unknown): Error => (value instanceof Error ? valu
 - For systemic code, avoid import-time wiring; treat env/config as `unknown`, decode it once, then pass typed config into the factory.
 
 ```ts
-type Transport = "grpc" | "http";
+type Transport = 'grpc' | 'http';
 
-const isTransport = (value: string): value is Transport => value === "grpc" || value === "http";
+const isTransport = (value: string): value is Transport => value === 'grpc' || value === 'http';
 
 type ClientConfig = {
   transport: Transport;
   url: string;
 };
 
-type ConfigError = { kind: "invalid-transport"; value: string };
+type ConfigError = { kind: 'invalid-transport'; value: string };
 
 export const decodeClientConfig = (env: Record<string, string | undefined>): Result<ClientConfig, ConfigError> => {
   const transportRaw = env.GAME_TRANSPORT;
-  if (transportRaw !== undefined && !isTransport(transportRaw))
-    return err({ kind: "invalid-transport", value: transportRaw });
+  if (transportRaw !== undefined && !isTransport(transportRaw)) {
+    return err({ kind: 'invalid-transport', value: transportRaw });
+  }
 
   return ok({
-    transport: transportRaw ?? "http",
-    url: env.GAME_URL ?? "http://localhost:3000",
+    transport: transportRaw ?? 'http',
+    url: env.GAME_URL ?? 'http://localhost:3000',
   });
 };
 
@@ -75,9 +76,9 @@ If you need cross-cutting policies, attach them at the factory boundary (Decorat
 ```ts
 type Player = { id: string; name: string };
 type GetPlayerError =
-  | { kind: "network"; message: string }
-  | { kind: "bad-status"; status: number }
-  | { kind: "invalid-payload" };
+  | { kind: 'network'; message: string }
+  | { kind: 'bad-status'; status: number }
+  | { kind: 'invalid-payload' };
 
 type GameClient = { getPlayer: (id: string) => Promise<Result<Player, GetPlayerError>> };
 
@@ -87,10 +88,14 @@ export const withRetry = (inner: GameClient, maxAttempts = 3): GameClient => ({
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       const result = await inner.getPlayer(id);
       last = result;
-      if (result.ok) return result;
-      if (result.error.kind !== "network") return result;
+      if (result.ok) {
+        return result;
+      }
+      if (result.error.kind !== 'network') {
+        return result;
+      }
     }
-    return last ?? err({ kind: "network", message: "no-attempts" });
+    return last ?? err({ kind: 'network', message: 'no-attempts' });
   },
 });
 ```
@@ -100,25 +105,25 @@ export const withRetry = (inner: GameClient, maxAttempts = 3): GameClient => ({
 Use when caller depends on an interface, but the concrete implementation varies.
 
 ```ts
-type Transport = "grpc" | "http";
+type Transport = 'grpc' | 'http';
 
 type Player = { id: string; name: string };
 type GetPlayerError =
-  | { kind: "network"; message: string }
-  | { kind: "bad-status"; status: number }
-  | { kind: "invalid-payload" };
+  | { kind: 'network'; message: string }
+  | { kind: 'bad-status'; status: number }
+  | { kind: 'invalid-payload' };
 
 export type GameClient = {
   getPlayer: (id: string) => Promise<Result<Player, GetPlayerError>>;
 };
 
 const isPlayer = (value: unknown): value is Player =>
-  typeof value === "object" &&
+  typeof value === 'object' &&
   value !== null &&
-  "id" in value &&
-  "name" in value &&
-  typeof (value as { id?: unknown }).id === "string" &&
-  typeof (value as { name?: unknown }).name === "string";
+  'id' in value &&
+  'name' in value &&
+  typeof (value as { id?: unknown }).id === 'string' &&
+  typeof (value as { name?: unknown }).name === 'string';
 
 const grpcGameClient = (endpoint: string): GameClient => ({
   getPlayer: async (id) => ok({ id, name: `grpc-player (${endpoint})` }),
@@ -128,12 +133,14 @@ const httpGameClient = (baseUrl: string): GameClient => ({
   getPlayer: async (id) => {
     try {
       const response = await fetch(`${baseUrl}/players/${id}`);
-      if (!response.ok) return err({ kind: "bad-status", status: response.status });
+      if (!response.ok) {
+        return err({ kind: 'bad-status', status: response.status });
+      }
       const json: unknown = await response.json();
-      return isPlayer(json) ? ok(json) : err({ kind: "invalid-payload" });
+      return isPlayer(json) ? ok(json) : err({ kind: 'invalid-payload' });
     } catch (error) {
       return err({
-        kind: "network",
+        kind: 'network',
         message: toError(error).message,
       });
     }
@@ -166,7 +173,7 @@ export interface CloudFactory {
   blobStore(): BlobStore;
 }
 
-type Provider = "aws" | "gcp";
+type Provider = 'aws' | 'gcp';
 
 const awsFactory = (_config: { region: string }): CloudFactory => ({
   queue: () => ({ publish: async () => {} }),
@@ -179,8 +186,8 @@ const gcpFactory = (_config: { projectId: string }): CloudFactory => ({
 });
 
 const factories = {
-  aws: (config: { region?: string }) => awsFactory({ region: config.region ?? "us-east-1" }),
-  gcp: (config: { projectId?: string }) => gcpFactory({ projectId: config.projectId ?? "local" }),
+  aws: (config: { region?: string }) => awsFactory({ region: config.region ?? 'us-east-1' }),
+  gcp: (config: { projectId?: string }) => gcpFactory({ projectId: config.projectId ?? 'local' }),
 } as const satisfies Record<Provider, (config: { region?: string; projectId?: string }) => CloudFactory>;
 
 export const createCloudFactory = (
@@ -220,34 +227,38 @@ Use when construction has many optional parts and must enforce invariants.
 
 ```ts
 type HttpRequest = {
-  method: "GET" | "POST";
+  method: 'GET' | 'POST';
   url: string;
   headers: Record<string, string>;
   body?: string;
 };
 
 type BuildError =
-  | { kind: "missing-url" }
-  | { kind: "body-not-allowed"; method: "GET" };
+  | { kind: 'missing-url' }
+  | { kind: 'body-not-allowed'; method: 'GET' };
 
 type HttpRequestDraft = {
-  method: HttpRequest["method"];
+  method: HttpRequest['method'];
   url: string | null;
   headers: Record<string, string>;
   body?: string;
 };
 
-const defaults: HttpRequestDraft = { method: "GET", url: null, headers: {} };
+const defaults: HttpRequestDraft = { method: 'GET', url: null, headers: {} };
 
 export const httpRequestBuilder = (draft: HttpRequestDraft = defaults) => ({
-  withMethod: (method: HttpRequest["method"]) => httpRequestBuilder({ ...draft, method }),
+  withMethod: (method: HttpRequest['method']) => httpRequestBuilder({ ...draft, method }),
   withUrl: (url: string) => httpRequestBuilder({ ...draft, url }),
   withHeader: (key: string, value: string) =>
     httpRequestBuilder({ ...draft, headers: { ...draft.headers, [key]: value } }),
   withBody: (body: string) => httpRequestBuilder({ ...draft, body }),
   build: (): Result<HttpRequest, BuildError> => {
-    if (!draft.url) return err({ kind: "missing-url" });
-    if (draft.method === "GET" && draft.body) return err({ kind: "body-not-allowed", method: "GET" });
+    if (!draft.url) {
+      return err({ kind: 'missing-url' });
+    }
+    if (draft.method === 'GET' && draft.body) {
+      return err({ kind: 'body-not-allowed', method: 'GET' });
+    }
     return ok({ method: draft.method, url: draft.url, headers: draft.headers, body: draft.body });
   },
 });
@@ -279,7 +290,7 @@ export const jobPrototype = (job: Job): Prototype<Job> => ({
 Prototype is often paired with a small “registry factory”:
 
 ```ts
-type RegistryError = { kind: "unknown-prototype"; key: string };
+type RegistryError = { kind: 'unknown-prototype'; key: string };
 
 export const createPrototypeRegistry = <T,>() => {
   const prototypes = new Map<string, Prototype<T>>();
@@ -289,7 +300,7 @@ export const createPrototypeRegistry = <T,>() => {
     },
     create: (key: string, overrides?: Partial<T>): Result<T, RegistryError> => {
       const proto = prototypes.get(key);
-      return proto ? ok(proto.clone(overrides)) : err({ kind: "unknown-prototype", key });
+      return proto ? ok(proto.clone(overrides)) : err({ kind: 'unknown-prototype', key });
     },
   };
 };
