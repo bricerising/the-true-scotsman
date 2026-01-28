@@ -119,8 +119,19 @@ Use when you need a single shared instance *for the React tree* (e.g., API clien
 ```tsx
 import * as React from "react";
 
+type Result<T, E> = { ok: true; value: T } | { ok: false; error: E };
+const ok = <T,>(value: T): Result<T, never> => ({ ok: true, value });
+const err = <E,>(error: E): Result<never, E> => ({ ok: false, error });
+const toError = (value: unknown): Error => (value instanceof Error ? value : new Error(String(value)));
+
+type ApiError =
+  | { kind: "aborted" }
+  | { kind: "network"; message: string }
+  | { kind: "bad-status"; status: number }
+  | { kind: "invalid-json"; message: string };
+
 type ApiClient = {
-  getJson: <T,>(path: string) => Promise<T>;
+  getJson: (path: string, options?: { signal?: AbortSignal }) => Promise<Result<unknown, ApiError>>;
 };
 
 const ApiClientContext = React.createContext<ApiClient | null>(null);
@@ -134,9 +145,22 @@ export const ApiClientProvider = ({
 }) => {
   const client = React.useMemo<ApiClient>(() => {
     return {
-      getJson: async <T,>(path: string) => {
-        const res = await fetch(`${baseUrl}${path}`);
-        return (await res.json()) as T;
+      getJson: async (path, options) => {
+        try {
+          const res = await fetch(`${baseUrl}${path}`, { signal: options?.signal });
+          if (!res.ok) return err({ kind: "bad-status", status: res.status });
+
+          try {
+            const json: unknown = await res.json();
+            return ok(json);
+          } catch (error) {
+            return err({ kind: "invalid-json", message: toError(error).message });
+          }
+        } catch (error) {
+          const e = toError(error);
+          if (e.name === "AbortError") return err({ kind: "aborted" });
+          return err({ kind: "network", message: e.message });
+        }
       },
     };
   }, [baseUrl]);
@@ -144,7 +168,9 @@ export const ApiClientProvider = ({
   return <ApiClientContext.Provider value={client}>{children}</ApiClientContext.Provider>;
 };
 
-export const useApiClient = () => {
+type UseApiClientError = { kind: "missing-api-client-provider" };
+
+export const useApiClient = (): Result<ApiClient, UseApiClientError> => {
   const value = React.useContext(ApiClientContext);
   return value ? ok(value) : err({ kind: "missing-api-client-provider" });
 };

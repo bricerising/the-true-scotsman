@@ -6,6 +6,8 @@ If you’re following “Systemic TypeScript” guidelines, prefer:
 - closures over `class` (avoid `this` pitfalls; easier serialization)
 - return-value error unions for expected failures at IO boundaries (avoid `throw`)
 - runtime validation when handling `unknown` at boundaries
+- thread cancellation/timeouts (`AbortSignal`) through adapters/proxies when relevant
+- if failures are expected, model them in return types (`Result`) instead of rejected promises
 
 Where it helps, these examples also show common supporting patterns:
 - **Factory Method** to assemble wrapper stacks at the boundary.
@@ -145,8 +147,13 @@ export const bundle = (children: readonly Component[]): Component => ({
 ## Decorator (wrap an interface to add behavior)
 
 ```ts
+export type User = { id: string; name: string };
+
+type UserRepoError = { kind: "unknown"; error: Error };
+export type UserRepoResult = Result<User | null, UserRepoError>;
+
 export interface UserRepo {
-  getById(id: string): Promise<{ id: string; name: string } | null>;
+  getById(id: string): Promise<UserRepoResult>;
 }
 
 export const withTracingUserRepo = (inner: UserRepo, log: (line: string) => void): UserRepo => ({
@@ -161,15 +168,20 @@ export const withTracingUserRepo = (inner: UserRepo, log: (line: string) => void
 });
 
 export const withCachingUserRepo = (inner: UserRepo): UserRepo => {
-  const cache = new Map<string, Promise<{ id: string; name: string } | null>>();
+  const cache = new Map<string, Promise<UserRepoResult>>();
   return {
     getById: async (id) => {
       const existing = cache.get(id);
       if (existing) return existing;
-      const value = inner.getById(id).catch((error) => {
-        cache.delete(id);
-        return Promise.reject(toError(error));
-      });
+
+      const value = inner
+        .getById(id)
+        .catch((error) => err({ kind: "unknown", error: toError(error) }))
+        .then((result) => {
+          if (!result.ok) cache.delete(id);
+          return result;
+        });
+
       cache.set(id, value);
       return value;
     },
@@ -184,6 +196,8 @@ export const createUserRepo = (base: UserRepo, dependencies: { log: (line: strin
 ## Facade (hide multi-client orchestration)
 
 ```ts
+type CheckoutError = { kind: "unknown"; error: Error };
+
 type Inventory = { reserve: (sku: string) => Promise<void> };
 type Payments = { charge: (amountCents: number) => Promise<void> };
 type Shipping = { createLabel: (sku: string) => Promise<string> };
@@ -193,10 +207,15 @@ export const createCheckoutFacade = (services: {
   payments: Payments;
   shipping: Shipping;
 }) => ({
-  checkout: async (sku: string, amountCents: number) => {
-    await services.inventory.reserve(sku);
-    await services.payments.charge(amountCents);
-    return services.shipping.createLabel(sku);
+  checkout: async (sku: string, amountCents: number): Promise<Result<string, CheckoutError>> => {
+    try {
+      await services.inventory.reserve(sku);
+      await services.payments.charge(amountCents);
+      const label = await services.shipping.createLabel(sku);
+      return ok(label);
+    } catch (error) {
+      return err({ kind: "unknown", error: toError(error) });
+    }
   },
 });
 ```
@@ -226,31 +245,44 @@ export const createGlyphFactory = () => {
 ## Proxy (lazy init + policy)
 
 ```ts
+type BlobStoreError = { kind: "unknown"; error: Error };
+type BlobStoreResult = Result<Uint8Array | null, BlobStoreError>;
+
 export interface BlobStore {
-  get(key: string): Promise<Uint8Array | null>;
+  get(key: string): Promise<BlobStoreResult>;
 }
 
 export const lazyBlobStore = (create: () => BlobStore): BlobStore => {
   let real: BlobStore | null = null;
   return {
     get: async (key) => {
-      real ??= create();
-      return real.get(key);
+      try {
+        real ??= create();
+      } catch (error) {
+        return err({ kind: "unknown", error: toError(error) });
+      }
+
+      return real.get(key).catch((error) => err({ kind: "unknown", error: toError(error) }));
     },
   };
 };
 
 // Proxy: cache results (and de-duplicate concurrent requests).
 export const cachedBlobStore = (inner: BlobStore): BlobStore => {
-  const cache = new Map<string, Promise<Uint8Array | null>>();
+  const cache = new Map<string, Promise<BlobStoreResult>>();
   return {
     get: async (key) => {
       const existing = cache.get(key);
       if (existing) return existing;
-      const value = inner.get(key).catch((error) => {
-        cache.delete(key);
-        return Promise.reject(toError(error));
-      });
+
+      const value = inner
+        .get(key)
+        .catch((error) => err({ kind: "unknown", error: toError(error) }))
+        .then((result) => {
+          if (!result.ok) cache.delete(key);
+          return result;
+        });
+
       cache.set(key, value);
       return value;
     },

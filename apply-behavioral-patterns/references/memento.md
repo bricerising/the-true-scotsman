@@ -33,6 +33,7 @@ Capture and restore an object’s internal state without exposing implementation
 - **Memory blowup**: store too many snapshots; cap history or store diffs.
 - **Leaking internals**: avoid exposing raw state through the caretaker API.
 - **External side effects**: mementos only cover in-memory state unless you explicitly model side effects.
+- **Persistence/serialization**: if you persist mementos, define a versioned wire format; don’t rely on JSON round-trips of classes.
 
 ## Testing Checklist
 

@@ -29,7 +29,7 @@ Provide a stand-in for another object to control access, add indirection, or att
    - create the real subject lazily or inject it
    - apply one clear policy (cache/auth/limits/logging)
    - delegate calls and preserve error semantics
-3. Make policy semantics explicit: cache key, invalidation, concurrency, timeouts.
+3. Make policy semantics explicit: cache key, invalidation, concurrency, timeouts, and lifetime forwarding (`close`/`dispose`).
 
 ## Pitfalls
 

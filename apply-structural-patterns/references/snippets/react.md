@@ -49,27 +49,56 @@ import * as React from "react";
 
 type User = { id: string; name: string };
 
+const isUser = (value: unknown): value is User => {
+  if (typeof value !== "object" || value === null) return false;
+  const record = value as Record<string, unknown>;
+  return typeof record.id === "string" && typeof record.name === "string";
+};
+
+const toError = (value: unknown): Error => (value instanceof Error ? value : new Error(String(value)));
+
 export const useUserProfile = (userId: string) => {
   const [user, setUser] = React.useState<User | null>(null);
   const [loading, setLoading] = React.useState(true);
+  const [error, setError] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    let cancelled = false;
+    const controller = new AbortController();
+
     setLoading(true);
-    fetch(`/api/users/${userId}`)
-      .then((r) => r.json())
-      .then((u: User) => {
-        if (!cancelled) setUser(u);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
+    setError(null);
+
+    (async () => {
+      try {
+        const res = await fetch(`/api/users/${userId}`, { signal: controller.signal });
+        if (!res.ok) {
+          setUser(null);
+          setError(`bad-status:${res.status}`);
+          return;
+        }
+
+        const json: unknown = await res.json();
+        if (!isUser(json)) {
+          setUser(null);
+          setError("invalid-payload");
+          return;
+        }
+
+        setUser(json);
+      } catch (e) {
+        const err = toError(e);
+        if (err.name === "AbortError") return;
+        setUser(null);
+        setError(err.message);
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    })();
+
+    return () => controller.abort();
   }, [userId]);
 
-  return { user, loading };
+  return { user, loading, error };
 };
 ```
 

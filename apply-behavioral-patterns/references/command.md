@@ -36,7 +36,7 @@ Encapsulate an action as an object so it can be queued, logged, retried, compose
 
 - **Commands become anemic DTOs**: keep invariants and validation at creation time.
 - **Undo complexity**: undo isn’t free; define what “undo” means for side effects (payments, emails).
-- **Serialization**: if commands persist, version them and test migrations.
+- **Serialization**: if commands persist, version them and test migrations (and don’t assume JSON round-trips preserve types/prototypes).
 
 ## Testing Checklist
 

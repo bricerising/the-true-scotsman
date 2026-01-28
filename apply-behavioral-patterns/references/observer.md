@@ -26,9 +26,9 @@ Define a subscription mechanism so multiple observers can react to events or sta
 1. Define event payloads (type, data, ordering guarantees).
 2. Choose delivery model:
    - synchronous (simple, but observers can block)
-   - async (needs queueing/backpressure/error handling)
+   - async (needs queueing/backpressure, explicit shutdown/cancellation, and error handling)
 3. Define error semantics (one observer fails: does it stop the rest?).
-4. Ensure unsubscribe and lifecycle management to prevent leaks.
+4. Ensure unsubscribe and lifecycle management to prevent leaks (and stop/abort async delivery when the owner shuts down).
 
 ## Pitfalls
 

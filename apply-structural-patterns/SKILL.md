@@ -38,7 +38,9 @@ Shape object relationships to reduce coupling without rewriting everything. Use 
 - Prefer composition; wrappers should delegate almost everything and add one focused concern.
 - Make wrappers transparent where appropriate (don’t leak internals via type checks).
 - Put facades and adapters at module boundaries; keep core domain clean.
-- For proxies: define clear caching/invalidations, error propagation, and concurrency semantics.
+- Translate boundary concerns explicitly: `unknown` inputs → decoded domain types; SDK errors → your error model.
+- For proxies: define caching/invalidation, concurrency semantics, and cancellation/timeouts (`AbortSignal`) where applicable.
+- If the real subject has a lifetime (`close`/`dispose`), expose and forward it; keep ownership/shutdown explicit.
 - For flyweights: prove the memory win and define ownership/lifetime of shared state.
 
 ## Snippets (optional)

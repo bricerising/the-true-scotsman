@@ -6,6 +6,8 @@ If you’re following “Systemic TypeScript” guidelines, prefer:
 - closures over `class` (avoid `this` pitfalls; easier serialization)
 - return-value error unions for expected failures (avoid `throw`)
 - runtime validation when handling `unknown` at boundaries
+- explicit ownership/lifetimes for eventing (unsubscribe/shutdown; avoid orphan async loops)
+- explicit encode/decode when persisting state (JSON round-trips lose information)
 
 Where it helps, these examples also show common supporting patterns:
 - **Factory Method** to choose/create a concrete behavior at the boundary.
@@ -207,22 +209,17 @@ export interface EventBus<E extends Record<string, unknown>> {
 }
 
 export const createEmitter = <E extends Record<string, unknown>>(): EventBus<E> => {
-  type AnyListener = (payload: E[keyof E]) => void;
-  const listenersByEvent = new Map<keyof E, Set<AnyListener>>();
+  const listenersByEvent: Partial<{ [K in keyof E]: Set<(payload: E[K]) => void> }> = {};
 
   return {
     on: (event, listener) => {
-      const listeners = listenersByEvent.get(event) ?? new Set<AnyListener>();
-      const registeredListener = listener as unknown as AnyListener;
-      listeners.add(registeredListener);
-      listenersByEvent.set(event, listeners);
-      return () => listeners.delete(registeredListener);
+      const listeners = listenersByEvent[event] ?? new Set<(payload: E[typeof event]) => void>();
+      listeners.add(listener);
+      listenersByEvent[event] = listeners;
+      return () => listeners.delete(listener);
     },
     emit: (event, payload) => {
-      const listeners = listenersByEvent.get(event);
-      if (!listeners) return;
-      const payloadForUnion = payload as E[keyof E];
-      listeners.forEach((registeredListener) => registeredListener(payloadForUnion));
+      listenersByEvent[event]?.forEach((listener) => listener(payload));
     },
   };
 };

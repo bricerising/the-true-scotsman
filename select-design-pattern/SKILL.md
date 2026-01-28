@@ -9,22 +9,28 @@ description: Choose an appropriate GoF design pattern (creational/structural/beh
 
 Pick the simplest design that fits, then map it to a GoF pattern only if it buys you clear leverage (change isolation, testability, reuse, or performance).
 
+In TypeScript systems, also watch for “complications” that patterns can accidentally amplify (hidden lifetimes, implicit `throw`, unchecked boundary data, cyclic deps). Prefer patterns that keep boundaries and ownership explicit.
+
 ## Workflow
 
-1. Restate the problem as: **what varies** and **what must stay stable** (API, data model, timing, performance).
-2. Identify the main pressure:
+1. Decide whether the context is **scriptic vs systemic** (short-lived script vs long-lived system). Set policies for boundary validation, error semantics, and ownership/lifetimes.
+2. Restate the problem as: **what varies** and **what must stay stable** (API, data model, timing, performance).
+3. Identify the main pressure:
    - **Creation** pressure: hard-to-test construction, many variants, environment-specific families.
    - **Structure** pressure: wrapping/combining objects, incompatible interfaces, indirection, memory sharing.
    - **Behavior** pressure: pluggable algorithms, eventing, pipelines, undo, state-dependent behavior.
-3. Pick 1 primary pattern (avoid “pattern soup”). Add a 2nd only if it addresses a different pressure.
-4. Validate with 2 examples: a “happy path” and a likely future change.
-5. Confirm the choice reduces coupling and increases testability (or has a clear perf win).
+4. Pick 1 primary pattern (avoid “pattern soup”). Add a 2nd only if it addresses a different pressure.
+5. Validate with 2 examples: a “happy path” and a likely future change.
+6. Confirm the choice reduces coupling and increases testability (or has a clear perf win).
 
 ## Clarifying Questions
 
+- Is this **scriptic** (one-off) or **systemic** (long-lived)? Who owns startup/shutdown?
 - What is the stable API/contract we must preserve?
 - What changes most often: **implementations**, **algorithms**, **steps**, **object graphs**, **external systems**?
-- Do we need runtime selection, configuration-based selection, or compile-time wiring?
+- Are we at an IO boundary (HTTP/DB/fs/events/env)? What is `unknown` and how will it be decoded?
+- What are the **expected failures** vs truly **unknown** failures? Should errors be signified (`Result`/tagged unions)?
+- Do we need cancellation/backpressure/timeouts (`AbortSignal`) or long-running “agents”?
 - Do we need undo/redo, queuing, retries, caching, auth, logging, or other cross-cutting concerns?
 - Are there many similar objects (memory pressure) or many collaborators (dependency explosion)?
 
@@ -35,7 +41,7 @@ Pick the simplest design that fits, then map it to a GoF pattern only if it buys
 - **Factory Method**: callers want an interface; subclasses/modules choose which concrete product to create.
 - **Abstract Factory**: pick an “environment” (e.g., OS/vendor) and create a *compatible family* of products.
 - **Builder**: object has many optional parts or multiple representations; construction must be stepwise/validated.
-- **Prototype**: cloning is cheaper/cleaner than constructing; you must preserve runtime types without `new` logic.
+- **Prototype**: cloning is cheaper/cleaner than constructing; you must define copy semantics explicitly.
 - **Singleton** (use sparingly): exactly one instance is required; prefer DI/container-managed lifetimes instead.
 
 ### Structural
@@ -75,6 +81,7 @@ Pick the simplest design that fits, then map it to a GoF pattern only if it buys
 - Prefer simpler refactors first: extract functions, introduce interfaces, compose objects, use DI.
 - Avoid patterns that force inheritance when composition would do (especially Template Method/Singleton).
 - Keep “pattern seams” small: a tiny interface plus focused implementations.
+- In systemic code, avoid top-level side effects; wire dependencies in a composition root and keep lifetimes explicit.
 - If the change axis is unclear, prototype with a simple interface + two implementations before formalizing.
 
 ## Output Template

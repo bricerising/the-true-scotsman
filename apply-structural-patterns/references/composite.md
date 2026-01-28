@@ -20,7 +20,7 @@ Compose objects into tree structures and treat individual objects and compositio
 - `Component` interface (the operations clients use)
 - `Leaf` implements `Component`
 - `Composite` implements `Component` and stores `children: List<Component>`
-- Optional: `add/remove` on `Composite` only (or on `Component` with no-op/throw for leaf)
+- Optional: `add/remove` on `Composite` only (preferred), or on `Component` with no-op or a typed error result for leaf
 
 ## Implementation Steps
 

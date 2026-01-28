@@ -14,7 +14,7 @@ Create objects without hard-coding concrete classes into callers. Use these patt
 1. Identify the creation pressure: variant explosion, complex setup, environment wiring, or lifecycle constraints.
 2. Decide what must be stable for callers (interface and invariants), and what may vary (implementation, configuration, dependencies).
 3. Pick the smallest creational pattern that matches the pressure (see chooser).
-4. Implement with DI-friendly constructors; keep factories pure where possible.
+4. Implement with DI-friendly constructors or factory functions; keep creation as pure as possible.
 5. Add tests that assert:
    - correct type selection for each variant
    - invariants validated during creation
@@ -32,8 +32,10 @@ Create objects without hard-coding concrete classes into callers. Use these patt
 
 - Make factories return interfaces/abstract types; hide concrete constructors in one place.
 - Keep variant selection logic near configuration boundaries (composition root).
-- Avoid “stringly-typed factories”; use enums/ADTs/typed keys where possible.
+- Avoid “stringly-typed factories”; use typed keys (`as const` maps / unions) where possible.
 - Validate invariants at creation time; fail fast with actionable errors.
+- Avoid import-time wiring in systemic code; create/wire dependencies in a composition root so lifetimes are explicit.
+- If created objects own resources, make lifetimes explicit (`start/stop/dispose`) and define ownership (who shuts it down).
 - Keep object graphs shallow in tests by injecting fakes/mocks (avoid global state).
 
 ## Snippets (optional)

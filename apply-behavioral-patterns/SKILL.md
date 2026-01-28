@@ -14,7 +14,7 @@ Manage algorithms and collaboration without turning your code into nested condit
 1. Identify the interaction pressure: pipelines, events, undo, state machines, or algorithm selection.
 2. Draw a quick responsibility map: who triggers actions, who owns state, who receives outcomes?
 3. Pick a pattern that makes responsibilities explicit (interfaces + concrete behaviors).
-4. Implement with clear contracts and tests for ordering, error handling, and invariants.
+4. Implement with clear contracts and tests for ordering, error semantics (Result vs throw), and lifetimes (unsubscribe/shutdown).
 
 ## Chooser
 
@@ -31,10 +31,13 @@ Manage algorithms and collaboration without turning your code into nested condit
 
 ## Implementation Checklist
 
-- Make ordering explicit for pipelines and observers; define error propagation/retry rules.
+- Make ordering explicit for pipelines and observers; define error semantics (what’s expected vs unknown).
+- For expected failures, prefer typed unions/`Result`; reserve `throw` for unknown/unrecoverable and catch/convert at boundaries.
+- Treat boundary inputs as `unknown` (events/requests) and validate/decode once near the edge.
+- For async observers/pipelines, make ownership explicit: unsubscribe/shutdown, backpressure/queueing, and cancellation (`AbortSignal`).
 - Keep strategies/states small and pure when possible; inject dependencies via context.
 - Prefer composition for Strategy/State; reserve Template Method for cases where inheritance is already a fit.
-- For Command/Memento: define serialization and persistence needs early (in-memory vs durable).
+- For Command/Memento: define serialization and persistence needs early (in-memory vs durable; versioned formats).
 
 ## Snippets (optional)
 

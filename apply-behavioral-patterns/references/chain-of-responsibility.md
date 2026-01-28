@@ -27,7 +27,7 @@ Route a request through a sequence of handlers where each handler can either pro
 2. Implement handlers as single-responsibility units; avoid shared mutable state.
 3. Make termination explicit:
    - return a result when handled, or
-   - throw/return error, or
+   - return a typed error/Result for expected failures, or
    - pass to next
 4. Assemble the chain in one place (composition root) so ordering is visible.
 

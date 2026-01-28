@@ -6,6 +6,8 @@ If you’re following “Systemic TypeScript” guidelines, prefer:
 - closures over `class` (avoid `this` pitfalls; easier serialization)
 - return-value error unions for expected failures (avoid `throw`)
 - runtime validation when handling `unknown` at boundaries
+- avoid import-time wiring in systemic code; wire in a composition root
+- make resource lifetimes explicit (`start/stop/dispose`)
 
 Where it helps, these examples also show common supporting patterns:
 - **Strategy registry** to avoid long `switch` statements in factories.
@@ -32,6 +34,8 @@ export const toError = (value: unknown): Error => (value instanceof Error ? valu
 
 - A low-friction “factory method” in TS is often just an exported constructor function that keeps module exports stable while allowing tests to inject config/dependencies.
 
+- For systemic code, avoid import-time wiring; treat env/config as `unknown`, decode it once, then pass typed config into the factory.
+
 ```ts
 type Transport = "grpc" | "http";
 
@@ -42,20 +46,29 @@ type ClientConfig = {
   url: string;
 };
 
-const readConfig = (): ClientConfig => {
-  const transportEnv = process.env.GAME_TRANSPORT;
-  const transport = typeof transportEnv === "string" && isTransport(transportEnv) ? transportEnv : "http";
-  return { transport, url: process.env.GAME_URL ?? "http://localhost:3000" };
+type ConfigError = { kind: "invalid-transport"; value: string };
+
+export const decodeClientConfig = (env: Record<string, string | undefined>): Result<ClientConfig, ConfigError> => {
+  const transportRaw = env.GAME_TRANSPORT;
+  if (transportRaw !== undefined && !isTransport(transportRaw))
+    return err({ kind: "invalid-transport", value: transportRaw });
+
+  return ok({
+    transport: transportRaw ?? "http",
+    url: env.GAME_URL ?? "http://localhost:3000",
+  });
 };
 
-export const createClients = (config = readConfig()) => ({
+export const createClients = (config: ClientConfig) => ({
   gameClient: withRetry(createGameClient(config.transport, { url: config.url })),
 });
 
-export const { gameClient } = createClients(); // import-time wiring is optional
+// In your composition root:
+// const config = decodeClientConfig(process.env);
+// if (!config.ok) { /* log + exit */ }
+// const { gameClient } = createClients(config.value);
 ```
 
-- If tests mock modules at import-time (and assert constructor/call counts), preserve import-side effects **or** update tests to call the factory boundary instead of relying on module initialization.
 
 If you need cross-cutting policies, attach them at the factory boundary (Decorator/Proxy):
 
