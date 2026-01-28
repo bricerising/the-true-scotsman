@@ -1,6 +1,6 @@
 ---
 name: typescript-style-guide
-description: Write, review, and refactor TypeScript code for readability, maintainability, and runtime safety. Use when creating or changing TypeScript modules (Node/React/shared libs), doing code reviews, establishing team conventions, modeling domain types, handling errors (Result/Either vs throw), validating external inputs, organizing modules/imports, or preventing cyclic dependencies.
+description: Write, review, and refactor TypeScript code for readability, maintainability, and runtime safety. Use when creating or changing TypeScript modules (Node/React/shared libs), doing code reviews, establishing team conventions, modeling domain types, handling errors, validating external inputs, organizing modules/imports, or preventing cyclic dependencies.
 ---
 
 # TypeScript Style Guide
@@ -11,16 +11,20 @@ Produce TypeScript that is easy to read, easy to change, and safe at runtime—b
 
 This guide synthesizes ideas from “Clean Code TypeScript” and Valand’s “Systemic TypeScript” series.
 
+A note on scope: these guidelines are optimized for **systemic** TypeScript (long‑lived apps/services/libraries where ownership, I/O boundaries, and runtime behavior matter). For short‑lived scripts, you can relax some constraints (e.g. more `throw`, fewer abstractions) as long as the blast radius stays small.
+
 ## Workflow (default)
 
-1. Separate pure logic from side effects (I/O, time, randomness, global state).
-2. Identify boundaries (HTTP/DB/fs/env) and treat their inputs as `unknown`.
-3. Model the domain with types (discriminated unions) and keep data as plain objects (serializable).
-4. Apply the *Throwless Pact*: make known failures explicit in types; reserve `throw` for unknown/unrecoverable; catch and convert at boundaries.
-5. Keep dependencies explicit via parameters/factories; centralize wiring in a composition root.
-6. Keep the module graph acyclic; enforce a dependency direction; prefer `import type` for type-only imports.
-7. Make lifetimes explicit (create/start/stop/dispose); don’t rely on GC or hidden ownership.
-8. Test at seams (pure functions, decoders/validators, adapters).
+1. Decide “scriptic vs systemic” and set policies (error strategy, boundary validation, ownership/lifetimes).
+2. Separate pure logic from side effects (I/O, time, randomness, global state).
+3. Identify boundaries (HTTP/DB/fs/env) and treat their inputs as `unknown`.
+4. Model the domain with types (discriminated unions) and keep data as plain objects (serializable).
+5. Apply the *Throwless Pact*: make known failures explicit in types; reserve `throw` for unknown/unrecoverable; catch and convert at boundaries.
+6. Keep dependencies explicit via parameters/factories; centralize wiring in a composition root.
+7. Keep the module graph acyclic; enforce a dependency direction; prefer `import type` for type-only imports.
+8. Make lifetimes explicit (create/start/stop/dispose); don’t rely on GC or hidden ownership.
+9. For long‑running work (pollers, consumers, schedulers), model explicit “agents” with typed inputs/state and explicit shutdown.
+10. Test at seams (pure functions, decoders/validators, adapters).
 
 ## Guidelines
 
@@ -28,8 +32,10 @@ This guide synthesizes ideas from “Clean Code TypeScript” and Valand’s “
 
 - **Types are erased at runtime**: validate external data; never “trust” `as X` on JSON/env/network input.
 - **`throw` is untyped control flow**: don’t use it for expected failures; keep domain/application code effectively “throwless”.
+- **Serialization is not bijective**: JSON/env/DB rows lose information (`Date`, `BigInt`, `undefined`, prototypes); decode/encode explicitly at boundaries.
 - **Classes don’t serialize**: JSON round-trips strip prototypes; avoid using classes as data and avoid `JSON.parse(...) as MyClass`.
 - **No deterministic destructors**: make cleanup explicit (`dispose()` / `close()`), and enforce it via `try/finally` at ownership boundaries.
+- **Module initialization hides lifetimes**: avoid top-level side effects; create/start resources in a composition root so you can also stop them.
 - **Cyclic dependencies break systems**: enforce an import direction and refactor cycles early.
 - **Strings scale easily**: avoid representing large/structured data as long strings unless you’ve measured the cost.
 
@@ -58,6 +64,7 @@ This guide synthesizes ideas from “Clean Code TypeScript” and Valand’s “
 - Avoid unchecked assertions (`as X`) for untrusted data (JSON, env, network); decode/validate at the boundary.
 - Prefer discriminated unions over boolean flags or “stringly-typed” states.
 - Keep “data” serializable and prototype-free (plain objects); don’t rely on class instances surviving JSON.
+- Keep “wire” shapes (JSON/env/DB rows) separate from domain types; decode/encode explicitly so round-trips don’t silently lose meaning.
 - Use the narrowest useful types (`'asc' | 'desc'`, `UserId` brand) to reduce invalid states.
 - Default to immutability (`readonly`, `ReadonlyArray`) unless mutation is a measured need.
 - For “closed sets”, prefer literal unions or `as const` objects; use `enum` only when you explicitly want a runtime object.
@@ -75,8 +82,9 @@ This guide synthesizes ideas from “Clean Code TypeScript” and Valand’s “
 ### Errors (known vs unknown)
 
 - Treat expected failures as values, not exceptions (*Throwless Pact*):
-  - **Known errors**: return a typed `Result<T, E>` / tagged union.
+  - **Known errors**: return a typed `Result<T, E>` / tagged union with stable **signifiers** (e.g. `{ type: "NotFound"; ... }`).
   - **Unknown errors**: `throw` `Error` and catch at the boundary to log/convert to a known error.
+- Avoid “sentinel” error signals (`null`, `false`, `-1`) and avoid using free-form strings as program logic; prefer structured error variants with context fields.
 - Never `throw` strings; throw `Error` (or subclasses) and attach context (use `cause` when wrapping).
 - Don’t swallow errors; handle, transform, or rethrow with context.
 - In `catch`, treat the value as `unknown` and narrow before reading `message/stack`.
@@ -92,7 +100,7 @@ export const ok = <T>(value: T): Ok<T> => ({ ok: true, value });
 export const err = <E>(error: E): Err<E> => ({ ok: false, error });
 ```
 
-Example known-error union:
+Example known-error union (signified variants):
 
 ```ts
 export type GetUserError =
@@ -111,13 +119,32 @@ export async function getUser(
 - Treat all external inputs as `unknown` (HTTP, DB rows, env vars, JSON files).
 - Validate/parse once at the boundary; after that, internal code should accept well-typed values.
 - Keep parsing separate from effects: `decode(input) -> Result<Domain, DecodeError>`, then `apply(domain)`.
+- Prefer paired **decoders/encoders** at system edges so “wire” shapes and domain types don’t drift (especially around `Date`, `BigInt`, and optional fields).
 
 ### Async, resources, and lifetimes
 
 - Avoid doing real work in constructors; prefer `createX()` factories for async setup.
 - Make lifetimes explicit (start/stop, connect/disconnect); don’t hide resource ownership.
 - Ensure cleanup is guaranteed where ownership lives (typically via `try/finally`).
+- Prefer explicit parent → child ownership: whoever creates a resource/agent is responsible for stopping it (and awaiting its termination).
 - Prefer `AbortSignal` for cancellation and timeouts at boundaries.
+- Avoid “detached” promises and background loops without an owner (they’re leaks with no shutdown path).
+
+### Concurrency and agents
+
+Use explicit “agents” for long-running work (pollers, consumers, schedulers) instead of ad-hoc module state.
+
+- Give each agent a single entrypoint that takes an `AbortSignal`.
+- Keep state private to the agent; communicate via typed messages or function calls at boundaries.
+- Supervise agents from a parent that can stop them and await completion.
+
+A minimal shape:
+
+```ts
+export type Agent = {
+  run(signal: AbortSignal): Promise<void>;
+};
+```
 
 ### Classes vs factory functions
 
@@ -151,16 +178,20 @@ Use this list when reviewing/refactoring TypeScript:
 
 - Names are precise; no mystery abbreviations or misleading types.
 - Functions are small, single-purpose, and mostly pure; few parameters; no boolean flags.
-- External input is validated/decoded at boundaries; no unsafe `as` casts from JSON.
-- Expected failures are typed (`Result`/tagged unions); internal code is effectively “throwless”; boundary code catches unknown throws and converts them.
+- External input is validated/decoded at boundaries; no unsafe `as` casts from JSON/env/network input.
+- JSON/env/DB “wire” shapes are kept separate from domain types; round-trips don’t silently lose meaning.
+- Expected failures are signified (tagged unions / `Result`); no sentinel returns; internal code is effectively “throwless”.
+- Boundary code catches unknown throws and converts them to known error variants.
 - Side effects are isolated; module dependencies are explicit and acyclic.
-- Resource ownership/cleanup is explicit; no “leaky” lifetimes.
+- No top-level side effects; composition root owns startup/shutdown.
+- Resource ownership/cleanup is explicit; no “leaky” lifetimes; cancellation is threaded via `AbortSignal`.
+- Long-running loops are explicit agents with shutdown/await paths.
 - Tests cover pure logic and boundary adapters (decoders, repositories, clients).
 
 ## Output template
 
 When asked to apply this guide, respond with:
 
-- The top 3 highest-leverage changes.
+- The top 3 highest-leverage changes (usually around boundaries, error signifiers, and lifetimes/ownership).
 - Concrete refactors (diffs or patch-sized snippets).
-- Any trade-offs and clarifying questions (domain/lifetimes/error policy).
+- Any trade-offs and clarifying questions (scriptic vs systemic scope, domain boundaries, lifetime/agent ownership, error policy).
