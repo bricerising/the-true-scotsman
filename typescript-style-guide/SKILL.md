@@ -210,6 +210,6 @@ Use this list when reviewing/refactoring TypeScript:
 
 When asked to apply this guide, respond with:
 
-- The top 3 highest-leverage changes (usually around boundaries, error signifiers, and lifetimes/ownership).
+- Up to 10 of the highest-leverage changes (usually around boundaries, error signifiers, and lifetimes/ownership).
 - Concrete refactors (diffs or patch-sized snippets).
 - Any trade-offs and clarifying questions (scriptic vs systemic scope, domain boundaries, lifetime/agent ownership, error policy).
