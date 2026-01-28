@@ -41,12 +41,7 @@ export const numberValue = (value: unknown, fallback = 0): number => {
   if (typeof value === 'number' && Number.isFinite(value)) {
     return value;
   }
-  if (
-    typeof value === 'string' &&
-    value.trim() !== '' &&
-    Number.isFinite(Number(value))
-  )
-  ) {
+  if (typeof value === 'string' && value.trim() !== '' && Number.isFinite(Number(value))) {
     return Number(value);
   }
   return fallback;
