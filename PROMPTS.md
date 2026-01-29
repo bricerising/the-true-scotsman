@@ -1,4 +1,4 @@
-# Prompt Library (project-agnostic)
+# Prompt Library
 
 These are copy/paste **prompt sequences** that work well across most software projects (apps, services, CLIs, libraries, monorepos).
 
