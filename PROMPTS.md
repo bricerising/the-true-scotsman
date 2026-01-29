@@ -10,27 +10,25 @@ They work best because they:
 
 Replace placeholders like `<service>`, `<spec-path>`, `<commands>`, etc.
 
-## Make agents effective (high-signal context)
+## Make agents effective
 
-The fastest way to get high-quality results is to include the information that lets an agent **act** (not guess):
+The fastest way to get high-quality results is to include the information that lets an agent **act** rather than guess:
 
 - **One-line goal**: what “done” looks like in plain English.
 - **Scope**: exact folders/modules that are in-scope, and what is explicitly out-of-scope.
 - **Invariants**: what must not change (public API, behavior, error semantics, data model, UX, perf budgets).
 - **Verification commands**: the exact commands to run (unit/integration/e2e/lint/build) and any required setup.
-- **Production-like repro**: how you want it verified locally (containers, dev server, seeds, localstack, etc.).
+- **Production-like runtime**: how you want it verified locally (containers, dev server, seeds, localstack, etc.).
 - **Entry points**: the main files/services/routes/jobs involved (or where to start looking).
 - **Repro steps + inputs**: steps, payloads, env vars, feature flags, and test data to reproduce.
 - **Expected vs actual**: observable behavior (status codes, responses, UI state), not internal implementation.
 - **Constraints on change**: “small diff”, “no new deps”, “no schema changes”, “no breaking changes”, etc.
 - **Stop condition**: when the agent should stop iterating and report back (tests green + specific behavior).
 
-If you only add two things, add **Verification** and **Done when**. Those alone dramatically improve outcomes.
-
-## Prompt skeleton (recommended)
+## Prompt skeleton
 
 ```text
-Skills (in order): <skill-1>, <skill-2>, <skill-3> (optional)
+Skills: <skill-1>, <skill-2>, <skill-3> (optional)
 Goal: <what you want, in one sentence>
 Requirements: <bullets of behavior>
 Non-goals: <explicitly what not to do>
@@ -44,7 +42,9 @@ Done when: <explicit stop condition>
 Context: <files, logs, screenshots, links>
 ```
 
-## Minimal prompt (fast)
+You do not need all of these sections for every prompt. Choose what is applicable to the task at hand. Consider **Verification** and **Done when** in particular. Those alone can dramatically improve outcomes.
+
+## Minimal prompt
 
 ```text
 Goal: <one sentence>
@@ -54,10 +54,10 @@ Done when: <tests green + behavior check>
 Context: <files/logs>
 ```
 
-## Using skills (recommended)
+## Using skills
 
-If your chat agent supports these skills, name them explicitly in the prompt (the exact skill name) and list an order.
-If your project isn’t TypeScript, omit `typescript-style-guide` (the other skills are largely language-agnostic).
+If your chat agent supports these skills, name them explicitly in the prompt (the exact skill name) and list in order.
+If your project isn’t TypeScript, omit `typescript-style-guide`. The other skills are largely language-agnostic.
 
 Available skills in this repo:
 
@@ -66,11 +66,11 @@ Available skills in this repo:
 - `apply-creational-patterns`: Apply Factory/Builder/etc. once a creational approach is chosen.
 - `apply-structural-patterns`: Apply Adapter/Decorator/Proxy/etc. when you need to add behavior without changing interfaces.
 - `apply-behavioral-patterns`: Apply Strategy/Observer/Chain/etc. when you need pluggable logic or pipelines.
-- `consumer-test-coverage`: Add consumer-centric tests (prefer observable behavior over internals).
+- `consumer-test-coverage`: Add consumer-centric tests. Prefer observable behavior over testing internals.
 
-## Skill recipes (copy/paste starters)
+## Skill recipes
 
-### Choose the simplest pattern
+### Choose the simplest design pattern
 
 ```text
 Use select-design-pattern.
@@ -175,7 +175,7 @@ Verification: <commands>
 
 Sequences below are ordered like a typical workflow: setup → implement → verify → debug → harden. Jump to the one that matches your task.
 
-## Sequence: quickstart/runbook (how to run + how to debug)
+## Sequence: quickstart/runbook
 
 Use this when you want future you (or other agents) to be able to run/debug the project quickly.
 
@@ -196,7 +196,7 @@ Constraints:
 Deliverables: updated docs (README/QUICKSTART.md/docs/runbook.md) and any small scripts needed.
 ```
 
-## Sequence: spec/requirements gap analysis (before you build)
+## Sequence: spec/requirements gap analysis
 
 Use this when the spec/PRD exists but you’re not sure the repo already matches it.
 
@@ -267,21 +267,21 @@ Deliverables:
 - any docs/spec updates needed to keep docs truthful
 ```
 
-### Follow-up (pin behavior before refactoring)
+### Follow-up
 
 ```text
 Before you change any behavior, add or adjust a test that captures the current consumer-visible behavior.
 Only refactor after the test pins it down.
 ```
 
-### Follow-up (keep it focused)
+### Follow-up
 
 ```text
 Focus only on <scope>. Ignore unrelated cleanup unless it is required to make tests pass.
 If you think something else must change, explain why and propose the smallest viable change.
 ```
 
-## Sequence: E2E tests against a real environment (Playwright/Cypress/etc.)
+## Sequence: E2E tests against a real environment
 
 ### Kickoff (spec-driven e2e)
 
@@ -318,7 +318,7 @@ Then update the Playwright tests to use those ids.
 Re-run the production-like environment + the tests and iterate until green.
 ```
 
-## Sequence: triage from logs (keep it production-ish)
+## Sequence: triage from logs
 
 ### Kickoff (repro → root cause → regression test)
 
@@ -357,7 +357,7 @@ If you need more info, ask for the smallest missing piece (exact service logs, t
 Prefer using the observability/log tooling that ships with the repo (dashboards/log search/traces) when available.
 ```
 
-## Sequence: observability fixes (logs/metrics/traces/dashboards)
+## Sequence: observability fixes
 
 ### Kickoff (dashboards/logs/traces missing)
 
@@ -384,7 +384,7 @@ Deliverables:
 - a short “how to debug when it breaks” checklist (where to look first)
 ```
 
-## Sequence: refactor with invariants (patterns + tests)
+## Sequence: refactor with invariants
 
 ### Kickoff (choose smallest pattern, then apply)
 
@@ -469,7 +469,7 @@ Verification:
 Done when: root build is reliable and documented.
 ```
 
-## Sequence: add CI guardrails (tests/lint + policy)
+## Sequence: add CI guardrails
 
 ```text
 Add merge-blocking CI for this repo.
@@ -486,7 +486,7 @@ Optional policy (if applicable):
 Deliverables: workflow files + docs on how to run the same checks locally.
 ```
 
-## Sequence: build a CLI tool (design + packaging + install)
+## Sequence: build a CLI tool
 
 ```text
 Skills (in order): apply-behavioral-patterns (Command), typescript-style-guide (if TS), consumer-test-coverage
@@ -534,7 +534,7 @@ Then implement the best option under these constraints:
 Verification: <commands> + <build/run in prod-like env>
 ```
 
-## Sequence: debug an unstable external integration (device/service)
+## Sequence: debug an unstable external integration
 
 ```text
 I’m integrating with an external dependency (hardware device / third-party service) and seeing failures:
@@ -554,7 +554,7 @@ Please:
 Verification: <commands> + a repro checklist I can run.
 ```
 
-## Sequence: data ingestion → dashboards (analytics)
+## Sequence: data ingestion → dashboards
 
 ```text
 Goal: load <dataset> into <store> and ship dashboards/queries that surface the most useful insights.
