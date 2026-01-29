@@ -28,7 +28,7 @@ The fastest way to get high-quality results is to include the information that l
 ## Prompt skeleton
 
 ```text
-Skills: <skill-1>, <skill-2>, <skill-3> (optional)
+Skills (in order): <skill-1>, <skill-2>, <skill-3> (optional)
 Goal: <what you want, in one sentence>
 Requirements: <bullets of behavior>
 Non-goals: <explicitly what not to do>

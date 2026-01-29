@@ -21,20 +21,47 @@ Each folder contains a `SKILL.md` playbook. To get an agent to apply one, **name
 
 ### Example prompts
 
-```
-Use typescript-style-guide to refactor our boundary handling so external inputs are validated (treat as `unknown`)
-and expected failures are modeled as typed results. Keep public APIs unchanged and add tests for the decoders.
-Scope: `src/config.ts`, request handlers, and any places we `JSON.parse(...) as X`.
-Verification: run the repo test + lint commands.
-Done when: tests are green and behavior is unchanged for callers.
-```
+These are copy/paste prompts that demonstrate how to invoke the skills in this repo: tight scope + explicit constraints + a verification loop.
+
+**1) Safe “cleanup refactor” quickstart (no user input required)**  
+Use when you just want to see this repo in action: the agent chooses 1–3 high-impact areas, adds characterization tests, refactors, and iterates until checks are green.
 
 ```
-Use these skills in order: select-design-pattern, apply-structural-patterns, consumer-test-coverage.
-Goal: add caching around `UserService.getUser(id)` without changing its interface.
-Constraints: TTL=60s; cache key includes tenant; preserve existing error semantics; add consumer-visible tests.
-Verification: run the repo test + lint commands.
-Done when: tests are green and cache hit/miss behavior is covered by tests.
+Skills (in order): typescript-style-guide (if TS), consumer-test-coverage
+Goal: do a safe “clean up” refactor to reduce complexity in the most problematic TypeScript area(s) without changing behavior.
+Selection: pick 1–3 targets under `src/` based on size/complexity/churn; tell me which you picked and why.
+Constraints: no public API changes; no behavior changes; avoid broad renames/moves; no new deps
+Autonomy: proceed without asking for confirmation between steps; ask only when blocked
+Approach: add/adjust characterization tests first (consumer-visible), then refactor, then re-run tests and iterate until green
+Verification: <test/lint/build commands>
+Done when: <commands> are green and the refactor is explained in a short summary (what changed + why it’s safer now)
+```
+
+**2) Wrap an interface without changing it (choose a pattern, then apply it)**  
+Use when you need to add behavior like caching/retries/logging without changing the public interface. The agent picks the smallest fitting pattern, implements it, and pins the behavior with contract-level tests.
+
+```
+Skills (in order): select-design-pattern, apply-structural-patterns, consumer-test-coverage
+Goal: add <caching/logging/retries/rate limiting> around <interface> without changing its public contract.
+Constraints: preserve error semantics; keep selection/ordering rules explicit; keep diff reviewable
+Deliverables: wrapper implementation + consumer-visible tests (hit/miss, retry limits, etc.) + a short usage example
+Verification: <test/lint/build commands>
+Done when: <commands> are green and tests pin the documented contract at the boundary
+Context: <interface path + key call sites + perf/UX constraints>
+```
+
+**3) Spec-driven feature implementation (TypeScript + tests)**  
+Use when you have a spec/issue and want the agent to implement it with explicit boundaries (validate inputs, model expected failures) and consumer-visible tests.
+
+```
+Skills (in order): typescript-style-guide (if TS), consumer-test-coverage
+Goal: implement <feature> described in <spec/issue> with a clean boundary (validate external inputs; explicit errors).
+Scope: in-scope <paths>; out-of-scope <paths>
+Constraints: preserve public APIs; small diff; no hidden globals; no new deps (unless necessary)
+Autonomy: proceed without asking between steps; ask only when blocked
+Verification: <test/lint/build commands>
+Done when: <commands> are green and the feature works end-to-end in the repo’s most production-like local setup
+Context: <files/spec/logs>
 ```
 
 For more templates and reusable prompt sequences, see [`PROMPTS.md`](PROMPTS.md).
