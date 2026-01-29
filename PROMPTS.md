@@ -10,6 +10,23 @@ They work best because they:
 
 Replace placeholders like `<service>`, `<spec-path>`, `<commands>`, etc.
 
+## Make agents effective (high-signal context)
+
+The fastest way to get high-quality results is to include the information that lets an agent **act** (not guess):
+
+- **One-line goal**: what “done” looks like in plain English.
+- **Scope**: exact folders/modules that are in-scope, and what is explicitly out-of-scope.
+- **Invariants**: what must not change (public API, behavior, error semantics, data model, UX, perf budgets).
+- **Verification commands**: the exact commands to run (unit/integration/e2e/lint/build) and any required setup.
+- **Production-like repro**: how you want it verified locally (containers, dev server, seeds, localstack, etc.).
+- **Entry points**: the main files/services/routes/jobs involved (or where to start looking).
+- **Repro steps + inputs**: steps, payloads, env vars, feature flags, and test data to reproduce.
+- **Expected vs actual**: observable behavior (status codes, responses, UI state), not internal implementation.
+- **Constraints on change**: “small diff”, “no new deps”, “no schema changes”, “no breaking changes”, etc.
+- **Stop condition**: when the agent should stop iterating and report back (tests green + specific behavior).
+
+If you only add two things, add **Verification** and **Done when**. Those alone dramatically improve outcomes.
+
 ## Using skills (recommended)
 
 If your chat agent supports these skills, name them explicitly in the prompt (the exact skill name) and list an order.
@@ -45,7 +62,13 @@ Deliverables:
 Use apply-creational-patterns.
 
 Goal: hide complex construction of <client/service> (e.g., multiple transports/providers/configs).
-Constraints: keep call sites minimal; no behavior change; add/adjust tests.
+Constraints:
+- keep call sites minimal
+- keep behavior identical at the boundary
+- avoid global singletons unless explicitly required
+Deliverables:
+- a factory/builder approach with clear lifetimes (create/start/stop if relevant)
+- tests using fakes/stubs (no network) where possible
 Context: <current constructors/factories and call sites>
 ```
 
@@ -55,7 +78,12 @@ Context: <current constructors/factories and call sites>
 Use apply-structural-patterns.
 
 Goal: add <caching/logging/retries/rate limiting/authorization> around <interface> without changing its interface.
-Constraints: preserve semantics; keep diff small; add tests for observable behavior.
+Constraints:
+- preserve semantics (including error cases)
+- keep diff small; avoid moving unrelated files
+Deliverables:
+- wrapper implementation (Decorator/Proxy/Adapter/etc.)
+- tests for observable behavior (cache hit/miss, logging fields, retry limits, etc.)
 ```
 
 ### Apply a behavioral pattern (pluggable logic/pipelines)
@@ -64,7 +92,12 @@ Constraints: preserve semantics; keep diff small; add tests for observable behav
 Use apply-behavioral-patterns.
 
 Goal: make <logic> pluggable or pipeline-based (e.g., Strategy, Chain of Responsibility, State).
-Constraints: preserve current outcomes; add tests proving selection/order and edge cases.
+Constraints:
+- preserve current outcomes by default
+- keep selection rules explicit (no magic)
+Deliverables:
+- pattern implementation (Strategy/Chain/State/etc.) with clear extension points
+- tests proving selection/order and edge cases
 ```
 
 ### Refactor or implement in TypeScript with explicit boundaries
@@ -76,6 +109,9 @@ Goal: <implement/refactor area> while keeping boundaries explicit and runtime-sa
 Requirements:
 - validate external inputs at boundaries (treat as `unknown`)
 - make expected failures explicit (typed result), no throwing for expected failures
+Constraints:
+- avoid top-level side effects; wire dependencies in a composition root
+- keep the module graph acyclic (or reduce cycles)
 Verification: <commands>
 ```
 
@@ -88,6 +124,10 @@ Target: <HTTP handler/gRPC method/job/consumer/CLI entrypoint>
 Requirements:
 - assert client-visible behavior (status codes, response shape, side effects)
 - avoid asserting internal calls/implementation details
+Coverage:
+- happy path
+- one invalid-input case
+- one unhappy-path that clients can observe (timeouts/downstream errors/permissions)
 Verification: <commands>
 ```
 
@@ -97,12 +137,25 @@ Verification: <commands>
 Skills (in order): <skill-1>, <skill-2>, <skill-3> (optional)
 Goal: <what you want, in one sentence>
 Requirements: <bullets of behavior>
+Non-goals: <explicitly what not to do>
 Constraints: <what must not change>
 Scope: <in-scope paths/modules> / <out-of-scope>
+Environment: <runtime versions, services, flags, constraints (e.g., no network)>
+Autonomy: <proceed without asking; ask only when blocked>
 Deliverables: <what you expect back: code/tests/docs>
 Verification: <exact commands/environment to run>
 Done when: <explicit stop condition>
 Context: <files, logs, screenshots, links>
+```
+
+## Minimal prompt (fast)
+
+```text
+Goal: <one sentence>
+Scope: <in/out>
+Verification: <commands>
+Done when: <tests green + behavior check>
+Context: <files/logs>
 ```
 
 ## Sequence: implement from a spec / PRD / issue
@@ -120,6 +173,9 @@ If the design is unclear or there are multiple viable designs:
 Requirements:
 - <list the observable behaviors / APIs / workflows>
 
+Non-goals:
+- <explicitly what not to do (e.g., “don’t redesign the architecture”, “don’t switch frameworks”)>
+
 Constraints:
 - preserve existing public APIs unless explicitly required
 - preserve existing behavior unless explicitly required
@@ -128,6 +184,10 @@ Constraints:
 Scope:
 - in-scope: <paths/modules>
 - out-of-scope: <paths/modules>
+
+Autonomy:
+- proceed without asking for confirmation between steps
+- ask questions only if blocked (missing info, unclear acceptance criteria)
 
 Verification:
 - run: <commands> (tests/lint/build)
@@ -169,10 +229,16 @@ Write E2E tests (Playwright/Cypress/etc.) that verify the deployed app matches <
 Start the app using the repo’s most production-like local setup (<command(s)>), then run E2E tests against it.
 Iterate until the tests pass (fix product bugs or test flakiness as needed).
 
+Non-goals:
+- don’t rely on fragile selectors (CSS structure/text) when a stable selector is feasible
+- don’t “fix” flakiness by adding arbitrary sleeps; prefer waiting on real conditions
+
 Guidelines:
 - Prefer stable selectors (e.g., `data-testid`) over text/CSS
 - Assert user-visible behavior (status codes, UI state, navigation), not internal calls
 - Use consumer-test-coverage principles: assert the contract at the boundary, not implementation details
+- Make tests rerunnable and isolated (unique ids/test data; cleanup when needed)
+- Capture useful artifacts on failure (screenshots/logs/traces) if your setup supports it
 
 Deliverables:
 - E2E tests
@@ -204,12 +270,20 @@ Expected:
 Actual:
 - <what happens instead>
 
+Non-goals:
+- don’t silence the error by swallowing exceptions or lowering log levels
+- don’t weaken validation/auth just to “make it pass”
+
 Please:
 1) reproduce locally (prefer the repo’s most production-like environment if available),
 2) identify the root cause,
 3) fix it with minimal churn,
 4) add a regression test (use consumer-test-coverage),
 5) re-run <commands> and iterate until green.
+
+If you can’t reproduce:
+- add the smallest instrumentation/logging to make the failure diagnosable, and
+- tell me exactly what to run/click to capture the missing signal.
 ```
 
 ### Follow-up (log triage discipline)
@@ -235,6 +309,10 @@ Finally use typescript-style-guide to standardize boundaries/errors, and consume
 
 Goal: refactor <area> to improve readability/maintainability without changing consumer-visible behavior.
 
+Non-goals:
+- no sweeping rewrites
+- no renames/moves unless they materially reduce complexity
+
 Constraints:
 - no public API changes
 - no behavior changes (unless explicitly called out and tested)
@@ -242,7 +320,7 @@ Constraints:
 
 Deliverables:
 - refactor implementation
-- tests updated/added only to preserve behavior
+- tests updated/added only to preserve behavior (add characterization tests first if needed)
 - short explanation of the chosen pattern and resulting module structure
 
 Verification:
@@ -268,6 +346,10 @@ If there’s ambiguity, add a test first to lock behavior down.
 Skills (optional): apply-structural-patterns, consumer-test-coverage
 
 Our observability is missing <logs/metrics/traces/dashboards>. Please fix what’s wrong end-to-end.
+
+Non-goals:
+- don’t “fix” missing signals by disabling instrumentation or sampling everything away
+- don’t paper over gaps with fake dashboards; make the underlying signals flow
 
 Approach:
 - use the repo’s production-like environment (containers/k8s/etc.) to reproduce

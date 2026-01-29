@@ -24,13 +24,17 @@ Each folder contains a `SKILL.md` playbook. To get an agent to apply one, **name
 ```
 Use typescript-style-guide to refactor our boundary handling so external inputs are validated (treat as `unknown`)
 and expected failures are modeled as typed results. Keep public APIs unchanged and add tests for the decoders.
-Context: `src/config.ts`, request handlers, and any places we `JSON.parse(...) as X`.
+Scope: `src/config.ts`, request handlers, and any places we `JSON.parse(...) as X`.
+Verification: run the repo test + lint commands.
+Done when: tests are green and behavior is unchanged for callers.
 ```
 
 ```
 Use these skills in order: select-design-pattern, apply-structural-patterns, consumer-test-coverage.
 Goal: add caching around `UserService.getUser(id)` without changing its interface.
 Constraints: TTL=60s; cache key includes tenant; preserve existing error semantics; add consumer-visible tests.
+Verification: run the repo test + lint commands.
+Done when: tests are green and cache hit/miss behavior is covered by tests.
 ```
 
 For more templates and reusable prompt sequences, see [`PROMPTS.md`](PROMPTS.md).
