@@ -27,6 +27,33 @@ The fastest way to get high-quality results is to include the information that l
 
 If you only add two things, add **Verification** and **Done when**. Those alone dramatically improve outcomes.
 
+## Prompt skeleton (recommended)
+
+```text
+Skills (in order): <skill-1>, <skill-2>, <skill-3> (optional)
+Goal: <what you want, in one sentence>
+Requirements: <bullets of behavior>
+Non-goals: <explicitly what not to do>
+Constraints: <what must not change>
+Scope: <in-scope paths/modules> / <out-of-scope>
+Environment: <runtime versions, services, flags, constraints (e.g., no network)>
+Autonomy: <proceed without asking; ask only when blocked>
+Deliverables: <what you expect back: code/tests/docs>
+Verification: <exact commands/environment to run>
+Done when: <explicit stop condition>
+Context: <files, logs, screenshots, links>
+```
+
+## Minimal prompt (fast)
+
+```text
+Goal: <one sentence>
+Scope: <in/out>
+Verification: <commands>
+Done when: <tests green + behavior check>
+Context: <files/logs>
+```
+
 ## Using skills (recommended)
 
 If your chat agent supports these skills, name them explicitly in the prompt (the exact skill name) and list an order.
@@ -146,31 +173,27 @@ Coverage:
 Verification: <commands>
 ```
 
-## Prompt skeleton (recommended)
+Sequences below are ordered like a typical workflow: setup → implement → verify → debug → harden. Jump to the one that matches your task.
+
+## Sequence: quickstart/runbook (how to run + how to debug)
+
+Use this when you want future you (or other agents) to be able to run/debug the project quickly.
 
 ```text
-Skills (in order): <skill-1>, <skill-2>, <skill-3> (optional)
-Goal: <what you want, in one sentence>
-Requirements: <bullets of behavior>
-Non-goals: <explicitly what not to do>
-Constraints: <what must not change>
-Scope: <in-scope paths/modules> / <out-of-scope>
-Environment: <runtime versions, services, flags, constraints (e.g., no network)>
-Autonomy: <proceed without asking; ask only when blocked>
-Deliverables: <what you expect back: code/tests/docs>
-Verification: <exact commands/environment to run>
-Done when: <explicit stop condition>
-Context: <files, logs, screenshots, links>
-```
+Write or update a Quickstart/runbook.
 
-## Minimal prompt (fast)
+Requirements:
+- prerequisites (versions, env vars, external services)
+- how to start (dev/prod-like) and how to stop/clean up
+- how to run tests/lint/build (exact commands)
+- common failures + how to diagnose (where logs live, what commands to run)
+- “known good” verification checklist (what to click/run to confirm it works)
 
-```text
-Goal: <one sentence>
-Scope: <in/out>
-Verification: <commands>
-Done when: <tests green + behavior check>
-Context: <files/logs>
+Constraints:
+- keep it short and executable (copy/paste commands)
+- don’t require hidden local state; document it if unavoidable
+
+Deliverables: updated docs (README/QUICKSTART.md/docs/runbook.md) and any small scripts needed.
 ```
 
 ## Sequence: spec/requirements gap analysis (before you build)
@@ -197,171 +220,6 @@ Constraints:
 
 Verification: <commands> + <production-like env if applicable>
 Done when: gaps are closed and <commands> are green.
-```
-
-## Sequence: quickstart/runbook (how to run + how to debug)
-
-Use this when you want future you (or other agents) to be able to run/debug the project quickly.
-
-```text
-Write or update a Quickstart/runbook.
-
-Requirements:
-- prerequisites (versions, env vars, external services)
-- how to start (dev/prod-like) and how to stop/clean up
-- how to run tests/lint/build (exact commands)
-- common failures + how to diagnose (where logs live, what commands to run)
-- “known good” verification checklist (what to click/run to confirm it works)
-
-Constraints:
-- keep it short and executable (copy/paste commands)
-- don’t require hidden local state; document it if unavoidable
-
-Deliverables: updated docs (README/QUICKSTART.md/docs/runbook.md) and any small scripts needed.
-```
-
-## Sequence: apply a repo style guide consistently
-
-```text
-Skills (in order): typescript-style-guide (if TS)
-
-Goal: make the repo conform to <style guide file(s)> (e.g., `STYLES.md`, lint rules) without changing behavior.
-
-Constraints:
-- no behavior changes (unless explicitly required and tested)
-- avoid drive-by refactors; keep changes mechanical and reviewable
-
-Approach:
-- identify the canonical style sources (lint/format rules + any docs)
-- apply automated formatting first (if available), then manual cleanups
-- fix type errors and lint errors created by the changes
-
-Verification: <commands>
-Done when: formatting/lint is clean and tests are green.
-```
-
-## Sequence: build a CLI tool (design + packaging + install)
-
-```text
-Skills (in order): apply-behavioral-patterns (Command), typescript-style-guide (if TS), consumer-test-coverage
-
-Build a CLI named `<cli-name>` for <purpose>.
-
-CLI contract:
-- commands/subcommands: <list>
-- flags/options: <list>
-- exit codes: 0 success, non-zero failures (define meanings)
-- output: human-readable by default; optional `--json` for automation
-
-Constraints:
-- stable UX: don’t break existing flags/output without a migration plan
-- avoid hidden globals; configuration should be explicit
-
-Deliverables:
-- implementation + `--help` output + examples
-- packaging/install instructions (and a smoke test: “install then run”)
-- tests for argument parsing and at least one end-to-end happy path
-```
-
-## Sequence: monorepo “one command” build
-
-```text
-Goal: make `npm run build` (or equivalent) at the repo root build all packages/apps reliably.
-
-Requirements:
-- deterministic output locations (`dist/` or similar)
-- clear dependency order between packages
-- consistent TS config / module resolution (if TS)
-
-Constraints:
-- don’t introduce new build tools unless necessary
-- keep local dev fast (avoid rebuilding everything on small changes)
-
-Verification:
-- clean build from scratch
-- incremental rebuild
-Done when: root build is reliable and documented.
-```
-
-## Sequence: native dependency / architecture mismatch
-
-Use this when you hit errors like “exec format error”, “arm64 vs x86_64”, or `node-gyp`/toolchain failures.
-
-```text
-I’m hitting a native dependency issue:
-<paste error>
-
-Environment:
-- host OS/arch: <e.g., macOS arm64>
-- container OS/arch (if relevant): <e.g., linux/amd64>
-- runtime versions: <node/python/rust/etc.>
-
-Please propose 2–3 options, ordered by maintainability:
-1) switch to a pure-language alternative (no native build) if viable
-2) use prebuilt binaries/multi-arch builds if available
-3) add the minimum toolchain required to build from source
-
-Then implement the best option under these constraints:
-- keep behavior identical for consumers
-- keep Docker/dev environment simple
-
-Verification: <commands> + <build/run in prod-like env>
-```
-
-## Sequence: data ingestion → dashboards (analytics)
-
-```text
-Goal: load <dataset> into <store> and ship dashboards/queries that surface the most useful insights.
-
-Requirements:
-- fully automated local bring-up (e.g., `docker compose up`)
-- deterministic, rerunnable importer/seeder
-- dashboards/queries provisioned as code in the repo
-
-Constraints:
-- keep the mapping explicit (document labels/fields and their meaning)
-- prefer a small set of “high-signal” dashboards over many weak ones
-
-Deliverables:
-- compose/env + importer + dashboards
-- “how to run” + “how to verify” docs
-```
-
-## Sequence: debug an unstable external integration (device/service)
-
-```text
-I’m integrating with an external dependency (hardware device / third-party service) and seeing failures:
-<paste logs>
-
-Context:
-- dependency model/version + protocol docs if available
-- exact repro steps + timing
-- what should happen vs what happens
-
-Please:
-1) add the minimum instrumentation/logging needed to diagnose (don’t spam logs),
-2) make the integration resilient (timeouts, retries, backoff, idempotency where appropriate),
-3) add a local “replay” or simulation mode if feasible (recorded traces/fixtures),
-4) document how to capture the right logs when it breaks again.
-
-Verification: <commands> + a repro checklist I can run.
-```
-
-## Sequence: add CI guardrails (tests/lint + policy)
-
-```text
-Add merge-blocking CI for this repo.
-
-Requirements:
-- run tests + lint + build on every PR
-- cache dependencies appropriately
-- clear failure output for contributors
-
-Optional policy (if applicable):
-- restrict who can trigger privileged workflows (maintainers only)
-- add a lightweight “guideline check” step (no secrets, no network where possible)
-
-Deliverables: workflow files + docs on how to run the same checks locally.
 ```
 
 ## Sequence: implement from a spec / PRD / issue
@@ -499,6 +357,33 @@ If you need more info, ask for the smallest missing piece (exact service logs, t
 Prefer using the observability/log tooling that ships with the repo (dashboards/log search/traces) when available.
 ```
 
+## Sequence: observability fixes (logs/metrics/traces/dashboards)
+
+### Kickoff (dashboards/logs/traces missing)
+
+```text
+Skills (optional): apply-structural-patterns, consumer-test-coverage
+
+Our observability is missing <logs/metrics/traces/dashboards>. Please fix what’s wrong end-to-end.
+
+Non-goals:
+- don’t “fix” missing signals by disabling instrumentation or sampling everything away
+- don’t paper over gaps with fake dashboards; make the underlying signals flow
+
+Approach:
+- use the repo’s production-like environment (containers/k8s/etc.) to reproduce
+- generate a small, controlled amount of traffic to produce signals (so you can validate fixes)
+- use logs/traces to identify ingestion/export/query errors end-to-end
+- fix the minimal set of config/instrumentation needed (agents/collectors/exporters/dashboards)
+- document the “signal path” (where logs/metrics/traces come from and how they flow)
+
+Deliverables:
+- working dashboards/panels
+- any config changes required
+- a short “how to verify” checklist (what to click/run to see data)
+- a short “how to debug when it breaks” checklist (where to look first)
+```
+
 ## Sequence: refactor with invariants (patterns + tests)
 
 ### Kickoff (choose smallest pattern, then apply)
@@ -544,31 +429,148 @@ Only make a refactor if you can keep behavior identical for consumers.
 If there’s ambiguity, add a test first to lock behavior down.
 ```
 
-## Sequence: observability fixes (logs/metrics/traces/dashboards)
-
-### Kickoff (dashboards/logs/traces missing)
+## Sequence: apply a repo style guide consistently
 
 ```text
-Skills (optional): apply-structural-patterns, consumer-test-coverage
+Skills (in order): typescript-style-guide (if TS)
 
-Our observability is missing <logs/metrics/traces/dashboards>. Please fix what’s wrong end-to-end.
+Goal: make the repo conform to <style guide file(s)> (e.g., `STYLES.md`, lint rules) without changing behavior.
 
-Non-goals:
-- don’t “fix” missing signals by disabling instrumentation or sampling everything away
-- don’t paper over gaps with fake dashboards; make the underlying signals flow
+Constraints:
+- no behavior changes (unless explicitly required and tested)
+- avoid drive-by refactors; keep changes mechanical and reviewable
 
 Approach:
-- use the repo’s production-like environment (containers/k8s/etc.) to reproduce
-- generate a small, controlled amount of traffic to produce signals (so you can validate fixes)
-- use logs/traces to identify ingestion/export/query errors end-to-end
-- fix the minimal set of config/instrumentation needed (agents/collectors/exporters/dashboards)
-- document the “signal path” (where logs/metrics/traces come from and how they flow)
+- identify the canonical style sources (lint/format rules + any docs)
+- apply automated formatting first (if available), then manual cleanups
+- fix type errors and lint errors created by the changes
+
+Verification: <commands>
+Done when: formatting/lint is clean and tests are green.
+```
+
+## Sequence: monorepo “one command” build
+
+```text
+Goal: make `npm run build` (or equivalent) at the repo root build all packages/apps reliably.
+
+Requirements:
+- deterministic output locations (`dist/` or similar)
+- clear dependency order between packages
+- consistent TS config / module resolution (if TS)
+
+Constraints:
+- don’t introduce new build tools unless necessary
+- keep local dev fast (avoid rebuilding everything on small changes)
+
+Verification:
+- clean build from scratch
+- incremental rebuild
+Done when: root build is reliable and documented.
+```
+
+## Sequence: add CI guardrails (tests/lint + policy)
+
+```text
+Add merge-blocking CI for this repo.
+
+Requirements:
+- run tests + lint + build on every PR
+- cache dependencies appropriately
+- clear failure output for contributors
+
+Optional policy (if applicable):
+- restrict who can trigger privileged workflows (maintainers only)
+- add a lightweight “guideline check” step (no secrets, no network where possible)
+
+Deliverables: workflow files + docs on how to run the same checks locally.
+```
+
+## Sequence: build a CLI tool (design + packaging + install)
+
+```text
+Skills (in order): apply-behavioral-patterns (Command), typescript-style-guide (if TS), consumer-test-coverage
+
+Build a CLI named `<cli-name>` for <purpose>.
+
+CLI contract:
+- commands/subcommands: <list>
+- flags/options: <list>
+- exit codes: 0 success, non-zero failures (define meanings)
+- output: human-readable by default; optional `--json` for automation
+
+Constraints:
+- stable UX: don’t break existing flags/output without a migration plan
+- avoid hidden globals; configuration should be explicit
 
 Deliverables:
-- working dashboards/panels
-- any config changes required
-- a short “how to verify” checklist (what to click/run to see data)
-- a short “how to debug when it breaks” checklist (where to look first)
+- implementation + `--help` output + examples
+- packaging/install instructions (and a smoke test: “install then run”)
+- tests for argument parsing and at least one end-to-end happy path
+```
+
+## Sequence: native dependency / architecture mismatch
+
+Use this when you hit errors like “exec format error”, “arm64 vs x86_64”, or `node-gyp`/toolchain failures.
+
+```text
+I’m hitting a native dependency issue:
+<paste error>
+
+Environment:
+- host OS/arch: <e.g., macOS arm64>
+- container OS/arch (if relevant): <e.g., linux/amd64>
+- runtime versions: <node/python/rust/etc.>
+
+Please propose 2–3 options, ordered by maintainability:
+1) switch to a pure-language alternative (no native build) if viable
+2) use prebuilt binaries/multi-arch builds if available
+3) add the minimum toolchain required to build from source
+
+Then implement the best option under these constraints:
+- keep behavior identical for consumers
+- keep Docker/dev environment simple
+
+Verification: <commands> + <build/run in prod-like env>
+```
+
+## Sequence: debug an unstable external integration (device/service)
+
+```text
+I’m integrating with an external dependency (hardware device / third-party service) and seeing failures:
+<paste logs>
+
+Context:
+- dependency model/version + protocol docs if available
+- exact repro steps + timing
+- what should happen vs what happens
+
+Please:
+1) add the minimum instrumentation/logging needed to diagnose (don’t spam logs),
+2) make the integration resilient (timeouts, retries, backoff, idempotency where appropriate),
+3) add a local “replay” or simulation mode if feasible (recorded traces/fixtures),
+4) document how to capture the right logs when it breaks again.
+
+Verification: <commands> + a repro checklist I can run.
+```
+
+## Sequence: data ingestion → dashboards (analytics)
+
+```text
+Goal: load <dataset> into <store> and ship dashboards/queries that surface the most useful insights.
+
+Requirements:
+- fully automated local bring-up (e.g., `docker compose up`)
+- deterministic, rerunnable importer/seeder
+- dashboards/queries provisioned as code in the repo
+
+Constraints:
+- keep the mapping explicit (document labels/fields and their meaning)
+- prefer a small set of “high-signal” dashboards over many weak ones
+
+Deliverables:
+- compose/env + importer + dashboards
+- “how to run” + “how to verify” docs
 ```
 
 ## Short follow-ups that keep agents aligned
