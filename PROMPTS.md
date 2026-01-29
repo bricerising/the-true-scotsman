@@ -52,8 +52,11 @@ Problem: <describe the pressure: multiple providers, pluggable rules, caching/lo
 Context: <where the code lives / current approach (e.g., switch statements)>
 Deliverables:
 - recommend the smallest GoF pattern(s) that fit
-- outline the target module structure and interfaces
-- call out tradeoffs and what not to do
+- show 1–2 plausible alternatives and why you’re not choosing them
+- outline the target module structure, key interfaces, and composition/wiring changes
+- propose an incremental migration plan (small steps, low-risk order)
+- propose a validation plan (tests + what “done” means)
+- call out tradeoffs, risks, and what not to do
 ```
 
 ### Apply a creational pattern (construction/config)
@@ -66,9 +69,13 @@ Constraints:
 - keep call sites minimal
 - keep behavior identical at the boundary
 - avoid global singletons unless explicitly required
+- make dependencies explicit (constructor params / factory inputs), avoid hidden I/O in constructors
+- make resource lifetimes explicit (create/start/stop/dispose) and easy to test
+- validate/normalize config at the boundary (parse once, pass typed config inward)
 Deliverables:
 - a factory/builder approach with clear lifetimes (create/start/stop if relevant)
 - tests using fakes/stubs (no network) where possible
+- a short usage example (how callers construct and use it)
 Context: <current constructors/factories and call sites>
 ```
 
@@ -125,9 +132,17 @@ Requirements:
 - assert client-visible behavior (status codes, response shape, side effects)
 - avoid asserting internal calls/implementation details
 Coverage:
-- happy path
-- one invalid-input case
-- one unhappy-path that clients can observe (timeouts/downstream errors/permissions)
+- baseline:
+  - happy path
+  - one invalid-input case
+  - one unhappy-path that clients can observe (timeouts/downstream errors/permissions)
+- add when relevant:
+  - auth/permissions
+  - idempotency/retries
+  - concurrency/race conditions
+  - pagination/sorting/filtering
+  - rate limiting/backpressure
+  - backward compatibility / versioning
 Verification: <commands>
 ```
 
@@ -353,13 +368,16 @@ Non-goals:
 
 Approach:
 - use the repo’s production-like environment (containers/k8s/etc.) to reproduce
-- use logs to identify ingestion/export errors
+- generate a small, controlled amount of traffic to produce signals (so you can validate fixes)
+- use logs/traces to identify ingestion/export/query errors end-to-end
 - fix the minimal set of config/instrumentation needed (agents/collectors/exporters/dashboards)
+- document the “signal path” (where logs/metrics/traces come from and how they flow)
 
 Deliverables:
 - working dashboards/panels
 - any config changes required
 - a short “how to verify” checklist (what to click/run to see data)
+- a short “how to debug when it breaks” checklist (where to look first)
 ```
 
 ## Short follow-ups that keep agents aligned
