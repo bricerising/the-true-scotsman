@@ -15,20 +15,6 @@ Each skill is a small, self-contained playbook (workflow + checklists + examples
 - `apply-behavioral-patterns/`: How to apply Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, and Visitor.
 - `consumer-test-coverage/`: Guidance for adding consumer-focused tests that raise coverage without asserting implementation details.
 
-## Philosophy
-
-These skills bias toward practices that make codebases easier for humans to operate over time:
-
-- Prefer clarity over cleverness; optimize for the next reader.
-- Make boundaries explicit; validate external inputs at the edges.
-- Keep dependencies and lifetimes explicit; avoid hidden globals.
-- Treat expected failures as data (typed results) instead of exceptions.
-- Use design patterns as names for proven structures, not as goals.
-
-## Install & integrate
-
-This repo is designed to be used directly with **Codex CLI**, but you can also integrate it with other popular code assistants by copying/linking the relevant guides into their “project rules / instructions” mechanism.
-
 ## Using these skills (prompting)
 
 Each folder contains a `SKILL.md` playbook. To get an agent to apply one, **name the skill explicitly** in your prompt and give it enough context (files, constraints, acceptance criteria).
@@ -37,10 +23,14 @@ Each folder contains a `SKILL.md` playbook. To get an agent to apply one, **name
 
 ```
 Use <skill-name> to <goal>.
+Requirements: <what you want built / behavior you need>.
 Constraints: <what must not change>.
+Deliverables: <files/structure you expect back>.
 Acceptance: <tests/behavior you want preserved>.
 Context: <relevant files, snippets, error logs>.
 ```
+
+You can omit sections that don’t apply, or swap labels like `Requirements` ↔ `Behavior`.
 
 ### Copy/paste prompts
 
@@ -167,6 +157,20 @@ Goal: add request-level caching for `GET /v1/users/:id` without changing the han
 Constraints: preserve HTTP semantics; TTL=60s; cache key includes auth tenant; no global singletons.
 Deliverables: recommended pattern + implementation + tests that assert client-visible behavior.
 ```
+
+## Philosophy
+
+These skills bias toward practices that make codebases easier for humans to operate over time:
+
+- Prefer clarity over cleverness; optimize for the next reader.
+- Make boundaries explicit; validate external inputs at the edges.
+- Keep dependencies and lifetimes explicit; avoid hidden globals.
+- Treat expected failures as data (typed results) instead of exceptions.
+- Use design patterns as names for proven structures, not as goals.
+
+## Install & integrate
+
+This repo is designed to be used directly with **Codex CLI**, but you can also integrate it with other popular code assistants by copying/linking the relevant guides into their “project rules / instructions” mechanism.
 
 ### Codex CLI (skills)
 
