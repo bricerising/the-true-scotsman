@@ -19,144 +19,21 @@ Each skill is a small, self-contained playbook (workflow + checklists + examples
 
 Each folder contains a `SKILL.md` playbook. To get an agent to apply one, **name the skill explicitly** in your prompt and give it enough context (files, constraints, acceptance criteria).
 
-### Prompt template
+### Example prompts
 
 ```
-Use <skill-name> to <goal>.
-Requirements: <what you want built / behavior you need>.
-Constraints: <what must not change>.
-Deliverables: <files/structure you expect back>.
-Acceptance: <tests/behavior you want preserved>.
-Context: <relevant files, snippets, error logs>.
+Use typescript-style-guide to refactor our boundary handling so external inputs are validated (treat as `unknown`)
+and expected failures are modeled as typed results. Keep public APIs unchanged and add tests for the decoders.
+Context: `src/config.ts`, request handlers, and any places we `JSON.parse(...) as X`.
 ```
-
-You can omit sections that don’t apply, or swap labels like `Requirements` ↔ `Behavior`.
-
-### Copy/paste prompts
-
-#### Scaffold a new app (`typescript-style-guide`)
-
-```
-Use typescript-style-guide to scaffold a new Node.js + TypeScript REST API.
-Requirements:
-- `/health` endpoint
-- `/v1/users` CRUD endpoints with request/response runtime validation (e.g. Zod)
-- env config decoded from `unknown` (no direct `process.env` reads outside config module)
-- explicit composition root (resources created in `src/main.ts`, with clean shutdown)
-- typed errors (no throwing for expected failures)
-Deliverables:
-- file tree + all source files
-- `package.json`, `tsconfig.json`, minimal tooling
-- tests for validators + one handler integration test
-Constraints: keep it simple; no DI framework; no classes for data.
-```
-
-```
-Use typescript-style-guide to build a TypeScript CLI called `log-summarize`.
-Behavior:
-- reads a log file path from argv
-- parses JSON lines, groups by `level` and `service`, prints a summary table
-- validates inputs and reports friendly, typed errors (no uncaught throws)
-Deliverables: project structure, implementation, and a few unit tests for parsing + formatting.
-```
-
-```
-Use typescript-style-guide to scaffold a small React + TypeScript app (Vite is fine) that:
-- fetches `/api/todos`
-- validates API responses at the boundary (treat as `unknown`)
-- keeps UI state modeled as a discriminated union (`loading` | `ready` | `error`)
-Deliverables: minimal components, a typed API client module, and tests for the decoder.
-```
-
-#### Refactors (`typescript-style-guide`)
-
-```
-Use typescript-style-guide to refactor our config loading so all env vars are decoded/validated from `unknown`,
-and the rest of the app never reads `process.env` directly. Keep the public API unchanged and add unit tests.
-Context: `src/config.ts`, `src/main.ts`, and any modules that read env vars.
-```
-
-```
-Use typescript-style-guide to refactor error handling to be “throwless” in domain/application code:
-- replace `throw` for expected failures with a typed result (discriminated union)
-- convert errors at boundaries (HTTP handlers / CLI entrypoints)
-Constraints: don’t change externally-visible error messages/status codes. Add tests for the new error paths.
-```
-
-```
-Use typescript-style-guide to break a cyclic dependency between `src/domain/*` and `src/infra/*`.
-Constraints: preserve behavior; do not add a DI container; prefer interfaces + adapters; add a regression test.
-Context: include the import cycle output from your tooling and the relevant files.
-```
-
-#### Choose a pattern (`select-design-pattern`)
-
-```
-Use select-design-pattern: I’m adding “exporters” for multiple formats (CSV, JSON, PDF) with different setup
-requirements and runtime selection per request. Recommend the smallest GoF pattern(s), explain tradeoffs,
-and sketch the target module structure + interfaces.
-Context: current code is `src/export/*` with `switch(format)` in multiple places.
-```
-
-#### Implement the chosen creation approach (`apply-creational-patterns`)
-
-```
-Use apply-creational-patterns to refactor `EmailClient` construction so callers don’t know about transport
-details (SMTP vs SES). Prefer Factory Method or Abstract Factory; keep call sites minimal; add tests.
-```
-
-```
-Use apply-creational-patterns to create a provider-agnostic `PaymentsClient` with Stripe + Adyen support.
-Requirements:
-- runtime selection based on config/env
-- shared interface for `authorize`, `capture`, `refund`
-- test doubles for unit tests (no network)
-Deliverables: factory/factories, interfaces, and tests.
-```
-
-#### Add behavior without changing interfaces (`apply-structural-patterns`)
-
-```
-Use apply-structural-patterns to add caching around `UserProfileService` without changing its interface.
-I want a Proxy or Decorator with TTL + cache key strategy and tests for cache hits/misses.
-```
-
-```
-Use apply-structural-patterns to add structured logging and timing around `OrderService` calls without
-changing its interface. Prefer Decorator; include log fields and tests asserting observable behavior.
-```
-
-#### Make logic pluggable (`apply-behavioral-patterns`)
-
-```
-Use apply-behavioral-patterns to make pricing rules pluggable. Implement Strategy so we can swap algorithms
-per customer tier, and add tests proving selection + edge cases.
-```
-
-```
-Use apply-behavioral-patterns to turn our request middleware into a Chain of Responsibility:
-- auth -> validation -> handler -> error mapping
-Constraints: keep current HTTP semantics; add tests for ordering and short-circuiting.
-```
-
-#### Add high-signal tests (`consumer-test-coverage`)
-
-```
-Use consumer-test-coverage to add tests for the `POST /v1/orders` endpoint:
-- assert response shape + status codes for success and validation failures
-- cover one unhappy-path (e.g. downstream timeout) as seen by the client
-- avoid asserting internal function calls or DB implementation details
-Context: include the router/handler entrypoint and how to start the app in test.
-```
-
-### End-to-end prompt (combine skills)
 
 ```
 Use these skills in order: select-design-pattern, apply-structural-patterns, consumer-test-coverage.
-Goal: add request-level caching for `GET /v1/users/:id` without changing the handler signature.
-Constraints: preserve HTTP semantics; TTL=60s; cache key includes auth tenant; no global singletons.
-Deliverables: recommended pattern + implementation + tests that assert client-visible behavior.
+Goal: add caching around `UserService.getUser(id)` without changing its interface.
+Constraints: TTL=60s; cache key includes tenant; preserve existing error semantics; add consumer-visible tests.
 ```
+
+For more templates and reusable prompt sequences, see [`PROMPTS.md`](PROMPTS.md).
 
 ## Philosophy
 

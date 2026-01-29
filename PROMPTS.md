@@ -10,9 +10,91 @@ They work best because they:
 
 Replace placeholders like `<service>`, `<spec-path>`, `<commands>`, etc.
 
+## Using skills (recommended)
+
+If your chat agent supports these skills, name them explicitly in the prompt (the exact skill name) and list an order.
+If your project isn’t TypeScript, omit `typescript-style-guide` (the other skills are largely language-agnostic).
+
+Available skills in this repo:
+
+- `typescript-style-guide`: TypeScript refactors/implementation with explicit boundaries, validation, and typed errors.
+- `select-design-pattern`: Pick the smallest GoF pattern(s) that fit.
+- `apply-creational-patterns`: Apply Factory/Builder/etc. once a creational approach is chosen.
+- `apply-structural-patterns`: Apply Adapter/Decorator/Proxy/etc. when you need to add behavior without changing interfaces.
+- `apply-behavioral-patterns`: Apply Strategy/Observer/Chain/etc. when you need pluggable logic or pipelines.
+- `consumer-test-coverage`: Add consumer-centric tests (prefer observable behavior over internals).
+
+## Skill recipes (copy/paste starters)
+
+### Choose the simplest pattern
+
+```text
+Use select-design-pattern.
+
+Problem: <describe the pressure: multiple providers, pluggable rules, caching/logging wrappers, etc.>
+Context: <where the code lives / current approach (e.g., switch statements)>
+Deliverables:
+- recommend the smallest GoF pattern(s) that fit
+- outline the target module structure and interfaces
+- call out tradeoffs and what not to do
+```
+
+### Apply a creational pattern (construction/config)
+
+```text
+Use apply-creational-patterns.
+
+Goal: hide complex construction of <client/service> (e.g., multiple transports/providers/configs).
+Constraints: keep call sites minimal; no behavior change; add/adjust tests.
+Context: <current constructors/factories and call sites>
+```
+
+### Apply a structural pattern (wrapping without interface change)
+
+```text
+Use apply-structural-patterns.
+
+Goal: add <caching/logging/retries/rate limiting/authorization> around <interface> without changing its interface.
+Constraints: preserve semantics; keep diff small; add tests for observable behavior.
+```
+
+### Apply a behavioral pattern (pluggable logic/pipelines)
+
+```text
+Use apply-behavioral-patterns.
+
+Goal: make <logic> pluggable or pipeline-based (e.g., Strategy, Chain of Responsibility, State).
+Constraints: preserve current outcomes; add tests proving selection/order and edge cases.
+```
+
+### Refactor or implement in TypeScript with explicit boundaries
+
+```text
+Use typescript-style-guide.
+
+Goal: <implement/refactor area> while keeping boundaries explicit and runtime-safe.
+Requirements:
+- validate external inputs at boundaries (treat as `unknown`)
+- make expected failures explicit (typed result), no throwing for expected failures
+Verification: <commands>
+```
+
+### Add consumer-centric tests/coverage
+
+```text
+Use consumer-test-coverage.
+
+Target: <HTTP handler/gRPC method/job/consumer/CLI entrypoint>
+Requirements:
+- assert client-visible behavior (status codes, response shape, side effects)
+- avoid asserting internal calls/implementation details
+Verification: <commands>
+```
+
 ## Prompt skeleton (recommended)
 
 ```text
+Skills (in order): <skill-1>, <skill-2>, <skill-3> (optional)
 Goal: <what you want, in one sentence>
 Requirements: <bullets of behavior>
 Constraints: <what must not change>
@@ -28,7 +110,12 @@ Context: <files, logs, screenshots, links>
 ### Kickoff (feature/module implementation)
 
 ```text
-Implement <feature/module> described in <spec-path or issue link>.
+Skills (in order): typescript-style-guide (if TS), consumer-test-coverage (optional: select-design-pattern, apply-creational-patterns/apply-structural-patterns/apply-behavioral-patterns)
+
+Use typescript-style-guide to implement <feature/module> described in <spec-path or issue link>.
+If the design is unclear or there are multiple viable designs:
+1) use select-design-pattern to recommend the smallest pattern(s) that fit, then
+2) use the matching apply-* skill to implement it (`apply-creational-patterns`, `apply-structural-patterns`, or `apply-behavioral-patterns`).
 
 Requirements:
 - <list the observable behaviors / APIs / workflows>
@@ -52,7 +139,7 @@ Done when:
 
 Deliverables:
 - implementation changes
-- tests for the key behaviors (unit + integration where appropriate)
+- tests for the key behaviors (unit + integration where appropriate) — use consumer-test-coverage to keep tests consumer-centric
 - any docs/spec updates needed to keep docs truthful
 ```
 
@@ -75,6 +162,8 @@ If you think something else must change, explain why and propose the smallest vi
 ### Kickoff (spec-driven e2e)
 
 ```text
+Skills (in order): consumer-test-coverage (optional: typescript-style-guide)
+
 Write E2E tests (Playwright/Cypress/etc.) that verify the deployed app matches <specs/requirements>.
 
 Start the app using the repo’s most production-like local setup (<command(s)>), then run E2E tests against it.
@@ -83,6 +172,7 @@ Iterate until the tests pass (fix product bugs or test flakiness as needed).
 Guidelines:
 - Prefer stable selectors (e.g., `data-testid`) over text/CSS
 - Assert user-visible behavior (status codes, UI state, navigation), not internal calls
+- Use consumer-test-coverage principles: assert the contract at the boundary, not implementation details
 
 Deliverables:
 - E2E tests
@@ -103,6 +193,8 @@ Re-run the production-like environment + the tests and iterate until green.
 ### Kickoff (repro → root cause → regression test)
 
 ```text
+Skills (in order): consumer-test-coverage (optional: typescript-style-guide, select-design-pattern)
+
 I’m seeing this error when <steps to reproduce>:
 <paste logs / stack trace>
 
@@ -116,7 +208,7 @@ Please:
 1) reproduce locally (prefer the repo’s most production-like environment if available),
 2) identify the root cause,
 3) fix it with minimal churn,
-4) add a regression test,
+4) add a regression test (use consumer-test-coverage),
 5) re-run <commands> and iterate until green.
 ```
 
@@ -132,8 +224,14 @@ Prefer using the observability/log tooling that ships with the repo (dashboards/
 ### Kickoff (choose smallest pattern, then apply)
 
 ```text
-If helpful, first choose the smallest design pattern that fits (e.g., via `select-design-pattern`).
-Then refactor using the simplest implementation (optionally via `apply-structural-patterns` / `apply-behavioral-patterns` / `apply-creational-patterns`).
+Skills (in order): select-design-pattern, apply-creational-patterns/apply-structural-patterns/apply-behavioral-patterns, typescript-style-guide (if TS), consumer-test-coverage
+
+First use select-design-pattern to recommend the smallest pattern(s) that fit.
+Then implement using the appropriate apply-* skill:
+- apply-creational-patterns (construction/config/lifecycle)
+- apply-structural-patterns (wrapping, adapters, caching, logging, proxies)
+- apply-behavioral-patterns (pipelines, strategies, observers, state machines)
+Finally use typescript-style-guide to standardize boundaries/errors, and consumer-test-coverage to keep tests consumer-visible.
 
 Goal: refactor <area> to improve readability/maintainability without changing consumer-visible behavior.
 
@@ -167,6 +265,8 @@ If there’s ambiguity, add a test first to lock behavior down.
 ### Kickoff (dashboards/logs/traces missing)
 
 ```text
+Skills (optional): apply-structural-patterns, consumer-test-coverage
+
 Our observability is missing <logs/metrics/traces/dashboards>. Please fix what’s wrong end-to-end.
 
 Approach:
