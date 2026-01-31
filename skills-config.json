@@ -1,0 +1,87 @@
+{
+  "version": 1,
+  "skillOrder": [
+    "typescript-style-guide",
+    "consumer-test-coverage",
+    "select-design-pattern",
+    "apply-creational-patterns",
+    "apply-structural-patterns",
+    "apply-behavioral-patterns"
+  ],
+  "projectDetectors": [
+    {
+      "name": "typescript",
+      "markersAny": ["tsconfig.json"],
+      "packageJsonDepsAny": ["typescript", "ts-node", "@types/node"],
+      "skills": ["typescript-style-guide"]
+    }
+  ],
+  "promptDetectors": [
+    {
+      "name": "testing",
+      "keywordsAny": [
+        "test",
+        "tests",
+        "coverage",
+        "contract test",
+        "integration test",
+        "e2e",
+        "jest",
+        "vitest",
+        "pytest"
+      ],
+      "skills": ["consumer-test-coverage"]
+    },
+    {
+      "name": "pattern-selection",
+      "keywordsAny": ["design pattern", "which pattern", "gof", "pattern to use", "choose a pattern"],
+      "skills": ["select-design-pattern"]
+    },
+    {
+      "name": "creational",
+      "keywordsAny": [
+        "factory",
+        "factory method",
+        "abstract factory",
+        "builder",
+        "prototype",
+        "singleton",
+        "construction",
+        "instantiation"
+      ],
+      "skills": ["apply-creational-patterns"]
+    },
+    {
+      "name": "structural",
+      "keywordsAny": [
+        "adapter",
+        "decorator",
+        "proxy",
+        "facade",
+        "wrapper",
+        "caching",
+        "cache",
+        "logging",
+        "retries",
+        "retry",
+        "rate limit",
+        "authorization"
+      ],
+      "skills": ["apply-structural-patterns"]
+    },
+    {
+      "name": "behavioral",
+      "keywordsAny": [
+        "strategy",
+        "chain of responsibility",
+        "observer",
+        "state pattern",
+        "template method",
+        "visitor",
+        "pipeline",
+        "workflow"
+      ],
+      "skills": ["apply-behavioral-patterns"]
+    }
+  ]
+}
