@@ -120,18 +120,3 @@ git submodule add https://github.com/bricerising/enterprise-software-playbook.gi
 ```
 
 Then reference files like `tools/enterprise-software-playbook/typescript-style-guide/SKILL.md` in your assistant’s project instructions.
-
-## Growing this repo
-
-The intent is to expand beyond TypeScript into more stacks over time (e.g., Go, Python, Rust, Java, frontend frameworks, data tooling). New additions will generally take the form of:
-
-- a `*-style-guide/` skill for a language/framework, plus
-- `references/` and `references/snippets/` for copyable patterns and examples.
-
-## Contributing
-
-If you add a new skill:
-
-1. Create a new folder with a `SKILL.md` containing YAML frontmatter (`name`, `description`).
-2. Keep it concise: workflows, checklists, and minimal examples beat long essays.
-3. Prefer reusable snippets/templates over prose where it helps agents apply guidance consistently.
