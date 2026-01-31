@@ -86,25 +86,29 @@ This repo is designed to be used directly with **Codex CLI**, but you can also i
 1. Clone this repo anywhere you like.
 2. Symlink (or copy) the skill folders into `$CODEX_HOME/skills` (commonly `~/.codex/skills`).
 
-Example (symlinks):
+Example (symlinks; installs every skill folder in this repo):
 
 ```sh
 git clone <this-repo-url> ~/enterprise-software-playbook
 mkdir -p ~/.codex/skills
-ln -s ~/enterprise-software-playbook/{apply-*,consumer-test-coverage,select-design-pattern,typescript-style-guide} ~/.codex/skills/
+for f in ~/enterprise-software-playbook/*/SKILL.md; do
+  ln -s "${f%/SKILL.md}" ~/.codex/skills/
+done
 ```
 
 ### Claude Code
 
 1. Clone this repo anywhere you like.
-2. Symlink (or copy) the skill folders into `~/.claude/skills`.
+2. Symlink (or copy) the skill folders into your Claude Code skills directory (commonly `~/.claude/skills`).
 
-Example (symlinks):
+Example (symlinks; installs every skill folder in this repo):
 
 ```sh
 git clone <this-repo-url> ~/enterprise-software-playbook
 mkdir -p ~/.claude/skills
-ln -s ~/enterprise-software-playbook/{apply-*,consumer-test-coverage,select-design-pattern,typescript-style-guide} ~/.claude/skills/
+for f in ~/enterprise-software-playbook/*/SKILL.md; do
+  ln -s "${f%/SKILL.md}" ~/.claude/skills/
+done
 ```
 
 ### Tool-agnostic: vendor it into your project
