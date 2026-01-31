@@ -1,15 +1,19 @@
 ---
 name: select-design-pattern
-description: Choose an appropriate GoF design pattern (creational/structural/behavioral) from a problem statement. Use when the user asks which pattern to use, compares patterns, or you need a quick decision workflow to refactor for extensibility, decoupling, composability, or testability.
+description: "Choose an appropriate code pattern (in-process: classic creational/structural/behavioral patterns, mostly GoF). Use when you need a quick decision workflow to refactor for extensibility, decoupling, composability, or testability."
 ---
 
-# Select Design Pattern
+# Select Code Pattern
 
 ## Overview
 
-Pick the simplest design that fits, then map it to a GoF pattern only if it buys you clear leverage (change isolation, testability, reuse, or performance).
+Pick the simplest design that fits, then map it to a code pattern only if it buys you clear leverage (change isolation, testability, reuse, or performance).
 
 In TypeScript systems, also watch for “complications” that patterns can accidentally amplify (hidden lifetimes, implicit `throw`, unchecked boundary data, cyclic deps). Prefer patterns that keep boundaries and ownership explicit.
+
+If the main pressure is *system-level* (multiple services/processes, partial failures, retries/idempotency, sagas, event-driven architecture, domain boundaries), use `select-architecture-pattern` first; then come back here to pick any code patterns needed for the in-process implementation.
+
+If you’re standardizing cross-cutting boundary behavior across multiple services, consider extracting the primitive into a shared package (see `shared-platform-library`) so the pattern becomes a consistent “golden path” instead of copy/paste.
 
 ## Workflow
 
