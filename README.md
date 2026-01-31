@@ -59,72 +59,10 @@ Each folder contains a `SKILL.md` playbook. The primary mode is **conversational
 
 ### Example prompts
 
-These are copy/paste prompts in conversational mode. They’re still effective because they include scope/constraints, a verification loop, and a clear “done when”.
-
-**1) Safe “cleanup refactor” quickstart (no user input required)**  
-Use when you just want to see this repo in action: the agent chooses 1–3 high-impact areas, adds characterization tests, refactors, and iterates until checks are green.
+Simply use the following prompt to get started. Provide feedback to direct the agent as necessary.
 
 ```
-Can you do a safe “clean up” refactor to reduce complexity in the most problematic TypeScript area(s) without changing behavior?
-
-Please auto-apply the enterprise-software-playbook workflow (I’m interacting conversationally; choose whatever skills you need).
-
-Pick 1–3 targets under `src/` based on size/complexity/churn and tell me which you picked and why.
-
-Constraints:
-- no public API changes
-- no behavior changes
-- avoid broad renames/moves
-- no new deps
-
-Approach:
-- add/adjust characterization tests first (consumer-visible)
-- refactor
-- re-run tests and iterate until green
-
-Verification: <test/lint/build commands>
-Done when: <commands> are green and you summarize what changed + why it’s safer now
-```
-
-**2) Wrap an interface without changing it (choose a pattern, then apply it)**  
-Use when you need to add behavior like caching/retries/logging without changing the public interface. The agent picks the smallest fitting pattern, implements it, and pins the behavior with contract-level tests.
-
-```
-I need to add <caching/logging/retries/rate limiting> around <interface> without changing its public contract.
-
-Please choose the smallest fitting approach, implement it, and pin the behavior with consumer-visible tests.
-
-Constraints:
-- preserve error semantics and response shapes
-- keep selection/ordering rules explicit
-- keep the diff reviewable (avoid unrelated moves/renames)
-
-Deliverables:
-- wrapper implementation
-- consumer-visible tests (hit/miss, retry limits, etc.)
-- a short usage example
-
-Verification: <test/lint/build commands>
-Done when: <commands> are green and tests pin the documented contract at the boundary
-
-Context: <interface path + key call sites + perf/UX constraints>
-```
-
-**3) Spec-driven feature implementation (TypeScript + tests)**  
-Use when you have a spec/issue and want the agent to implement it with explicit boundaries (validate inputs, model expected failures) and consumer-visible tests.
-
-```
-Can you implement <feature> described in <spec/issue>?
-
-Please keep boundaries explicit (validate external inputs; model expected failures explicitly) and keep the change cohesive (specs/contracts/tests stay aligned).
-
-Scope: in-scope <paths>; out-of-scope <paths>
-Constraints: preserve public APIs; small diff; no hidden globals; no new deps (unless necessary)
-
-Verification: <test/lint/build commands>
-Done when: <commands> are green and the feature works end-to-end in the repo’s most production-like local setup
-
-Context: <files/spec/logs>
+Please review this enterprise web application.
 ```
 
 For more templates and reusable prompt sequences, see [`PROMPTS.md`](PROMPTS.md).
