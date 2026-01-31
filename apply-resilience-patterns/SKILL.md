@@ -1,6 +1,6 @@
 ---
 name: apply-resilience-patterns
-description: Apply reliability/resilience patterns for enterprise services (timeouts, retries with backoff+jitter, idempotency, circuit breakers, bulkheads/concurrency limits, and safe fallbacks). Use when code crosses an I/O boundary (HTTP/gRPC/DB/queues/Redis) or when services must tolerate partial failures without cascading outages.
+description: Apply resilience patterns for enterprise services (timeouts, retries with backoff+jitter, idempotency, circuit breakers, bulkheads/concurrency limits, safe fallbacks). Use when adding/refactoring outbound calls, consumers/jobs, retry behavior, or hardening a service against partial failures and flaky dependencies.
 ---
 
 # Apply Resilience Patterns

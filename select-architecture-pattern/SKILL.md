@@ -88,6 +88,8 @@ Use GoF patterns for in-process structure; use these patterns when the problem i
 
 ## Map To Existing Skills
 
+- Spec + contracts + plans: `spec-driven-development`.
+- Shared primitives across services: `shared-platform-library`.
 - Observability (logs/metrics/traces correlation): `apply-observability-patterns`.
 - Timeouts / retries / idempotency / circuit breaker / bulkheads: `apply-resilience-patterns` (often implemented via `Proxy`/`Decorator`).
 - Circuit breaker / caching / rate limiting (in-process structure): often a `Proxy` or `Decorator` (`apply-structural-patterns`).

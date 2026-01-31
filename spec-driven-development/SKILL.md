@@ -1,6 +1,6 @@
 ---
 name: spec-driven-development
-description: Write and maintain specification-first artifacts for enterprise web applications (service specs, API contracts, plans, task lists, and quickstarts). Use when starting a new feature/service, refactoring major behavior, defining non-functional requirements, or when agents need a shared source of truth for scope, acceptance criteria, and invariants.
+description: Write and maintain spec-first artifacts for enterprise web apps (service specs, API contracts, plans, task lists, quickstarts). Use when creating/updating `specs/*.md`, `apps/*/spec/` bundles, or `contracts/` docs (OpenAPI/proto/WS), especially before major behavior changes or multi-agent iteration.
 ---
 
 # Spec Driven Development

@@ -75,6 +75,17 @@ Available skills in this repo:
 
 ## Skill recipes
 
+### Enterprise web app default sequence (cohesion-first)
+
+```text
+Skills (in order): spec-driven-development, select-architecture-pattern, shared-platform-library, typescript-style-guide, apply-resilience-patterns, apply-observability-patterns, consumer-test-coverage
+Goal: implement <feature> for an enterprise web app with stable contracts and predictable failure/telemetry behavior.
+Constraints: preserve public contracts unless the spec says otherwise; keep error semantics stable; no hidden I/O at import time
+Verification: <test/lint/build commands>
+Done when: specs + contracts are updated, tests are green, and the feature is observable + resilient at its boundaries
+Context: <spec paths>, <entrypoints>, <SLOs/time budgets>, <existing patterns>
+```
+
 ### Choose the simplest design pattern
 
 ```text

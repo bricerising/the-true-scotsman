@@ -1,6 +1,6 @@
 ---
 name: shared-platform-library
-description: Design and maintain a shared platform library (monorepo package) that standardizes cross-cutting concerns across services (auth, config, gRPC/HTTP helpers, lifecycle, typed errors/results, observability, retries/timeouts). Use when multiple services duplicate the same boundary logic, when you need consistent semantics across an enterprise web app, or when introducing new shared primitives without creating a “utils junk drawer”.
+description: Design and maintain a shared platform library (e.g. `packages/shared`) that standardizes cross-cutting concerns across services (auth, config, gRPC/HTTP helpers, lifecycle, typed errors/results, observability, retries/timeouts). Use when multiple services duplicate boundary logic or when introducing shared primitives without creating a “utils junk drawer”.
 ---
 
 # Shared Platform Library

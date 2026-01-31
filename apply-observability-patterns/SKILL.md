@@ -1,6 +1,6 @@
 ---
 name: apply-observability-patterns
-description: Apply modern observability patterns (logs/metrics/traces correlation, structured logging, RED metrics, OpenTelemetry instrumentation, and actionable dashboards/alerts). Use when implementing or refactoring enterprise web applications/services that need production-grade debugging, performance visibility, and reliable incident triage.
+description: Apply modern observability patterns (structured logs with trace correlation, RED metrics, OpenTelemetry spans, dashboards/alerts). Use when adding or changing logs/metrics/traces instrumentation, defining telemetry field contracts, or creating verification steps/runbooks for production debugging in enterprise web apps.
 ---
 
 # Apply Observability Patterns

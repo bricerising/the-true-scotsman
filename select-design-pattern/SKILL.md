@@ -13,6 +13,8 @@ In TypeScript systems, also watch for “complications” that patterns can acci
 
 If the main pressure is *system-level* (multiple services/processes, partial failures, retries/idempotency, sagas, event-driven architecture, domain boundaries), use `select-architecture-pattern` first; then come back here to pick any GoF patterns needed for the in-process implementation.
 
+If you’re standardizing cross-cutting boundary behavior across multiple services, consider extracting the primitive into a shared package (see `shared-platform-library`) so the pattern becomes a consistent “golden path” instead of copy/paste.
+
 ## Workflow
 
 1. Decide whether the context is **scriptic vs systemic** (short-lived script vs long-lived system). Set policies for boundary validation, error semantics, and ownership/lifetimes.
