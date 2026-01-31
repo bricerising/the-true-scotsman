@@ -19,7 +19,7 @@ Define the skeleton of an algorithm once and let callers override specific steps
 ## Minimal Structure
 
 - **TypeScript-friendly (preferred)**: a `run(template, input)` function that calls `template.read/parse/validate/write` step functions (some optional with defaults).
-- **Classic GoF**: a base class `templateMethod()` calls overridable `step1()`, `step2()`, ... and subclasses override selected steps.
+- **Classic code pattern (GoF Template Method)**: a base class `templateMethod()` calls overridable `step1()`, `step2()`, ... and subclasses override selected steps.
 
 ## Implementation Steps
 

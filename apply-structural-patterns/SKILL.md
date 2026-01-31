@@ -1,6 +1,6 @@
 ---
 name: apply-structural-patterns
-description: Apply structural GoF design patterns (Adapter, Bridge, Composite, Decorator, Facade, Flyweight, Proxy). Use when you need to wrap/compose objects, translate interfaces, split abstraction from implementation, simplify a subsystem, share memory, or add indirection (caching, access control, lazy loading).
+description: Apply structural code patterns (classic GoF: Adapter, Bridge, Composite, Decorator, Facade, Flyweight, Proxy). Use when you need to wrap/compose objects, translate interfaces, split abstraction from implementation, simplify a subsystem, share memory, or add indirection (caching, access control, lazy loading).
 ---
 
 # Apply Structural Patterns

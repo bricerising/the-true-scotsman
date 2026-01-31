@@ -22,6 +22,7 @@ This skill treats specs as **operational tooling**: they prevent scope drift, en
 Use one (or both) of these:
 
 - **System specs**: `specs/*.md` for cross-service rules and shared constraints (auth, observability, eventing, product scope).
+- **Decision records**: `specs/decisions/*.md` for significant choices (trade-offs, migrations, taxonomy, compatibility).
 - **Service spec bundle**: `apps/<service>/spec/` for service-local truth:
   - `spec.md`: requirements and acceptance scenarios
   - `contracts/`: OpenAPI/proto/WS message contracts

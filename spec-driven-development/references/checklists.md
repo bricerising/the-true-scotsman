@@ -45,3 +45,4 @@ Use this to review a spec before implementation (or when a spec has drifted).
 
 - The spec names the “stop condition” for work (what “done” means).
 - If the spec is for a migration/refactor, it includes an incremental plan and rollback considerations.
+- Significant trade-offs and compatibility decisions have a short decision record (`specs/decisions/*.md` or similar).

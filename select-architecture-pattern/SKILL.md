@@ -1,15 +1,15 @@
 ---
 name: select-architecture-pattern
-description: Choose architecture / distributed-systems patterns beyond GoF (cloud-native resilience, event-driven, DDD, distributed coordination, ML/MLOps). Use when designing or refactoring systems that span processes/services, need reliability under partial failure, require eventual consistency, or need clearer domain boundaries and integration seams.
+description: Choose system patterns (architecture/distributed-systems/ops) for enterprise web apps. Use when designing or refactoring systems that span processes/services, need reliability under partial failure, require eventual consistency, or need clearer domain boundaries and integration seams.
 ---
 
-# Select Architecture Pattern
+# Select System Pattern (Architecture / Distributed Systems)
 
 ## Overview
 
 Pick the smallest system/architecture pattern that addresses the pressure (reliability, consistency, domain boundaries, scalability).
 
-Use GoF patterns for in-process structure; use these patterns when the problem is cross-process or cross-team.
+Use code patterns for in-process structure; use system patterns when the problem is cross-process or cross-team.
 
 ## Workflow
 
@@ -25,7 +25,7 @@ Use GoF patterns for in-process structure; use these patterns when the problem i
 3. State what’s stable and what can change (contracts, schemas, SLAs).
 4. Choose a primary pattern and 0–2 supporting ones (avoid “pattern soup”).
 5. Validate with: happy path, failure path, and ops path (metrics/alerts, retries, backoff, fallbacks).
-6. Map to implementation tactics (often GoF wrappers/pipelines) and a testing strategy.
+6. Map to implementation tactics (often code-pattern wrappers/pipelines) and a testing strategy.
 
 ## Clarifying Questions
 
@@ -38,7 +38,7 @@ Use GoF patterns for in-process structure; use these patterns when the problem i
 - What is the expected load profile (spikes, fan-out, long tails)?
 - Can we tolerate duplication / reordering of messages?
 
-## Pattern Chooser (From `feedback.txt`)
+## Pattern Chooser
 
 ### Cloud-Native / Microservices
 
@@ -58,6 +58,7 @@ Use GoF patterns for in-process structure; use these patterns when the problem i
 ### Reactive / Event-Driven
 
 - **Pub/Sub**: decouple producers/consumers via events.
+- **Transactional outbox + idempotent consumer (inbox)**: avoid dual-write bugs; make at-least-once delivery safe with dedupe.
 - **Reactive streams + backpressure**: prevent fast producers from overwhelming slow consumers.
 - **Event Sourcing**: store events as source of truth; rebuild state by replay.
 - **CQRS**: separate command (write) model from query (read) model.

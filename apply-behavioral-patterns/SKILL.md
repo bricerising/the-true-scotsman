@@ -1,6 +1,6 @@
 ---
 name: apply-behavioral-patterns
-description: Apply behavioral GoF design patterns (Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, Visitor). Use when you need pluggable algorithms, event-driven updates, request pipelines, undo/redo, decoupled collaboration, state-dependent behavior, or stable iteration over collections.
+description: Apply behavioral code patterns (classic GoF: Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, Visitor). Use when you need pluggable algorithms, event-driven updates, request pipelines, undo/redo, decoupled collaboration, state-dependent behavior, or stable iteration over collections.
 ---
 
 # Apply Behavioral Patterns

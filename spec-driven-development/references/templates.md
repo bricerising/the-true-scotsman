@@ -65,6 +65,31 @@ How you’ll verify the spec is satisfied (tests, e2e flows, manual checks).
 - ...
 ```
 
+## Decision Record Template (`specs/decisions/NNN-<topic>.md`)
+
+Use this when making a choice that has meaningful trade-offs or migration impact.
+
+```md
+# Decision NNN: <Title>
+
+**Date**: YYYY-MM-DD
+**Status**: Proposed | Accepted | Rejected | Superseded
+
+## Context
+
+What problem are we solving? What pressures/constraints matter?
+
+## Decision
+
+What we chose and why (short, concrete).
+
+## Consequences
+
+- Positive outcomes / what gets simpler
+- Trade-offs / what gets harder
+- Compatibility/migration impact
+```
+
 ## Service Spec Template (`apps/<service>/spec/spec.md`)
 
 ```md

@@ -61,17 +61,31 @@ If your project isn’t TypeScript, omit `typescript-style-guide`. The other ski
 
 Available skills in this repo:
 
-- `typescript-style-guide`: TypeScript refactors/implementation with explicit boundaries, validation, and typed errors.
-- `select-design-pattern`: Pick the smallest GoF pattern(s) that fit.
-- `select-architecture-pattern`: Pick system/architecture patterns beyond GoF (cloud-native, event-driven, DDD, distributed coordination, AI/ML).
+**Define (what are we building?)**
+
 - `spec-driven-development`: Write and maintain specs/contracts/plans/tasks/quickstarts so agents converge.
+- `select-architecture-pattern`: Pick system pattern(s) for cross-service pressures.
+- `select-design-pattern`: Pick code pattern(s) for in-process design pressures.
+
+**Standardize (make it consistent)**
+
 - `shared-platform-library`: Design a shared platform package to standardize cross-cutting concerns across services.
-- `apply-observability-patterns`: Apply logs/metrics/traces correlation patterns for production debugging.
-- `apply-resilience-patterns`: Apply timeouts/retries/idempotency/circuit breaker/bulkhead patterns at I/O boundaries.
+- `typescript-style-guide`: TypeScript refactors/implementation with explicit boundaries, validation, and typed errors.
+
+**Harden (make it survive reality)**
+
+- `apply-resilience-patterns`: Timeouts/retries/idempotency/circuit breaker/bulkhead patterns at I/O boundaries.
+- `apply-observability-patterns`: Logs/metrics/traces correlation patterns for production debugging.
+
+**Verify (prove behavior)**
+
+- `consumer-test-coverage`: Add consumer-centric tests. Prefer observable behavior over testing internals.
+
+**Mechanics (in-process building blocks)**
+
 - `apply-creational-patterns`: Apply Factory/Builder/etc. once a creational approach is chosen.
 - `apply-structural-patterns`: Apply Adapter/Decorator/Proxy/etc. when you need to add behavior without changing interfaces.
 - `apply-behavioral-patterns`: Apply Strategy/Observer/Chain/etc. when you need pluggable logic or pipelines.
-- `consumer-test-coverage`: Add consumer-centric tests. Prefer observable behavior over testing internals.
 
 ## Skill recipes
 
@@ -86,7 +100,7 @@ Done when: specs + contracts are updated, tests are green, and the feature is ob
 Context: <spec paths>, <entrypoints>, <SLOs/time budgets>, <existing patterns>
 ```
 
-### Choose the simplest design pattern
+### Choose the simplest code pattern
 
 ```text
 Use select-design-pattern.
@@ -94,7 +108,7 @@ Use select-design-pattern.
 Problem: <describe the pressure: multiple providers, pluggable rules, caching/logging wrappers, etc.>
 Context: <where the code lives / current approach (e.g., switch statements)>
 Deliverables:
-- recommend the smallest GoF pattern(s) that fit
+- recommend the smallest code pattern(s) that fit
 - show 1–2 plausible alternatives and why you’re not choosing them
 - outline the target module structure, key interfaces, and composition/wiring changes
 - propose an incremental migration plan (small steps, low-risk order)
@@ -102,7 +116,7 @@ Deliverables:
 - call out tradeoffs, risks, and what not to do
 ```
 
-### Choose an architecture/system pattern
+### Choose a system pattern
 
 ```text
 Use select-architecture-pattern.
@@ -110,10 +124,10 @@ Use select-architecture-pattern.
 Problem: <describe the system pressure: partial failures, cross-service consistency, domain boundaries, eventing, scaling, migration, ML lifecycle>
 Constraints: <SLAs/SLOs, consistency needs, schema ownership, latency budgets, deployment realities>
 Deliverables:
-- recommend the smallest architecture pattern(s) that fit
+- recommend the smallest system pattern(s) that fit
 - list assumptions + the key failure modes you’re designing for
 - show 1–2 alternatives and why you’re not choosing them
-- map to implementation tactics (often GoF wrappers/pipelines) and outline tests/metrics
+- map to implementation tactics (often code-pattern wrappers/pipelines) and outline tests/metrics
 ```
 
 ### Write a spec bundle (enterprise web app)

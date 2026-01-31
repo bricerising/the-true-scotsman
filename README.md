@@ -6,19 +6,53 @@ This repo is a tongue-in-cheek set of **agent skills** meant to teach code assis
 
 Each skill is a small, self-contained playbook (workflow + checklists + examples) stored in a `SKILL.md` file. Some skills include **language/framework snippets** and **style guides** so an agent can apply the ideas consistently across stacks.
 
+Repo-level specs live in `specs/` (start at `specs/000-index.md`).
+
 ## What’s in here
 
-- `typescript-style-guide/`: A practical TypeScript style guide focused on runtime safety, explicit boundaries, typed errors, and maintainable module structure.
-- `select-design-pattern/`: A decision workflow for picking the *simplest* GoF pattern that fits the pressure (creation/structure/behavior).
-- `select-architecture-pattern/`: A decision workflow for picking system/architecture patterns beyond GoF (cloud-native, event-driven, DDD, distributed coordination, AI/ML).
-- `spec-driven-development/`: How to write and maintain specs, contracts, plans, and task lists so agents converge on cohesive solutions.
-- `shared-platform-library/`: How to design and evolve a monorepo shared library (`packages/shared`) that standardizes cross-cutting concerns across services without becoming a “utils junk drawer”.
-- `apply-observability-patterns/`: How to apply modern observability patterns (logs/metrics/traces correlation, RED metrics, dashboards/alerts).
-- `apply-resilience-patterns/`: How to apply resilience patterns at I/O boundaries (timeouts, retries/backoff, idempotency, circuit breakers, bulkheads).
-- `apply-creational-patterns/`: How to apply Factory Method, Abstract Factory, Builder, Prototype, and (careful) Singleton.
-- `apply-structural-patterns/`: How to apply Adapter, Bridge, Composite, Decorator, Facade, Flyweight, and Proxy.
-- `apply-behavioral-patterns/`: How to apply Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, and Visitor.
-- `consumer-test-coverage/`: Guidance for adding consumer-focused tests that raise coverage without asserting implementation details.
+**Define (what are we building?)**
+
+- `spec-driven-development/`: Write specs, contracts, plans, and task lists so agents converge on cohesive solutions.
+- `select-architecture-pattern/`: Choose the smallest system pattern(s) for cross-service pressures.
+- `select-design-pattern/`: Choose the smallest code pattern(s) for in-process design pressures.
+
+**Standardize (make it consistent)**
+
+- `typescript-style-guide/`: TypeScript guidance focused on runtime safety, explicit boundaries, typed errors, and maintainable module structure.
+- `shared-platform-library/`: Design and evolve a shared platform package (`packages/shared`) without becoming a “utils junk drawer”.
+
+**Harden (make it survive reality)**
+
+- `apply-resilience-patterns/`: Timeouts, retries/backoff, idempotency, circuit breakers, bulkheads.
+- `apply-observability-patterns/`: Logs/metrics/traces correlation, RED metrics, dashboards/alerts, verification steps.
+
+**Verify (prove behavior)**
+
+- `consumer-test-coverage/`: Consumer-focused tests that raise coverage without asserting implementation details.
+
+**Mechanics (in-process building blocks)**
+
+- `apply-creational-patterns/`: Factory Method, Abstract Factory, Builder, Prototype, and (careful) Singleton.
+- `apply-structural-patterns/`: Adapter, Bridge, Composite, Decorator, Facade, Flyweight, and Proxy.
+- `apply-behavioral-patterns/`: Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, and Visitor.
+
+## Terminology
+
+- **Code patterns**: in-process patterns (classic creational/structural/behavioral patterns, mostly GoF).
+- **System patterns**: cross-process patterns (architecture/distributed-systems/ops) that deal with failure, consistency, and integration seams.
+- **Operational patterns**: repeatable workflows and cross-cutting policies that make delivery + operations predictable (spec bundles, shared platform primitives, tests, observability, resilience).
+
+The skill list above is grouped by **workflow stage** (Define/Standardize/Harden/Verify/Mechanics), not by scope.
+
+## A DDD lens (for organizing skills)
+
+If you model a high-performing engineer as a domain-driven system, the “aggregate roots” this repo tries to standardize are:
+
+- **Decision record**: pressure + constraints + chosen code/system pattern(s) + trade-offs + validation plan (drives alignment).
+- **Spec bundle**: `spec.md` + `contracts/` + `plan.md` + `tasks.md` + `quickstart.md` (drives cohesion).
+- **Boundary policy**: stable error semantics + time budgets + retries/idempotency + telemetry field contracts (drives operability).
+- **Shared platform primitive**: one “golden path” wrapper/facade used by multiple services (drives consistency).
+- **Verification loop**: consumer-visible tests + local verification steps/runbooks (drives confidence).
 
 ## Using these skills (prompting)
 
