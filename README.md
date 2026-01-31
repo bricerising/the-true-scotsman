@@ -80,6 +80,18 @@ These skills bias toward practices that make codebases easier for humans to oper
 
 This repo is designed to be used directly with **Codex CLI**, but you can also integrate it with other popular code assistants by copying/linking the relevant guides into their “project rules / instructions” mechanism.
 
+### Quick install (idempotent)
+
+From this repo root:
+
+```sh
+# Install into Codex + Claude skill dirs (symlinks by default)
+bash scripts/install.sh --all
+
+# If your environment doesn't like symlinks
+bash scripts/install.sh --all --method copy
+```
+
 ### Codex CLI (skills)
 
 1. Clone this repo anywhere you like.
@@ -114,7 +126,27 @@ Many assistants can only reliably follow rules that live *inside the repo they�
 git submodule add <this-repo-url> tools/the-true-scotsman
 ```
 
-Then reference files like `tools/the-true-scotsman/typescript-style-guide/SKILL.md` in your assistant’s project instructions.
+Then either:
+
+- Reference files like `tools/the-true-scotsman/typescript-style-guide/SKILL.md` in your assistant’s project instructions, or
+- Generate tool instruction files in your project (Codex/Claude/Cursor/Copilot):
+
+```sh
+bash tools/the-true-scotsman/scripts/generate-project-rules.sh --project-dir . --tool all --force
+```
+
+This generates:
+
+- `.codex/AGENTS.md`
+- `.claude/AGENTS.md`
+- `.cursorrules`
+- `.github/copilot-instructions.md`
+
+To quickly decide which skill(s) to load for a task:
+
+```sh
+python3 tools/the-true-scotsman/scripts/recommend-skills.py --project-dir . --prompt "<your prompt>"
+```
 
 ## Growing this repo
 
@@ -130,3 +162,16 @@ If you add a new skill:
 1. Create a new folder with a `SKILL.md` containing YAML frontmatter (`name`, `description`).
 2. Keep it concise: workflows, checklists, and minimal examples beat long essays.
 3. Prefer reusable snippets/templates over prose where it helps agents apply guidance consistently.
+
+### Validation
+
+Run `bash scripts/validate-skills.sh` (also runs in CI) to ensure:
+- every `*/SKILL.md` has frontmatter and stays small,
+- `README.md` stays in sync with the skill directories,
+- `skills-config.json` stays consistent with the repo.
+
+## Docs
+
+- `ARCHITECTURE.md`: repo structure + how the scripts work
+- `ANTI_PATTERNS.md`: common failure modes when writing skills (and what not to teach)
+- `SUCCESS_METRICS.md`: how to tell whether the skills are helping
