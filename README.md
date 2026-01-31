@@ -65,6 +65,8 @@ Simply use the following prompt to get started. Provide feedback to direct the a
 Please review this enterprise web application.
 ```
 
+If you want it to build a feature, then just start explaining the feature.
+
 ## Philosophy
 
 These skills bias toward practices that make codebases easier for humans to operate over time:
