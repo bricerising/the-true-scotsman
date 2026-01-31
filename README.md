@@ -65,8 +65,6 @@ Simply use the following prompt to get started. Provide feedback to direct the a
 Please review this enterprise web application.
 ```
 
-For more templates and reusable prompt sequences, see [`PROMPTS.md`](PROMPTS.md).
-
 ## Philosophy
 
 These skills bias toward practices that make codebases easier for humans to operate over time:
