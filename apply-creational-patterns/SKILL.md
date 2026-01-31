@@ -1,6 +1,6 @@
 ---
 name: apply-creational-patterns
-description: Apply creational code patterns (classic GoF: Factory Method, Abstract Factory, Builder, Prototype, Singleton). Use when object construction is complex, varies by type/environment, must be decoupled from callers, needs consistent lifecycle, or you’re refactoring creation logic for testability.
+description: "Apply creational code patterns (classic GoF: Factory Method, Abstract Factory, Builder, Prototype, Singleton). Use when object construction is complex, varies by type/environment, must be decoupled from callers, needs consistent lifecycle, or you’re refactoring creation logic for testability."
 ---
 
 # Apply Creational Patterns

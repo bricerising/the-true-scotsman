@@ -1,6 +1,6 @@
 ---
 name: select-design-pattern
-description: Choose an appropriate code pattern (in-process: classic creational/structural/behavioral patterns, mostly GoF). Use when you need a quick decision workflow to refactor for extensibility, decoupling, composability, or testability.
+description: "Choose an appropriate code pattern (in-process: classic creational/structural/behavioral patterns, mostly GoF). Use when you need a quick decision workflow to refactor for extensibility, decoupling, composability, or testability."
 ---
 
 # Select Code Pattern
