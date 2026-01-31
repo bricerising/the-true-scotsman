@@ -11,11 +11,11 @@ Improve coverage by exercising consumer-visible behavior with infra mocked and b
 
 ## Workflow
 
-1. Identify consumer-facing flows: handlers, service APIs, event consumers, caches, jobs.
-2. Map expectations from specs or existing tests.
-3. Add tests for both success and error paths.
-4. Mock infra boundaries (DB, Redis, network, schedulers).
-5. Run coverage and iterate until thresholds are met.
+1. Read relevant specs (system + service) and map them to consumer-visible flows and invariants.
+2. Identify consumer-facing entrypoints: HTTP/gRPC handlers, public service methods, event consumers, cache/storage adapters, jobs.
+3. Add tests for success and failure paths that a consumer can observe (invalid input, downstream failures, permissions, timeouts where applicable).
+4. Mock infra boundaries (DB, Redis, network listeners, clocks/timers). Prefer calling handlers/functions directly instead of running real servers.
+5. Run focused coverage and iterate until the target is met (default 80% unless the spec says otherwise).
 
 ## Testing Patterns
 
@@ -24,6 +24,7 @@ Improve coverage by exercising consumer-visible behavior with infra mocked and b
 - Cache/storage: cover cache hit/miss, null/empty results, invalidation behavior.
 - Jobs: use fake timers; cover interval runs and error logging branches.
 - Observability: assert metrics render and logging mixins without external services.
+  - Vitest note: if mocked values are referenced by `vi.mock` factories, use `vi.hoisted` to avoid init-order bugs.
 
 ## Guardrails
 
@@ -33,4 +34,5 @@ Improve coverage by exercising consumer-visible behavior with infra mocked and b
 
 ## Commands
 
-- `cd apps/<service> && npm test -- --coverage`
+- Vitest example: `npx vitest run apps/<service>/**/*.test.ts --coverage --coverage.include='apps/<service>/src/**'`
+- Generic: `cd apps/<service> && npm test -- --coverage`

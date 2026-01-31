@@ -63,6 +63,11 @@ Available skills in this repo:
 
 - `typescript-style-guide`: TypeScript refactors/implementation with explicit boundaries, validation, and typed errors.
 - `select-design-pattern`: Pick the smallest GoF pattern(s) that fit.
+- `select-architecture-pattern`: Pick system/architecture patterns beyond GoF (cloud-native, event-driven, DDD, distributed coordination, AI/ML).
+- `spec-driven-development`: Write and maintain specs/contracts/plans/tasks/quickstarts so agents converge.
+- `shared-platform-library`: Design a shared platform package to standardize cross-cutting concerns across services.
+- `apply-observability-patterns`: Apply logs/metrics/traces correlation patterns for production debugging.
+- `apply-resilience-patterns`: Apply timeouts/retries/idempotency/circuit breaker/bulkhead patterns at I/O boundaries.
 - `apply-creational-patterns`: Apply Factory/Builder/etc. once a creational approach is chosen.
 - `apply-structural-patterns`: Apply Adapter/Decorator/Proxy/etc. when you need to add behavior without changing interfaces.
 - `apply-behavioral-patterns`: Apply Strategy/Observer/Chain/etc. when you need pluggable logic or pipelines.
@@ -84,6 +89,54 @@ Deliverables:
 - propose an incremental migration plan (small steps, low-risk order)
 - propose a validation plan (tests + what “done” means)
 - call out tradeoffs, risks, and what not to do
+```
+
+### Choose an architecture/system pattern
+
+```text
+Use select-architecture-pattern.
+
+Problem: <describe the system pressure: partial failures, cross-service consistency, domain boundaries, eventing, scaling, migration, ML lifecycle>
+Constraints: <SLAs/SLOs, consistency needs, schema ownership, latency budgets, deployment realities>
+Deliverables:
+- recommend the smallest architecture pattern(s) that fit
+- list assumptions + the key failure modes you’re designing for
+- show 1–2 alternatives and why you’re not choosing them
+- map to implementation tactics (often GoF wrappers/pipelines) and outline tests/metrics
+```
+
+### Write a spec bundle (enterprise web app)
+
+```text
+Use spec-driven-development.
+
+Goal: create or update the spec bundle for <service/feature>.
+Deliverables:
+- system spec updates (if cross-service) and/or `apps/<service>/spec/spec.md`
+- contract updates (`contracts/`): OpenAPI/proto/WS message docs
+- `plan.md` with phases and wiring notes
+- `tasks.md` broken into small tasks with acceptance criteria
+- `quickstart.md` with copy/paste commands + “known good” verification
+Constraints: keep specs testable (Given/When/Then), explicit non-goals, and stable error semantics
+Context: <current behavior>, <files>, <constraints/SLOs>, <what’s changing>
+```
+
+### Build a shared platform library (monorepo)
+
+```text
+Use shared-platform-library.
+
+Goal: extract/standardize <cross-cutting concern> into `packages/shared` (or equivalent) without changing behavior.
+Deliverables:
+- proposed module layout and public exports
+- one “golden path” primitive (e.g., handler wrapper, client proxy, lifecycle facade)
+- migrate at least 2 call sites to prove it works
+- tests for the primitive + consumer-visible tests where needed
+Constraints:
+- no domain/business logic in shared
+- no top-level side effects (no hidden I/O on import)
+- preserve response shapes and error semantics at boundaries
+Context: <duplicated code>, <services involved>, <observability/resilience requirements>
 ```
 
 ### Apply a creational pattern (construction/config)
@@ -118,6 +171,36 @@ Constraints:
 Deliverables:
 - wrapper implementation (Decorator/Proxy/Adapter/etc.)
 - tests for observable behavior (cache hit/miss, logging fields, retry limits, etc.)
+```
+
+### Apply observability patterns (logs/metrics/traces)
+
+```text
+Use apply-observability-patterns.
+
+Goal: add or improve observability for <service>/<feature>/<boundary>.
+Requirements:
+- structured logs with correlation IDs (traceId/spanId or requestId)
+- RED metrics for the boundary (rate/errors/duration)
+- traces span the end-to-end request (including downstream calls)
+Constraints: avoid high-cardinality metric labels; avoid logging secrets/PII
+Deliverables: instrumentation changes + a short local verification checklist (log → trace → metrics)
+Context: <routes/rpcs/jobs>, <current logger/otel/metrics setup>
+```
+
+### Apply resilience patterns (timeouts/retries/idempotency)
+
+```text
+Use apply-resilience-patterns.
+
+Goal: harden <boundary> against partial failures.
+Requirements:
+- explicit timeouts and cancellation propagation
+- bounded retries with backoff+jitter (only if safe)
+- idempotency/dedupe strategy when retries exist
+Optional: circuit breaker and bulkhead/concurrency limit when dependency is flaky/overloaded
+Deliverables: wrapper/utility changes + tests for consumer-visible semantics + failure-mode smoke steps
+Context: <call sites>, <error semantics>, <SLO/time budgets>
 ```
 
 ### Apply a behavioral pattern (pluggable logic/pipelines)

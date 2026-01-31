@@ -34,6 +34,7 @@ Definitions:
 8. Make lifetimes explicit (create/start/stop/dispose); don’t rely on GC or hidden ownership.
 9. For long‑running work (pollers, consumers, schedulers), model explicit “agents” with typed inputs/state and explicit shutdown.
 10. Test at seams (pure functions, decoders/validators, adapters).
+11. At I/O boundaries, make timeouts/retries/idempotency explicit (`apply-resilience-patterns`) and keep telemetry consistent (`apply-observability-patterns`).
 
 ## Guidelines
 

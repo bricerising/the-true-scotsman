@@ -10,6 +10,11 @@ Each skill is a small, self-contained playbook (workflow + checklists + examples
 
 - `typescript-style-guide/`: A practical TypeScript style guide focused on runtime safety, explicit boundaries, typed errors, and maintainable module structure.
 - `select-design-pattern/`: A decision workflow for picking the *simplest* GoF pattern that fits the pressure (creation/structure/behavior).
+- `select-architecture-pattern/`: A decision workflow for picking system/architecture patterns beyond GoF (cloud-native, event-driven, DDD, distributed coordination, AI/ML).
+- `spec-driven-development/`: How to write and maintain specs, contracts, plans, and task lists so agents converge on cohesive solutions.
+- `shared-platform-library/`: How to design and evolve a monorepo shared library (`packages/shared`) that standardizes cross-cutting concerns across services without becoming a “utils junk drawer”.
+- `apply-observability-patterns/`: How to apply modern observability patterns (logs/metrics/traces correlation, RED metrics, dashboards/alerts).
+- `apply-resilience-patterns/`: How to apply resilience patterns at I/O boundaries (timeouts, retries/backoff, idempotency, circuit breakers, bulkheads).
 - `apply-creational-patterns/`: How to apply Factory Method, Abstract Factory, Builder, Prototype, and (careful) Singleton.
 - `apply-structural-patterns/`: How to apply Adapter, Bridge, Composite, Decorator, Facade, Flyweight, and Proxy.
 - `apply-behavioral-patterns/`: How to apply Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, and Visitor.

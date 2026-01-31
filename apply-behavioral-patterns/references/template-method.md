@@ -9,6 +9,7 @@ Define the skeleton of an algorithm once and let callers override specific steps
 - You already have an inheritance hierarchy and want to standardize the flow while allowing step customization.
 - You need consistent ordering and invariants enforced by the skeleton.
 - “Hooks” are enough for extension and you don’t need runtime swapping.
+- You want to standardize noisy boundary handlers (HTTP/gRPC/jobs) so each handler reads like “decode → call service → map response” while timing/logging/metrics/error mapping stay consistent.
 
 ## Prefer Something Else When
 
@@ -32,6 +33,8 @@ Define the skeleton of an algorithm once and let callers override specific steps
 - **Inheritance coupling**: changes to base can ripple through subclasses.
 - **Fragile base class**: too many hooks makes behavior unpredictable.
 - **Hard to combine features**: inheritance doesn’t compose like decorators/strategies.
+- **Contract drift**: wrappers must preserve externally visible response shapes and error semantics; don’t “helpfully” add/remove fields at the boundary.
+- **Metric/name drift**: if you record metrics/logs by operation name, make the name explicit in the skeleton (don’t depend on reflection or framework casing quirks).
 
 ## Testing Checklist
 

@@ -11,6 +11,8 @@ Pick the simplest design that fits, then map it to a GoF pattern only if it buys
 
 In TypeScript systems, also watch for “complications” that patterns can accidentally amplify (hidden lifetimes, implicit `throw`, unchecked boundary data, cyclic deps). Prefer patterns that keep boundaries and ownership explicit.
 
+If the main pressure is *system-level* (multiple services/processes, partial failures, retries/idempotency, sagas, event-driven architecture, domain boundaries), use `select-architecture-pattern` first; then come back here to pick any GoF patterns needed for the in-process implementation.
+
 ## Workflow
 
 1. Decide whether the context is **scriptic vs systemic** (short-lived script vs long-lived system). Set policies for boundary validation, error semantics, and ownership/lifetimes.
