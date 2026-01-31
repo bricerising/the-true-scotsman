@@ -1,17 +1,16 @@
-# the-true-scotsman
+# enterprise-software-playbook
 
-> “No *true* Scotsman would write code like that.”
-
-This repo is a tongue-in-cheek set of **agent skills** meant to teach code assistants to write what humans tend to consider **clean code**: readable, maintainable, testable, and safe to change.
+This repo is an opinionated set of **agent skills** meant to drive cohesive, high-quality **enterprise software**: readable, maintainable, testable, and safe to change.
 
 Each skill is a small, self-contained playbook (workflow + checklists + examples) stored in a `SKILL.md` file. Some skills include **language/framework snippets** and **style guides** so an agent can apply the ideas consistently across stacks.
 
-Repo-level specs live in `specs/` (start at `specs/000-index.md`).
+Repo-level specs live in `specs/` (start at `specs/000-index.md`). For adopting this library into an application repo, see `specs/005-application-integration.md` and `specs/templates/app-repo/AGENTS.md`.
 
 ## What’s in here
 
 **Define (what are we building?)**
 
+- `enterprise-web-app-workflow/`: Auto-route work across skills (conversational mode: choose appropriate skills even if the user doesn’t name them).
 - `spec-driven-development/`: Write specs, contracts, plans, and task lists so agents converge on cohesive solutions.
 - `select-architecture-pattern/`: Choose the smallest system pattern(s) for cross-service pressures.
 - `select-design-pattern/`: Choose the smallest code pattern(s) for in-process design pressures.
@@ -127,9 +126,9 @@ This repo is designed to be used directly with **Codex CLI**, but you can also i
 Example (symlinks):
 
 ```sh
-git clone <this-repo-url> ~/the-true-scotsman
+git clone <this-repo-url> ~/enterprise-software-playbook
 mkdir -p ~/.codex/skills
-ln -s ~/the-true-scotsman/{apply-*,consumer-test-coverage,select-design-pattern,typescript-style-guide} ~/.codex/skills/
+ln -s ~/enterprise-software-playbook/{apply-*,consumer-test-coverage,select-design-pattern,typescript-style-guide} ~/.codex/skills/
 ```
 
 ### Claude Code
@@ -140,9 +139,9 @@ ln -s ~/the-true-scotsman/{apply-*,consumer-test-coverage,select-design-pattern,
 Example (symlinks):
 
 ```sh
-git clone <this-repo-url> ~/the-true-scotsman
+git clone <this-repo-url> ~/enterprise-software-playbook
 mkdir -p ~/.claude/skills
-ln -s ~/the-true-scotsman/{apply-*,consumer-test-coverage,select-design-pattern,typescript-style-guide} ~/.claude/skills/
+ln -s ~/enterprise-software-playbook/{apply-*,consumer-test-coverage,select-design-pattern,typescript-style-guide} ~/.claude/skills/
 ```
 
 ### Tool-agnostic: vendor it into your project
@@ -150,10 +149,10 @@ ln -s ~/the-true-scotsman/{apply-*,consumer-test-coverage,select-design-pattern,
 Many assistants can only reliably follow rules that live *inside the repo they’re editing*. A simple approach is to add this repo as a submodule (or just copy the files), then point your assistant at the specific skill(s) you want.
 
 ```sh
-git submodule add <this-repo-url> tools/the-true-scotsman
+git submodule add <this-repo-url> tools/enterprise-software-playbook
 ```
 
-Then reference files like `tools/the-true-scotsman/typescript-style-guide/SKILL.md` in your assistant’s project instructions.
+Then reference files like `tools/enterprise-software-playbook/typescript-style-guide/SKILL.md` in your assistant’s project instructions.
 
 ## Growing this repo
 

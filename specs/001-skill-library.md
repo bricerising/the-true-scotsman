@@ -41,6 +41,7 @@ Skills are not essays: they are playbooks that turn intent into repeatable actio
 - **R-002**: Each skill MUST include an explicit workflow and a “done when” style output template.
 - **R-003**: Skills MUST cross-link rather than duplicate (e.g., resilience references observability; system patterns map to code patterns).
 - **R-004**: The repo MUST include prompt recipes (`PROMPTS.md`) that demonstrate a reliable default sequence for enterprise web apps.
+- **R-005**: The repo MUST include an adoption path that enables auto-skill usage in conversational mode (router skill + app-repo instructions template).
 
 ### Non-functional
 

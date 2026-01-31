@@ -1,4 +1,4 @@
-# Agent Instructions (the-true-scotsman)
+# Agent Instructions (enterprise-software-playbook)
 
 This repo is itself an opinionated system for writing agent skills. To prevent drift, follow the repo specs.
 

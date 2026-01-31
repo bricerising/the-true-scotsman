@@ -12,6 +12,7 @@ This reduces decision friction: an agent can follow a reliable loop without deba
 
 Intent and boundaries:
 
+- Auto-routing across this library in conversational mode (`enterprise-web-app-workflow`)
 - Specs and contracts (`spec-driven-development`)
 - System-pattern selection for cross-service pressures (`select-architecture-pattern`)
 - Code-pattern selection for in-process pressures (`select-design-pattern`)

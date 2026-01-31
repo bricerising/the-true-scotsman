@@ -54,6 +54,23 @@ Done when: <tests green + behavior check>
 Context: <files/logs>
 ```
 
+## Conversational bootstrap (auto-skill routing)
+
+Use this once at the start of a project when you want a coding agent to apply skills automatically without you naming them.
+
+```text
+You have access to the enterprise-software-playbook skills. I will not name skills explicitly.
+
+Default behavior:
+- You must choose and apply the appropriate skills automatically.
+- Follow: Define → Standardize → Harden → Verify → Mechanics.
+- Keep overhead proportional to the change (don’t create “spec theater” for tiny edits).
+- Ask clarifying questions only when blocked; otherwise proceed.
+- Always run the provided verification commands; if none are provided, ask once for the preferred commands and then continue.
+
+If supported, treat `enterprise-web-app-workflow` as the router for selecting the rest.
+```
+
 ## Using skills
 
 If your chat agent supports these skills, name them explicitly in the prompt (the exact skill name) and list in order.
@@ -63,6 +80,7 @@ Available skills in this repo:
 
 **Define (what are we building?)**
 
+- `enterprise-web-app-workflow`: Auto-route work across skills (conversational mode: choose appropriate skills even if the user doesn’t name them).
 - `spec-driven-development`: Write and maintain specs/contracts/plans/tasks/quickstarts so agents converge.
 - `select-architecture-pattern`: Pick system pattern(s) for cross-service pressures.
 - `select-design-pattern`: Pick code pattern(s) for in-process design pressures.
