@@ -25,20 +25,23 @@ The fastest way to get high-quality results is to include the information that l
 - **Constraints on change**: “small diff”, “no new deps”, “no schema changes”, “no breaking changes”, etc.
 - **Stop condition**: when the agent should stop iterating and report back (tests green + specific behavior).
 
-## Prompt skeleton
+## Conversational prompt skeleton
 
 ```text
-Skills (in order): <skill-1>, <skill-2>, <skill-3> (optional)
-Goal: <what you want, in one sentence>
-Requirements: <bullets of behavior>
-Non-goals: <explicitly what not to do>
-Constraints: <what must not change>
-Scope: <in-scope paths/modules> / <out-of-scope>
-Environment: <runtime versions, services, flags, constraints (e.g., no network)>
-Autonomy: <proceed without asking; ask only when blocked>
-Deliverables: <what you expect back: code/tests/docs>
-Verification: <exact commands/environment to run>
-Done when: <explicit stop condition>
+Hey — can you help me with <what I want, in one sentence>?
+
+Please work conversationally: auto-select the appropriate enterprise-software-playbook skills and follow:
+Define → Standardize → Harden → Verify → Mechanics.
+
+Here’s what matters:
+- Requirements: <bullets of observable behavior>
+- Non-goals: <explicitly what not to do>
+- Constraints: <what must not change>
+- Scope: in-scope <paths/modules>; out-of-scope <paths/modules>
+- Environment: <runtime versions, services, flags, constraints (e.g., no network)>
+- Verification: <exact commands/environment to run>
+- Done when: <explicit stop condition>
+
 Context: <files, logs, screenshots, links>
 ```
 
@@ -47,7 +50,10 @@ You do not need all of these sections for every prompt. Choose what is applicabl
 ## Minimal prompt
 
 ```text
-Goal: <one sentence>
+Can you <one sentence goal>?
+
+Please keep the change small and run the verification commands.
+
 Scope: <in/out>
 Verification: <commands>
 Done when: <tests green + behavior check>
@@ -73,7 +79,9 @@ If supported, treat `enterprise-web-app-workflow` as the router for selecting th
 
 ## Using skills
 
-If your chat agent supports these skills, name them explicitly in the prompt (the exact skill name) and list in order.
+Primary mode is conversational: use the bootstrap above and let the agent auto-select skills.
+
+If you want deterministic control (or you’re debugging why an agent chose something), name skills explicitly in the prompt (exact skill name) and list them in order.
 If your project isn’t TypeScript, omit `typescript-style-guide`. The other skills are largely language-agnostic.
 
 Available skills in this repo:
@@ -110,107 +118,122 @@ Available skills in this repo:
 ### Enterprise web app default sequence (cohesion-first)
 
 ```text
-Skills (in order): spec-driven-development, select-architecture-pattern, shared-platform-library, typescript-style-guide, apply-resilience-patterns, apply-observability-patterns, consumer-test-coverage
-Goal: implement <feature> for an enterprise web app with stable contracts and predictable failure/telemetry behavior.
-Constraints: preserve public contracts unless the spec says otherwise; keep error semantics stable; no hidden I/O at import time
+Can you implement <feature> for an enterprise web app?
+
+Please auto-apply the enterprise-software-playbook workflow (Define → Standardize → Harden → Verify → Mechanics) and choose whatever skills you need.
+
+Constraints:
+- preserve public contracts unless the spec says otherwise
+- keep error semantics stable
+- no hidden I/O at import time
+
 Verification: <test/lint/build commands>
-Done when: specs + contracts are updated, tests are green, and the feature is observable + resilient at its boundaries
+Done when: specs/contracts are updated (if needed), tests are green, and the feature is observable + resilient at its boundaries
+
 Context: <spec paths>, <entrypoints>, <SLOs/time budgets>, <existing patterns>
 ```
 
 ### Choose the simplest code pattern
 
 ```text
-Use select-design-pattern.
+I’m not sure what the best in-process structure is for this problem:
+<describe the pressure: multiple providers, pluggable rules, caching/logging wrappers, etc.>
 
-Problem: <describe the pressure: multiple providers, pluggable rules, caching/logging wrappers, etc.>
+Can you recommend the smallest code pattern(s) that fit, and keep it practical?
+
+Please include:
+- a clear recommendation (and why)
+- 1–2 plausible alternatives and why you’re not choosing them
+- target module structure + key interfaces + wiring changes
+- an incremental migration plan (small steps, low-risk order)
+- a validation plan (tests + what “done” means)
+- trade-offs/risks + what not to do
+
 Context: <where the code lives / current approach (e.g., switch statements)>
-Deliverables:
-- recommend the smallest code pattern(s) that fit
-- show 1–2 plausible alternatives and why you’re not choosing them
-- outline the target module structure, key interfaces, and composition/wiring changes
-- propose an incremental migration plan (small steps, low-risk order)
-- propose a validation plan (tests + what “done” means)
-- call out tradeoffs, risks, and what not to do
 ```
 
 ### Choose a system pattern
 
 ```text
-Use select-architecture-pattern.
+I’m dealing with a cross-service/system pressure:
+<partial failures, cross-service consistency, domain boundaries, eventing, scaling, migration, ML lifecycle>
 
-Problem: <describe the system pressure: partial failures, cross-service consistency, domain boundaries, eventing, scaling, migration, ML lifecycle>
+Can you recommend the smallest system pattern(s) that fit?
+
+Please include:
+- assumptions + key failure modes you’re designing for
+- 1–2 alternatives and why you’re not choosing them
+- how this maps to implementation tactics (often code-pattern wrappers/pipelines)
+- what tests + metrics would prove it works
+
 Constraints: <SLAs/SLOs, consistency needs, schema ownership, latency budgets, deployment realities>
-Deliverables:
-- recommend the smallest system pattern(s) that fit
-- list assumptions + the key failure modes you’re designing for
-- show 1–2 alternatives and why you’re not choosing them
-- map to implementation tactics (often code-pattern wrappers/pipelines) and outline tests/metrics
 ```
 
 ### Write a spec bundle (enterprise web app)
 
 ```text
-Use spec-driven-development.
+Can you create or update the spec bundle for <service/feature>?
 
-Goal: create or update the spec bundle for <service/feature>.
+Please keep it testable and concrete (Given/When/Then), include explicit non-goals, and keep error semantics stable.
+
 Deliverables:
 - system spec updates (if cross-service) and/or `apps/<service>/spec/spec.md`
 - contract updates (`contracts/`): OpenAPI/proto/WS message docs
 - `plan.md` with phases and wiring notes
 - `tasks.md` broken into small tasks with acceptance criteria
 - `quickstart.md` with copy/paste commands + “known good” verification
-Constraints: keep specs testable (Given/When/Then), explicit non-goals, and stable error semantics
+
 Context: <current behavior>, <files>, <constraints/SLOs>, <what’s changing>
 ```
 
 ### Build a shared platform library (monorepo)
 
 ```text
-Use shared-platform-library.
+We have repeated cross-cutting code for <concern>. Can you extract/standardize it into `packages/shared` (or equivalent) without changing behavior?
 
-Goal: extract/standardize <cross-cutting concern> into `packages/shared` (or equivalent) without changing behavior.
+Constraints:
+- no domain/business logic in shared
+- no top-level side effects (no hidden I/O on import)
+- preserve response shapes and error semantics at boundaries
+
 Deliverables:
 - proposed module layout and public exports
 - one “golden path” primitive (e.g., handler wrapper, client proxy, lifecycle facade)
 - migrate at least 2 call sites to prove it works
 - tests for the primitive + consumer-visible tests where needed
-Constraints:
-- no domain/business logic in shared
-- no top-level side effects (no hidden I/O on import)
-- preserve response shapes and error semantics at boundaries
+
 Context: <duplicated code>, <services involved>, <observability/resilience requirements>
 ```
 
 ### Apply a creational pattern (construction/config)
 
 ```text
-Use apply-creational-patterns.
+Can you hide the complex construction of <client/service> (multiple transports/providers/configs) so call sites stay simple?
 
-Goal: hide complex construction of <client/service> (e.g., multiple transports/providers/configs).
 Constraints:
-- keep call sites minimal
 - keep behavior identical at the boundary
 - avoid global singletons unless explicitly required
-- make dependencies explicit (constructor params / factory inputs), avoid hidden I/O in constructors
+- make dependencies explicit (constructor params / factory inputs); avoid hidden I/O in constructors
 - make resource lifetimes explicit (create/start/stop/dispose) and easy to test
 - validate/normalize config at the boundary (parse once, pass typed config inward)
+
 Deliverables:
 - a factory/builder approach with clear lifetimes (create/start/stop if relevant)
 - tests using fakes/stubs (no network) where possible
 - a short usage example (how callers construct and use it)
+
 Context: <current constructors/factories and call sites>
 ```
 
 ### Apply a structural pattern (wrapping without interface change)
 
 ```text
-Use apply-structural-patterns.
+I need to add <caching/logging/retries/rate limiting/authorization> around <interface> without changing its interface.
 
-Goal: add <caching/logging/retries/rate limiting/authorization> around <interface> without changing its interface.
 Constraints:
 - preserve semantics (including error cases)
-- keep diff small; avoid moving unrelated files
+- keep the diff small; avoid moving unrelated files
+
 Deliverables:
 - wrapper implementation (Decorator/Proxy/Adapter/etc.)
 - tests for observable behavior (cache hit/miss, logging fields, retry limits, etc.)
@@ -219,83 +242,96 @@ Deliverables:
 ### Apply observability patterns (logs/metrics/traces)
 
 ```text
-Use apply-observability-patterns.
+Can you add or improve observability for <service>/<feature>/<boundary>?
 
-Goal: add or improve observability for <service>/<feature>/<boundary>.
-Requirements:
-- structured logs with correlation IDs (traceId/spanId or requestId)
+What I need:
+- structured logs with correlation IDs (`traceId`/`spanId` or `requestId`)
 - RED metrics for the boundary (rate/errors/duration)
-- traces span the end-to-end request (including downstream calls)
-Constraints: avoid high-cardinality metric labels; avoid logging secrets/PII
-Deliverables: instrumentation changes + a short local verification checklist (log → trace → metrics)
+- traces that span the end-to-end request (including downstream calls)
+
+Constraints:
+- avoid high-cardinality metric labels
+- avoid logging secrets/PII
+
+Deliverables:
+- instrumentation changes
+- a short local verification checklist (log → trace → metrics)
+
 Context: <routes/rpcs/jobs>, <current logger/otel/metrics setup>
 ```
 
 ### Apply resilience patterns (timeouts/retries/idempotency)
 
 ```text
-Use apply-resilience-patterns.
+Can you harden <boundary> against partial failures?
 
-Goal: harden <boundary> against partial failures.
 Requirements:
 - explicit timeouts and cancellation propagation
 - bounded retries with backoff+jitter (only if safe)
 - idempotency/dedupe strategy when retries exist
-Optional: circuit breaker and bulkhead/concurrency limit when dependency is flaky/overloaded
-Deliverables: wrapper/utility changes + tests for consumer-visible semantics + failure-mode smoke steps
+
+Optional (if needed): circuit breaker and bulkhead/concurrency limit when dependency is flaky/overloaded
+
+Deliverables:
+- wrapper/utility changes
+- tests for consumer-visible semantics
+- failure-mode smoke steps I can run locally
+
 Context: <call sites>, <error semantics>, <SLO/time budgets>
 ```
 
 ### Apply a behavioral pattern (pluggable logic/pipelines)
 
 ```text
-Use apply-behavioral-patterns.
+I need to make <logic> pluggable or pipeline-based (e.g., Strategy, Chain of Responsibility, State).
 
-Goal: make <logic> pluggable or pipeline-based (e.g., Strategy, Chain of Responsibility, State).
 Constraints:
 - preserve current outcomes by default
 - keep selection rules explicit (no magic)
+
 Deliverables:
-- pattern implementation (Strategy/Chain/State/etc.) with clear extension points
-- tests proving selection/order and edge cases
+- pattern implementation with clear extension points
+- tests proving selection/order and key edge cases
 ```
 
 ### Refactor or implement in TypeScript with explicit boundaries
 
 ```text
-Use typescript-style-guide.
+Can you <implement/refactor area> in TypeScript while keeping boundaries explicit and runtime-safe?
 
-Goal: <implement/refactor area> while keeping boundaries explicit and runtime-safe.
 Requirements:
 - validate external inputs at boundaries (treat as `unknown`)
-- make expected failures explicit (typed result), no throwing for expected failures
+- make expected failures explicit (typed result); don’t throw for expected failures
+
 Constraints:
 - avoid top-level side effects; wire dependencies in a composition root
 - keep the module graph acyclic (or reduce cycles)
+
 Verification: <commands>
 ```
 
 ### Add consumer-centric tests/coverage
 
 ```text
-Use consumer-test-coverage.
+Can you add consumer-centric tests for <HTTP handler/gRPC method/job/consumer/CLI entrypoint>?
 
-Target: <HTTP handler/gRPC method/job/consumer/CLI entrypoint>
-Requirements:
+Please:
 - assert client-visible behavior (status codes, response shape, side effects)
 - avoid asserting internal calls/implementation details
-Coverage:
-- baseline:
-  - happy path
-  - one invalid-input case
-  - one unhappy-path that clients can observe (timeouts/downstream errors/permissions)
-- add when relevant:
-  - auth/permissions
-  - idempotency/retries
-  - concurrency/race conditions
-  - pagination/sorting/filtering
-  - rate limiting/backpressure
-  - backward compatibility / versioning
+
+Coverage baseline:
+- happy path
+- one invalid-input case
+- one unhappy-path clients can observe (timeouts/downstream errors/permissions)
+
+Add when relevant:
+- auth/permissions
+- idempotency/retries
+- concurrency/race conditions
+- pagination/sorting/filtering
+- rate limiting/backpressure
+- backward compatibility / versioning
+
 Verification: <commands>
 ```
 
@@ -306,7 +342,7 @@ Sequences below are ordered like a typical workflow: setup → implement → ver
 Use this when you want future you (or other agents) to be able to run/debug the project quickly.
 
 ```text
-Write or update a Quickstart/runbook.
+Can you write or update a Quickstart/runbook for this project so future us (and other agents) can run/debug it quickly?
 
 Requirements:
 - prerequisites (versions, env vars, external services)
@@ -327,9 +363,7 @@ Deliverables: updated docs (README/QUICKSTART.md/docs/runbook.md) and any small 
 Use this when the spec/PRD exists but you’re not sure the repo already matches it.
 
 ```text
-Skills (in order): consumer-test-coverage (optional: select-design-pattern, typescript-style-guide if TS)
-
-Please do a gap analysis between <spec/PRD/issue> and the current implementation.
+Can you do a gap analysis between <spec/PRD/issue> and the current implementation, then close the gaps?
 
 Output:
 1) What’s missing (requirements not implemented)
@@ -353,12 +387,11 @@ Done when: gaps are closed and <commands> are green.
 ### Kickoff (feature/module implementation)
 
 ```text
-Skills (in order): typescript-style-guide (if TS), consumer-test-coverage (optional: select-design-pattern, apply-creational-patterns/apply-structural-patterns/apply-behavioral-patterns)
+Can you implement <feature/module> described in <spec-path or issue link>?
 
-Use typescript-style-guide to implement <feature/module> described in <spec-path or issue link>.
-If the design is unclear or there are multiple viable designs:
-1) use select-design-pattern to recommend the smallest pattern(s) that fit, then
-2) use the matching apply-* skill to implement it (`apply-creational-patterns`, `apply-structural-patterns`, or `apply-behavioral-patterns`).
+Please keep boundaries explicit and runtime-safe, and keep tests consumer-visible.
+
+If the design is unclear or there are multiple viable designs, propose the smallest fitting code pattern(s) and explain why before implementing.
 
 Requirements:
 - <list the observable behaviors / APIs / workflows>
@@ -396,14 +429,14 @@ Deliverables:
 ### Follow-up
 
 ```text
-Before you change any behavior, add or adjust a test that captures the current consumer-visible behavior.
+Before you change any behavior, please add or adjust a test that captures the current consumer-visible behavior.
 Only refactor after the test pins it down.
 ```
 
 ### Follow-up
 
 ```text
-Focus only on <scope>. Ignore unrelated cleanup unless it is required to make tests pass.
+Please focus only on <scope>. Ignore unrelated cleanup unless it is required to make tests pass.
 If you think something else must change, explain why and propose the smallest viable change.
 ```
 
@@ -412,9 +445,7 @@ If you think something else must change, explain why and propose the smallest vi
 ### Kickoff (spec-driven e2e)
 
 ```text
-Skills (in order): consumer-test-coverage (optional: typescript-style-guide)
-
-Write E2E tests (Playwright/Cypress/etc.) that verify the deployed app matches <specs/requirements>.
+Can you write E2E tests (Playwright/Cypress/etc.) that verify the deployed app matches <specs/requirements>?
 
 Start the app using the repo’s most production-like local setup (<command(s)>), then run E2E tests against it.
 Iterate until the tests pass (fix product bugs or test flakiness as needed).
@@ -438,8 +469,9 @@ Deliverables:
 ### Follow-up (UI isn’t testable yet)
 
 ```text
-Update the UI to add stable test selectors for user-performable actions (buttons, inputs, menus).
-Keep the naming consistent and “future proof” (avoid brittle DOM-coupled names).
+Can you update the UI to add stable test selectors for user-performable actions (buttons, inputs, menus)?
+
+Please keep the naming consistent and “future proof” (avoid brittle DOM-coupled names).
 Then update the Playwright tests to use those ids.
 Re-run the production-like environment + the tests and iterate until green.
 ```
@@ -449,8 +481,6 @@ Re-run the production-like environment + the tests and iterate until green.
 ### Kickoff (repro → root cause → regression test)
 
 ```text
-Skills (in order): consumer-test-coverage (optional: typescript-style-guide, select-design-pattern)
-
 I’m seeing this error when <steps to reproduce>:
 <paste logs / stack trace>
 
@@ -488,9 +518,7 @@ Prefer using the observability/log tooling that ships with the repo (dashboards/
 ### Kickoff (dashboards/logs/traces missing)
 
 ```text
-Skills (optional): apply-structural-patterns, consumer-test-coverage
-
-Our observability is missing <logs/metrics/traces/dashboards>. Please fix what’s wrong end-to-end.
+Our observability is missing <logs/metrics/traces/dashboards>. Can you fix what’s wrong end-to-end?
 
 Non-goals:
 - don’t “fix” missing signals by disabling instrumentation or sampling everything away
@@ -515,14 +543,15 @@ Deliverables:
 ### Kickoff (choose smallest pattern, then apply)
 
 ```text
-Skills (in order): select-design-pattern, apply-creational-patterns/apply-structural-patterns/apply-behavioral-patterns, typescript-style-guide (if TS), consumer-test-coverage
+Please recommend the smallest pattern(s) that fit, then apply them.
 
-First use select-design-pattern to recommend the smallest pattern(s) that fit.
-Then implement using the appropriate apply-* skill:
-- apply-creational-patterns (construction/config/lifecycle)
-- apply-structural-patterns (wrapping, adapters, caching, logging, proxies)
-- apply-behavioral-patterns (pipelines, strategies, observers, state machines)
-Finally use typescript-style-guide to standardize boundaries/errors, and consumer-test-coverage to keep tests consumer-visible.
+Use this as a guide when choosing the kind of refactor:
+- creational: construction/config/lifecycle
+- structural: wrapping, adapters, caching, logging, proxies
+- behavioral: pipelines, strategies, observers, state machines
+
+If this is a TypeScript area, keep boundaries/errors consistent with the repo’s TypeScript conventions.
+If behavior is ambiguous, add a characterization test first (consumer-visible).
 
 Goal: refactor <area> to improve readability/maintainability without changing consumer-visible behavior.
 
@@ -551,16 +580,14 @@ Done when:
 ### Follow-up (don’t refactor blind)
 
 ```text
-Only make a refactor if you can keep behavior identical for consumers.
+Please only make a refactor if you can keep behavior identical for consumers.
 If there’s ambiguity, add a test first to lock behavior down.
 ```
 
 ## Sequence: apply a repo style guide consistently
 
 ```text
-Skills (in order): typescript-style-guide (if TS)
-
-Goal: make the repo conform to <style guide file(s)> (e.g., `STYLES.md`, lint rules) without changing behavior.
+Please help me make this repo conform to <style guide file(s)> (e.g., `STYLES.md`, lint rules) without changing behavior.
 
 Constraints:
 - no behavior changes (unless explicitly required and tested)
@@ -578,7 +605,7 @@ Done when: formatting/lint is clean and tests are green.
 ## Sequence: monorepo “one command” build
 
 ```text
-Goal: make `npm run build` (or equivalent) at the repo root build all packages/apps reliably.
+Can you make `npm run build` (or equivalent) at the repo root build all packages/apps reliably?
 
 Requirements:
 - deterministic output locations (`dist/` or similar)
@@ -598,7 +625,7 @@ Done when: root build is reliable and documented.
 ## Sequence: add CI guardrails
 
 ```text
-Add merge-blocking CI for this repo.
+Can you add merge-blocking CI for this repo?
 
 Requirements:
 - run tests + lint + build on every PR
@@ -615,9 +642,9 @@ Deliverables: workflow files + docs on how to run the same checks locally.
 ## Sequence: build a CLI tool
 
 ```text
-Skills (in order): apply-behavioral-patterns (Command), typescript-style-guide (if TS), consumer-test-coverage
+Can you build a CLI named `<cli-name>` for <purpose>?
 
-Build a CLI named `<cli-name>` for <purpose>.
+Please structure it so each subcommand is implemented as an explicit “command” (easy to test, easy to extend).
 
 CLI contract:
 - commands/subcommands: <list>
@@ -683,7 +710,7 @@ Verification: <commands> + a repro checklist I can run.
 ## Sequence: data ingestion → dashboards
 
 ```text
-Goal: load <dataset> into <store> and ship dashboards/queries that surface the most useful insights.
+Can you help me load <dataset> into <store> and ship dashboards/queries that surface the most useful insights?
 
 Requirements:
 - fully automated local bring-up (e.g., `docker compose up`)
@@ -706,9 +733,9 @@ Please run tests and iterate until green.
 ```
 
 ```text
-Prefer the repo’s most production-like verification environment (containers/k8s/etc.); don’t rely on mocks unless necessary.
+Please prefer the repo’s most production-like verification environment (containers/k8s/etc.); don’t rely on mocks unless necessary.
 ```
 
 ```text
-Don’t change externally-visible semantics. If you must, explain the tradeoff and update tests + spec.
+Please don’t change externally-visible semantics. If you must, explain the tradeoff and update tests + spec.
 ```
