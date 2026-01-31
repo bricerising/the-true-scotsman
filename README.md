@@ -55,7 +55,7 @@ If you model a high-performing engineer as a domain-driven system, the “aggreg
 
 ## Using these skills (prompting)
 
-Each folder contains a `SKILL.md` playbook. The primary mode is **conversational**: ask for what you want and let the agent auto-select the right skills (or paste the “Conversational bootstrap” from `PROMPTS.md`). If you want deterministic control, name specific skills explicitly.
+Each folder contains a `SKILL.md` playbook. The primary mode is **conversational**: ask for what you want and let the agent auto-select the right skills. If you want deterministic control, name specific skills explicitly.
 
 ### Example prompts
 
