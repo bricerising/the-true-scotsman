@@ -89,7 +89,7 @@ This repo is designed to be used directly with **Codex CLI**, but you can also i
 Example (symlinks; installs every skill folder in this repo):
 
 ```sh
-git clone <this-repo-url> ~/enterprise-software-playbook
+git clone https://github.com/bricerising/enterprise-software-playbook.git ~/enterprise-software-playbook
 mkdir -p ~/.codex/skills
 for f in ~/enterprise-software-playbook/*/SKILL.md; do
   ln -s "${f%/SKILL.md}" ~/.codex/skills/
@@ -104,7 +104,7 @@ done
 Example (symlinks; installs every skill folder in this repo):
 
 ```sh
-git clone <this-repo-url> ~/enterprise-software-playbook
+git clone https://github.com/bricerising/enterprise-software-playbook.git ~/enterprise-software-playbook
 mkdir -p ~/.claude/skills
 for f in ~/enterprise-software-playbook/*/SKILL.md; do
   ln -s "${f%/SKILL.md}" ~/.claude/skills/
@@ -116,7 +116,7 @@ done
 Many assistants can only reliably follow rules that live *inside the repo they’re editing*. A simple approach is to add this repo as a submodule (or just copy the files), then point your assistant at the specific skill(s) you want.
 
 ```sh
-git submodule add <this-repo-url> tools/enterprise-software-playbook
+git submodule add https://github.com/bricerising/enterprise-software-playbook.git tools/enterprise-software-playbook
 ```
 
 Then reference files like `tools/enterprise-software-playbook/typescript-style-guide/SKILL.md` in your assistant’s project instructions.
