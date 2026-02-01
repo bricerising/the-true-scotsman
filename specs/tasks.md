@@ -30,18 +30,21 @@ Keep tasks small, orderable, and testable. Prefer “acceptance” that is obser
 
 ## T003: Add an “observability triage” skill (debug loop)
 
+- **Status**: Done (2026-02-01)
 - **Acceptance**:
   - New skill focuses on production/local triage workflows (log → trace → metrics), not instrumentation.
   - Includes copy/paste commands/checklists for common enterprise web app stacks (HTTP + gRPC + async consumers).
 
 ## T004: Add a “boundary wrapper” shared-primitive guide
 
+- **Status**: Done (2026-02-01)
 - **Acceptance**:
   - Either extend `shared-platform-library` or create a dedicated skill for “golden path” boundary wrappers (HTTP/gRPC/job/consumer).
   - Includes required contracts: error envelope, retry/idempotency policy, telemetry field contract.
 
 ## T005: Add a system-pattern decision tree
 
+- **Status**: Done (2026-02-01)
 - **Acceptance**:
   - Extend `select-architecture-pattern` with a compact decision tree (pressure → candidate patterns → risks).
   - Includes anti-pattern guardrails (e.g., saga misuse, event sourcing misuse, retries without idempotency).

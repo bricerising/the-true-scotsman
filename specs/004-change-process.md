@@ -34,7 +34,7 @@ Update `specs/` (and usually add a decision record) when you:
 
 ## Capturing Learnings From Real Projects
 
-When you learn something from a target enterprise app (like `specify-poker`), capture it as:
+When you learn something from a target enterprise app (e.g., an internal pilot project), capture it as:
 
 - a new **invariant** (if it should apply broadly), and/or
 - a new **operational workflow/checklist** in the relevant skill, and/or

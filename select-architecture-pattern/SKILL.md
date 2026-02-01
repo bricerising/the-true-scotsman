@@ -99,6 +99,10 @@ Use code patterns for in-process structure; use system patterns when the problem
 - Hexagonal architecture: ports are interfaces; adapters are often `Adapter` or `Facade` (`apply-structural-patterns`).
 - Option/Result: aligns with typed error boundaries (`typescript-style-guide`).
 
+## References
+
+- Decision tree (pressure → patterns → risks): `references/decision-tree.md`
+
 ## Output Template
 
 When recommending a pattern:

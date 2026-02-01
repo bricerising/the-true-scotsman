@@ -11,12 +11,12 @@ Use it to prevent taxonomy drift and to make multi-agent iteration converge.
 
 ## Documents
 
-- `specs/001-skill-library.md`: Charter for what this repo is for (goals, non-goals, constitution, acceptance).
-- `specs/002-skill-contract.md`: What a “skill” is in this repo (folder format, metadata, compatibility, validation/packaging).
-- `specs/003-taxonomy-and-workflow.md`: The workflow-stage taxonomy (Define/Standardize/Harden/Verify/Mechanics) and how it maps to skills.
-- `specs/004-change-process.md`: How to evolve this repo without breaking prompting compatibility or bloating context.
-- `specs/005-application-integration.md`: How to integrate this library into a target app repo so agents auto-apply the workflow.
-- `specs/tasks.md`: Backlog of work with acceptance criteria.
-- `specs/quickstart.md`: Copy/paste commands to validate/package skills locally.
-- `specs/decisions/`: ADR-style decision records (see `specs/decisions/000-template.md`).
-- `specs/templates/`: Copy/paste templates for adopting this repo in application codebases.
+- [`specs/001-skill-library.md`](001-skill-library.md): Charter for what this repo is for (goals, non-goals, constitution, acceptance).
+- [`specs/002-skill-contract.md`](002-skill-contract.md): What a “skill” is in this repo (folder format, metadata, compatibility, validation/packaging).
+- [`specs/003-taxonomy-and-workflow.md`](003-taxonomy-and-workflow.md): The workflow-stage taxonomy (Define/Standardize/Harden/Verify/Mechanics) and how it maps to skills.
+- [`specs/004-change-process.md`](004-change-process.md): How to evolve this repo without breaking prompting compatibility or bloating context.
+- [`specs/005-application-integration.md`](005-application-integration.md): How to integrate this library into a target app repo so agents auto-apply the workflow.
+- [`specs/tasks.md`](tasks.md): Backlog of work with acceptance criteria.
+- [`specs/quickstart.md`](quickstart.md): Copy/paste commands to validate/package skills locally.
+- [`specs/decisions/`](decisions/): ADR-style decision records (see [`specs/decisions/000-template.md`](decisions/000-template.md)).
+- [`specs/templates/`](templates/): Copy/paste templates for adopting this repo in application codebases.
