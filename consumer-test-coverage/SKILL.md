@@ -36,3 +36,16 @@ Improve coverage by exercising consumer-visible behavior with infra mocked and b
 
 - Vitest example: `npx vitest run apps/<service>/**/*.test.ts --coverage --coverage.include='apps/<service>/src/**'`
 - Generic: `cd apps/<service> && npm test -- --coverage`
+
+## References
+
+- Specs and contracts as test sources: [`spec-driven-development`](../spec-driven-development/SKILL.md)
+- Telemetry verification (when tests cover boundary logging/metrics): [`apply-observability-patterns`](../apply-observability-patterns/SKILL.md)
+
+## Output Template
+
+When applying this skill, return:
+
+- What consumer-visible behavior is now pinned (happy path + key failure modes).
+- What tests were added/changed (by entrypoint: handler/consumer/job/adapter).
+- Coverage/verification results (commands run + outcomes) and any notable gaps/follow-ups.

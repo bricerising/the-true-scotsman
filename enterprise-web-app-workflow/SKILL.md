@@ -46,6 +46,7 @@ Prevent copy/paste drift:
 If the change touches I/O boundaries (HTTP/gRPC/DB/cache/queues/events/WS), apply these:
 
 - `apply-resilience-patterns`: timeouts + cancellation, bounded retries (only when safe), idempotency/dedupe, breakers/bulkheads when needed.
+- `apply-security-patterns`: authn/authz checks, strict input validation, secrets/PII safety, and SSRF/injection guardrails where applicable.
 - `apply-observability-patterns`: log/trace/metric correlation, stable field contract, and local verification steps (log → trace → metrics).
 
 ### 4) Verify (prove behavior)
@@ -81,5 +82,5 @@ When you finish work, report:
 
 ## References
 
-- Workflow taxonomy: `specs/003-taxonomy-and-workflow.md`
-- Change process: `specs/004-change-process.md`
+- Workflow taxonomy: [`specs/003-taxonomy-and-workflow.md`](../specs/003-taxonomy-and-workflow.md)
+- Change process: [`specs/004-change-process.md`](../specs/004-change-process.md)

@@ -48,19 +48,27 @@ A note on scope: these guidelines assume **systemic** TypeScript (long‑lived a
 
 ## Snippets (optional)
 
-- TypeScript: `references/snippets/typescript.md`
-- React: `references/snippets/react.md`
+- TypeScript: [`references/snippets/typescript.md`](references/snippets/typescript.md)
+- React: [`references/snippets/react.md`](references/snippets/react.md)
 
 ## References
 
 Read the relevant reference file before implementing or refactoring toward the pattern:
 
-- `references/adapter.md`
-- `references/bridge.md`
-- `references/composite.md`
-- `references/decorator.md`
-- `references/facade.md`
-- `references/flyweight.md`
-- `references/proxy.md`
+- [`references/adapter.md`](references/adapter.md)
+- [`references/bridge.md`](references/bridge.md)
+- [`references/composite.md`](references/composite.md)
+- [`references/decorator.md`](references/decorator.md)
+- [`references/facade.md`](references/facade.md)
+- [`references/flyweight.md`](references/flyweight.md)
+- [`references/proxy.md`](references/proxy.md)
 
 Each reference includes: selection cues, minimal structure, pitfalls, and test ideas.
+
+## Output Template
+
+When applying a structural pattern, return:
+
+- The boundary you’re shaping (callers vs hidden subsystem) and what stays stable.
+- The chosen pattern (Adapter/Facade/Proxy/etc.) and the minimal surface area (interface + implementations/wrappers).
+- Verification steps (tests at the boundary seam; lifetime/timeout/cancellation behavior where applicable).

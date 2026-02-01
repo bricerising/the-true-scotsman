@@ -29,6 +29,7 @@ Make the “golden path” boring and reusable:
 Make partial failure and production debugging predictable:
 
 - Timeouts, retries, idempotency, breakers, bulkheads (`apply-resilience-patterns`)
+- Practical security guardrails (authn/authz, input validation, injection safety, secrets, SSRF) (`apply-security-patterns`)
 - Logs/metrics/traces correlation + verification steps (`apply-observability-patterns`)
 - Debug loop (log → trace → metrics) triage workflows (`observability-triage`)
 
@@ -63,8 +64,9 @@ Unless you have a strong reason to deviate:
 3. `shared-platform-library` (if multiple services need the same boundary behavior)
 4. `typescript-style-guide` (or the relevant language style guide)
 5. `apply-resilience-patterns`
-6. `apply-observability-patterns`
-7. `consumer-test-coverage`
+6. `apply-security-patterns`
+7. `apply-observability-patterns`
+8. `consumer-test-coverage`
 
 In-process pattern application (`apply-*-patterns`) is usually a supporting step during implementation, not the starting point.
 

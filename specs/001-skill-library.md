@@ -35,7 +35,7 @@ Skills are not essays: they are playbooks that turn intent into repeatable actio
 - **R-001**: The repo MUST provide skills that cover the full delivery loop:
   - Define (specs + pattern selection)
   - Standardize (shared platform + style)
-  - Harden (resilience + observability)
+  - Harden (resilience + security + observability)
   - Verify (consumer tests)
   - Mechanics (in-process pattern application)
 - **R-002**: Each skill MUST include an explicit workflow and a “done when” style output template.

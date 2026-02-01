@@ -94,6 +94,17 @@ Risk: <timeouts, retries, at-least-once delivery, partial failure>
 Add explicit time budgets + cancellation propagation. Only add retries when safe and idempotent.
 ```
 
+### Security hardening for boundaries
+
+```text
+Use apply-security-patterns.
+
+Boundary: <HTTP/gRPC/WS/events/outbound HTTP/DB/etc>
+Risk: <authn/authz, injection, SSRF, secrets/PII, multi-tenant isolation>
+
+Add authn/authz checks, strict input validation, safe logging/telemetry, and SSRF/injection guardrails where applicable.
+```
+
 ### Observability instrumentation + verification
 
 ```text
