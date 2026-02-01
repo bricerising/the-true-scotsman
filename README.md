@@ -1,13 +1,30 @@
 # enterprise-software-playbook
 
 This repo is an opinionated set of **agent skills** meant to drive cohesive, high-quality **enterprise software**: readable, maintainable, testable, and safe to change.
-(An “agent” here is an AI coding assistant; a “skill” is a small playbook it can follow.)
 
 Each skill is a small, self-contained playbook (workflow + checklists + examples) stored in a `SKILL.md` file. Some skills include **language/framework snippets** and **style guides** so an agent can apply the ideas consistently across stacks.
 
-Repo-level specs live in `specs/` (start at [`specs/000-index.md`](specs/000-index.md)). For adopting this library into an application repo, see [`specs/005-application-integration.md`](specs/005-application-integration.md) and [`specs/templates/app-repo/AGENTS.md`](specs/templates/app-repo/AGENTS.md).
+## What you get
 
-Prompt recipes live in [`PROMPTS.md`](PROMPTS.md).
+- A default workflow that keeps changes cohesive: **Define → Standardize → Harden → Verify → Mechanics**
+- A small library of composable playbooks (“skills”) that an assistant can auto-apply
+  - Skills are a native feature in coding agents like Claude Code and Codex
+- Copy/paste prompt recipes in [`PROMPTS.md`](PROMPTS.md)
+- An adoption template for app repos: [`specs/templates/app-repo/AGENTS.md`](specs/templates/app-repo/AGENTS.md)
+
+## 60-second start
+
+1. Install the skills (pick one): [Codex CLI](#codex-cli-skills), [Claude Code](#claude-code), or [vendor via submodule](#tool-agnostic-vendor-it-into-your-project).
+2. Add agent instructions to your app repo (start from [`specs/templates/app-repo/AGENTS.md`](specs/templates/app-repo/AGENTS.md)).
+3. Paste the “Conversational bootstrap” from [`PROMPTS.md`](PROMPTS.md#conversational-bootstrap-auto-route).
+
+Minimal “try it now” prompt:
+
+```text
+Use enterprise-web-app-workflow (read enterprise-web-app-workflow/SKILL.md).
+
+Please review this enterprise web application.
+```
 
 ## What’s in here
 
@@ -39,53 +56,11 @@ Prompt recipes live in [`PROMPTS.md`](PROMPTS.md).
 - [`apply-structural-patterns/`](apply-structural-patterns/SKILL.md): Adapter, Bridge, Composite, Decorator, Facade, Flyweight, and Proxy.
 - [`apply-behavioral-patterns/`](apply-behavioral-patterns/SKILL.md): Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, and Visitor.
 
-## Terminology
-
-- **Code patterns**: in-process patterns (classic creational/structural/behavioral patterns, mostly GoF).
-- **System patterns**: cross-process patterns (architecture/distributed-systems/ops) that deal with failure, consistency, and integration seams.
-- **Operational patterns**: repeatable workflows and cross-cutting policies that make delivery + operations predictable (spec bundles, shared platform primitives, tests, observability, resilience).
-
-The skill list above is grouped by **workflow stage** (Define/Standardize/Harden/Verify/Mechanics), not by scope.
-
-## A DDD lens (for organizing skills)
-
-If you model a high-performing engineer as a domain-driven system, the “aggregate roots” this repo tries to standardize are:
-
-- **Decision record**: pressure + constraints + chosen code/system pattern(s) + trade-offs + validation plan (drives alignment).
-- **Spec bundle**: `spec.md` + `contracts/` + `plan.md` + `tasks.md` + `quickstart.md` (drives cohesion).
-- **Boundary policy**: stable error semantics + time budgets + retries/idempotency + telemetry field contracts (drives operability).
-- **Shared platform primitive**: one “golden path” wrapper/facade used by multiple services (drives consistency).
-- **Verification loop**: consumer-visible tests + local verification steps/runbooks (drives confidence).
-
-## Using these skills (prompting)
+## Using these skills
 
 Each folder contains a `SKILL.md` playbook. The primary mode is **conversational**: ask for what you want and let the agent auto-select the right skills. If you want deterministic control, name specific skills explicitly.
 
 For more prompt recipes (including a conversational bootstrap), see [`PROMPTS.md`](PROMPTS.md).
-
-### Quick start (adoption)
-
-1. Install the skills (or vendor this repo) via **Install & integrate** below.
-2. Add agent instructions to your app repo (start from [`specs/templates/app-repo/AGENTS.md`](specs/templates/app-repo/AGENTS.md)).
-3. Start the session with the “Conversational bootstrap” in [`PROMPTS.md`](PROMPTS.md).
-
-### Example prompts
-
-Simply use the following prompt to get started. Provide feedback to direct the agent as necessary.
-
-```
-Please review this enterprise web application.
-```
-
-If you want deterministic routing via the auto-router skill:
-
-```
-Use enterprise-web-app-workflow.
-
-Please review this enterprise web application.
-```
-
-If you want it to build a feature, then just start explaining the feature.
 
 ## Philosophy
 
@@ -97,11 +72,18 @@ These skills bias toward practices that make codebases easier for humans to oper
 - Treat expected failures as data (typed results) instead of exceptions.
 - Use design patterns as names for proven structures, not as goals.
 
+## Docs
+
+- Prompt recipes: [`PROMPTS.md`](PROMPTS.md)
+- Repo-level specs (source of truth): [`specs/000-index.md`](specs/000-index.md)
+- App-repo integration: [`specs/005-application-integration.md`](specs/005-application-integration.md)
+- App-repo agent instructions template: [`specs/templates/app-repo/AGENTS.md`](specs/templates/app-repo/AGENTS.md)
+
 ## Install & integrate
 
 This repo is designed to be used directly with **Codex CLI**, but you can also integrate it with other popular code assistants by copying/linking the relevant guides into their “project rules / instructions” mechanism.
 
-### Codex CLI (skills)
+### Codex CLI
 
 1. Clone this repo anywhere you like.
 2. Symlink (or copy) the skill folders into `$CODEX_HOME/skills` (commonly `~/.codex/skills`).
@@ -140,6 +122,24 @@ git submodule add https://github.com/bricerising/enterprise-software-playbook.gi
 ```
 
 Then reference files like `tools/enterprise-software-playbook/typescript-style-guide/SKILL.md` in your assistant’s project instructions.
+
+## Terminology
+
+- **Code patterns**: in-process patterns (classic creational/structural/behavioral patterns, mostly GoF).
+- **System patterns**: cross-process patterns (architecture/distributed-systems/ops) that deal with failure, consistency, and integration seams.
+- **Operational patterns**: repeatable workflows and cross-cutting policies that make delivery + operations predictable (spec bundles, shared platform primitives, tests, observability, resilience).
+
+The skill list above is grouped by **workflow stage** (Define/Standardize/Harden/Verify/Mechanics), not by scope.
+
+## A DDD lens
+
+If you model a high-performing engineer as a domain-driven system, the “aggregate roots” this repo tries to standardize are:
+
+- **Decision record**: pressure + constraints + chosen code/system pattern(s) + trade-offs + validation plan (drives alignment).
+- **Spec bundle**: `spec.md` + `contracts/` + `plan.md` + `tasks.md` + `quickstart.md` (drives cohesion).
+- **Boundary policy**: stable error semantics + time budgets + retries/idempotency + telemetry field contracts (drives operability).
+- **Shared platform primitive**: one “golden path” wrapper/facade used by multiple services (drives consistency).
+- **Verification loop**: consumer-visible tests + local verification steps/runbooks (drives confidence).
 
 ## Contributing
 
