@@ -1,0 +1,36 @@
+name: Feature request (new skill / improvement)
+description: Propose a new skill, checklist, reference, or workflow improvement.
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What workflow pain or recurring failure are you trying to solve?
+      placeholder: Describe the real-world pressure and why the current playbook isn’t enough.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What should we add/change? Prefer small, composable additions.
+      placeholder: e.g. add a checklist to apply-security-patterns/references/, or add a new skill folder.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: How would we know this is done? Prefer observable acceptance.
+      placeholder: e.g. new skill validates with quick_validate; README/PROMPTS updated; includes verification steps.
+    validations:
+      required: false
+  - type: textarea
+    id: context
+    attributes:
+      label: Context (optional)
+      description: Links, examples, or other references that help implement the change.
+    validations:
+      required: false

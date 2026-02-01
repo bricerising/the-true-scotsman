@@ -102,3 +102,9 @@ Before considering a change “done”, prove you can debug it:
    - idempotency prevents double-apply
    - logs include correlation IDs
    - traces show retry attempts and downstream spans
+
+## Optional external reading
+
+- Michael Nygard, *Release It!* (stability patterns: timeouts, circuit breakers, bulkheads)
+- Google SRE Book: “Handling Overload” https://sre.google/sre-book/handling-overload/
+- AWS Architecture Blog: “Exponential Backoff And Jitter” https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/

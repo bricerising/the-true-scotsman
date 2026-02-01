@@ -4,19 +4,33 @@ This repo is an opinionated set of **agent skills** meant to drive cohesive, hig
 
 Each skill is a small, self-contained playbook (workflow + checklists + examples) stored in a `SKILL.md` file. Most skills are language-agnostic; TypeScript is currently the only language-specific style guide.
 
+## Scope (and non-goals)
+
+This playbook is optimized for **enterprise web apps**, especially:
+
+- HTTP/gRPC services, background jobs, and event consumers
+- Multi-service systems with reliability/consistency pressures
+
+Non-goals:
+
+- A framework-specific “how to build a React app” guide
+- A complete performance tuning handbook (use it selectively, case-by-case)
+
 ## What you get
 
 - A default workflow that keeps changes cohesive: **Define → Standardize → Harden → Verify → Mechanics**
 - A small library of composable playbooks (“skills”) that an assistant can auto-apply
-  - Skills are a native feature in coding agents like Claude Code and Codex
+  - Skills are supported by coding agents like **Codex CLI** and **Claude Code** (and can be vendored into any repo)
 - Copy/paste prompt recipes in [`PROMPTS.md`](PROMPTS.md)
 - An adoption template for app repos: [`specs/templates/app-repo/AGENTS.md`](specs/templates/app-repo/AGENTS.md)
 
 ## 60-second start
 
-1. Install the skills (pick one): [Codex CLI](#codex-cli-skills), [Claude Code](#claude-code), or [vendor via submodule](#tool-agnostic-vendor-it-into-your-project).
+1. Install the skills (pick one): [Codex CLI](#codex-cli), [Claude Code](#claude-code), or [vendor via submodule](#tool-agnostic-vendor-it-into-your-project).
 2. Add agent instructions to your app repo (start from [`specs/templates/app-repo/AGENTS.md`](specs/templates/app-repo/AGENTS.md)).
 3. Paste the “Conversational bootstrap” from [`PROMPTS.md`](PROMPTS.md#conversational-bootstrap-auto-route).
+
+You do **not** need to read this repo cover-to-cover. Start with the three steps above, then open the specific `*/SKILL.md` playbook(s) you need as you go.
 
 Minimal “try it now” prompt:
 
@@ -88,6 +102,8 @@ This repo is designed to be used directly with **Codex CLI**, but you can also i
 
 ### Codex CLI
 
+Codex CLI is OpenAI’s terminal-based coding agent: https://github.com/openai/codex
+
 1. Clone this repo anywhere you like.
 2. Symlink (or copy) the skill folders into `$CODEX_HOME/skills` (commonly `~/.codex/skills`).
 
@@ -102,6 +118,8 @@ done
 ```
 
 ### Claude Code
+
+Claude Code is Anthropic’s terminal-based coding agent: https://docs.anthropic.com/en/docs/claude-code
 
 1. Clone this repo anywhere you like.
 2. Symlink (or copy) the skill folders into your Claude Code skills directory (commonly `~/.claude/skills`).
@@ -137,3 +155,10 @@ The skill list above is grouped by **workflow stage** (Define/Standardize/Harden
 ## Contributing
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) and the backlog in [`specs/tasks.md`](specs/tasks.md).
+
+## Feedback
+
+If you try this playbook in a real codebase, feedback is extremely valuable:
+
+- Use GitHub Issues for bugs, confusing docs, and feature requests.
+- Include the prompt you used and what you expected vs what happened.
