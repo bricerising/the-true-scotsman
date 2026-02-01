@@ -48,3 +48,18 @@ Keep tasks small, orderable, and testable. Prefer “acceptance” that is obser
 - **Acceptance**:
   - Extend `select-architecture-pattern` with a compact decision tree (pressure → candidate patterns → risks).
   - Includes anti-pattern guardrails (e.g., saga misuse, event sourcing misuse, retries without idempotency).
+
+## T007: Add a security hardening skill
+
+- **Status**: Done (2026-02-01)
+- **Acceptance**:
+  - New skill exists: `apply-security-patterns`.
+  - Taxonomy and default sequence include it (`specs/003-taxonomy-and-workflow.md`).
+  - `README.md`, `PROMPTS.md`, and `enterprise-web-app-workflow` mention it.
+
+## T008: Add onboarding docs (glossary + walkthrough)
+
+- **Status**: Done (2026-02-01)
+- **Acceptance**:
+  - `GLOSSARY.md` exists and is linked from `README.md`.
+  - `TUTORIAL.md` exists and is linked from `README.md`.

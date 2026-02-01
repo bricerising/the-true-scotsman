@@ -89,6 +89,13 @@ If you’re standardizing cross-cutting boundary behavior across multiple servic
 - In systemic code, avoid top-level side effects; wire dependencies in a composition root and keep lifetimes explicit.
 - If the change axis is unclear, prototype with a simple interface + two implementations before formalizing.
 
+## References
+
+- If the pressure is cross-service/system-level: [`select-architecture-pattern`](../select-architecture-pattern/SKILL.md)
+- If you need a concrete implementation guide: [`apply-creational-patterns`](../apply-creational-patterns/SKILL.md), [`apply-structural-patterns`](../apply-structural-patterns/SKILL.md), [`apply-behavioral-patterns`](../apply-behavioral-patterns/SKILL.md)
+- If the seam should be shared across services: [`shared-platform-library`](../shared-platform-library/SKILL.md)
+- If you’re in TypeScript and hitting systemic constraints (boundaries/lifetimes/errors): [`typescript-style-guide`](../typescript-style-guide/SKILL.md)
+
 ## Output Template
 
 When recommending a pattern, return:

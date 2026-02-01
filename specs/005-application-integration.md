@@ -55,6 +55,6 @@ Integration is successful when:
 - A conversational user can request a feature/bugfix without naming skills and the agent still:
   - updates specs/contracts appropriately for boundary changes
   - standardizes repeated cross-cutting behavior via shared primitives
-  - hardens I/O boundaries (timeouts/idempotency/telemetry)
+  - hardens boundaries (timeouts/idempotency/security/telemetry)
   - adds consumer-visible tests
 - The app repo has an `AGENTS.md` (or equivalent) that instructs auto-skill routing.

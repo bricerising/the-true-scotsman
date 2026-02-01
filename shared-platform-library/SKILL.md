@@ -62,18 +62,19 @@ Prefer **boundary primitives** over “random helpers”:
 
 ## References
 
-- Checklists: `references/checklists.md`
-- Module layout guidance: `references/module-layout.md`
-- Templates/snippets: `references/templates.md`
-- Boundary wrappers (error/idempotency/telemetry contracts): `references/boundary-wrappers.md`
+- Checklists: [`references/checklists.md`](references/checklists.md)
+- Module layout guidance: [`references/module-layout.md`](references/module-layout.md)
+- Templates/snippets: [`references/templates.md`](references/templates.md)
+- Boundary wrappers (error/idempotency/telemetry contracts): [`references/boundary-wrappers.md`](references/boundary-wrappers.md)
 
 Related skills:
 
-- `spec-driven-development` (spec bundles + contracts)
-- `apply-observability-patterns` (telemetry expectations)
-- `apply-resilience-patterns` (timeouts/retries/idempotency)
-- `typescript-style-guide` (typed boundaries/errors/lifetimes)
-- `apply-structural-patterns` / `apply-behavioral-patterns` (wrappers/pipelines)
+- [`spec-driven-development`](../spec-driven-development/SKILL.md) (spec bundles + contracts)
+- [`apply-observability-patterns`](../apply-observability-patterns/SKILL.md) (telemetry expectations)
+- [`apply-resilience-patterns`](../apply-resilience-patterns/SKILL.md) (timeouts/retries/idempotency)
+- [`apply-security-patterns`](../apply-security-patterns/SKILL.md) (authn/authz, input validation, secrets)
+- [`typescript-style-guide`](../typescript-style-guide/SKILL.md) (typed boundaries/errors/lifetimes)
+- [`apply-structural-patterns`](../apply-structural-patterns/SKILL.md) / [`apply-behavioral-patterns`](../apply-behavioral-patterns/SKILL.md) (wrappers/pipelines)
 
 ## Output Template
 

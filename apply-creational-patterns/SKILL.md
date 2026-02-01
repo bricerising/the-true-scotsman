@@ -43,17 +43,25 @@ A note on scope: these guidelines assume **systemic** TypeScript (long‑lived a
 
 ## Snippets (optional)
 
-- TypeScript: `references/snippets/typescript.md`
-- React: `references/snippets/react.md`
+- TypeScript: [`references/snippets/typescript.md`](references/snippets/typescript.md)
+- React: [`references/snippets/react.md`](references/snippets/react.md)
 
 ## References
 
 Read the relevant reference file before implementing or refactoring toward the pattern:
 
-- `references/factory-method.md`
-- `references/abstract-factory.md`
-- `references/builder.md`
-- `references/prototype.md`
-- `references/singleton.md`
+- [`references/factory-method.md`](references/factory-method.md)
+- [`references/abstract-factory.md`](references/abstract-factory.md)
+- [`references/builder.md`](references/builder.md)
+- [`references/prototype.md`](references/prototype.md)
+- [`references/singleton.md`](references/singleton.md)
 
 Each reference includes: selection cues, minimal structure, pitfalls, and test ideas.
+
+## Output Template
+
+When applying a creational pattern, return:
+
+- The creation pressure (variants/complex setup/lifecycle constraints) and what must stay stable for callers.
+- The chosen pattern and the proposed seam (factory/builder/prototype) + wiring point (composition root).
+- Verification steps (tests for variant selection, invariant validation, and lifetime ownership).

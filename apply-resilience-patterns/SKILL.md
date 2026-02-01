@@ -88,10 +88,10 @@ export function backoffDelayMs(
 
 ## References
 
-- Deeper checklists: `references/checklists.md`
-- Instrumentation guidance: `apply-observability-patterns`
-- Typed error semantics and explicit lifetimes: `typescript-style-guide`
-- Wrapping clients: `apply-structural-patterns` (Proxy/Decorator)
+- Deeper checklists: [`references/checklists.md`](references/checklists.md)
+- Instrumentation guidance: [`apply-observability-patterns`](../apply-observability-patterns/SKILL.md)
+- Typed error semantics and explicit lifetimes: [`typescript-style-guide`](../typescript-style-guide/SKILL.md)
+- Wrapping clients: [`apply-structural-patterns`](../apply-structural-patterns/SKILL.md) (Proxy/Decorator)
 
 ## Output Template
 

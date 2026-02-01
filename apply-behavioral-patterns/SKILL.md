@@ -44,22 +44,30 @@ A note on scope: these guidelines assume **systemic** TypeScript (long‑lived a
 
 ## Snippets (optional)
 
-- TypeScript: `references/snippets/typescript.md`
-- React: `references/snippets/react.md`
+- TypeScript: [`references/snippets/typescript.md`](references/snippets/typescript.md)
+- React: [`references/snippets/react.md`](references/snippets/react.md)
 
 ## References
 
 Read the relevant reference file before implementing or refactoring toward the pattern:
 
-- `references/chain-of-responsibility.md`
-- `references/command.md`
-- `references/iterator.md`
-- `references/mediator.md`
-- `references/memento.md`
-- `references/observer.md`
-- `references/state.md`
-- `references/strategy.md`
-- `references/template-method.md`
-- `references/visitor.md`
+- [`references/chain-of-responsibility.md`](references/chain-of-responsibility.md)
+- [`references/command.md`](references/command.md)
+- [`references/iterator.md`](references/iterator.md)
+- [`references/mediator.md`](references/mediator.md)
+- [`references/memento.md`](references/memento.md)
+- [`references/observer.md`](references/observer.md)
+- [`references/state.md`](references/state.md)
+- [`references/strategy.md`](references/strategy.md)
+- [`references/template-method.md`](references/template-method.md)
+- [`references/visitor.md`](references/visitor.md)
 
 Each reference includes: selection cues, minimal structure, pitfalls, and test ideas.
+
+## Output Template
+
+When applying a behavioral pattern, return:
+
+- The pressure you’re addressing (pipeline/eventing/undo/state/algorithm selection) and why this pattern fits.
+- The proposed seam (interfaces/contracts) and who owns state and lifetimes (subscribe/unsubscribe, start/stop).
+- Verification steps (tests for ordering, expected failures, and shutdown/cancellation).

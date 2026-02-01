@@ -28,6 +28,7 @@ If your agent supports skills, you can treat `enterprise-web-app-workflow` as th
 - If work is cross-service (reliability/consistency/integration seams), use a system-pattern chooser first.
 - If the same boundary behavior repeats across services, extract a small shared “golden path” primitive (avoid copy/paste drift).
 - Always harden I/O boundaries with explicit timeouts/cancellation; do not add retries without idempotency/dedupe.
+- Always apply security guardrails at boundaries: authn/authz checks, strict input validation, safe logging (no secrets/PII), and SSRF/injection protections where applicable.
 - Always make the change observable: logs/trace/metrics correlate via stable IDs/fields; avoid high-cardinality metric labels.
 
 ## Specs (Recommended)

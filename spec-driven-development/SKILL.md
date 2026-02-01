@@ -62,9 +62,9 @@ Use one (or both) of these:
 
 ## References
 
-- Templates: `references/templates.md`
-- Spec quality checklist: `references/checklists.md`
-- Architecture choices: `select-architecture-pattern`
-- In-process pattern choices: `select-design-pattern`
-- Typed boundaries/errors/lifetimes: `typescript-style-guide`
-- Consumer-visible tests: `consumer-test-coverage`
+- Templates: [`references/templates.md`](references/templates.md)
+- Spec quality checklist: [`references/checklists.md`](references/checklists.md)
+- Architecture choices: [`select-architecture-pattern`](../select-architecture-pattern/SKILL.md)
+- In-process pattern choices: [`select-design-pattern`](../select-design-pattern/SKILL.md)
+- Typed boundaries/errors/lifetimes: [`typescript-style-guide`](../typescript-style-guide/SKILL.md)
+- Consumer-visible tests: [`consumer-test-coverage`](../consumer-test-coverage/SKILL.md)

@@ -93,9 +93,9 @@ export function getTraceLogFields(): { traceId?: string; spanId?: string } {
 
 ## References
 
-- Deeper checklists: `references/checklists.md`
-- Boundary tests: `consumer-test-coverage`
-- Typed errors + explicit lifetimes: `typescript-style-guide`
+- Deeper checklists: [`references/checklists.md`](references/checklists.md)
+- Boundary tests: [`consumer-test-coverage`](../consumer-test-coverage/SKILL.md)
+- Typed errors + explicit lifetimes: [`typescript-style-guide`](../typescript-style-guide/SKILL.md)
 
 ## Output Template
 

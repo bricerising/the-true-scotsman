@@ -89,19 +89,19 @@ Use code patterns for in-process structure; use system patterns when the problem
 
 ## Map To Existing Skills
 
-- Spec + contracts + plans: `spec-driven-development`.
-- Shared primitives across services: `shared-platform-library`.
-- Observability (logs/metrics/traces correlation): `apply-observability-patterns`.
-- Timeouts / retries / idempotency / circuit breaker / bulkheads: `apply-resilience-patterns` (often implemented via `Proxy`/`Decorator`).
-- Circuit breaker / caching / rate limiting (in-process structure): often a `Proxy` or `Decorator` (`apply-structural-patterns`).
-- Saga orchestration: often a `State` machine + `Command` objects (`apply-behavioral-patterns`).
-- Pub/sub + domain events: `Observer` (`apply-behavioral-patterns`).
-- Hexagonal architecture: ports are interfaces; adapters are often `Adapter` or `Facade` (`apply-structural-patterns`).
-- Option/Result: aligns with typed error boundaries (`typescript-style-guide`).
+- Spec + contracts + plans: [`spec-driven-development`](../spec-driven-development/SKILL.md).
+- Shared primitives across services: [`shared-platform-library`](../shared-platform-library/SKILL.md).
+- Observability (logs/metrics/traces correlation): [`apply-observability-patterns`](../apply-observability-patterns/SKILL.md).
+- Timeouts / retries / idempotency / circuit breaker / bulkheads: [`apply-resilience-patterns`](../apply-resilience-patterns/SKILL.md) (often implemented via `Proxy`/`Decorator`).
+- Circuit breaker / caching / rate limiting (in-process structure): often a `Proxy` or `Decorator` ([`apply-structural-patterns`](../apply-structural-patterns/SKILL.md)).
+- Saga orchestration: often a `State` machine + `Command` objects ([`apply-behavioral-patterns`](../apply-behavioral-patterns/SKILL.md)).
+- Pub/sub + domain events: `Observer` ([`apply-behavioral-patterns`](../apply-behavioral-patterns/SKILL.md)).
+- Hexagonal architecture: ports are interfaces; adapters are often `Adapter` or `Facade` ([`apply-structural-patterns`](../apply-structural-patterns/SKILL.md)).
+- Option/Result: aligns with typed error boundaries ([`typescript-style-guide`](../typescript-style-guide/SKILL.md)).
 
 ## References
 
-- Decision tree (pressure → patterns → risks): `references/decision-tree.md`
+- Decision tree (pressure → patterns → risks): [`references/decision-tree.md`](references/decision-tree.md)
 
 ## Output Template
 

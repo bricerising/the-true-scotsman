@@ -78,10 +78,10 @@ If impact is moderate or unclear:
 
 If you found a systemic gap, capture it:
 
-- missing telemetry field contracts → `apply-observability-patterns`
-- retries without idempotency / missing time budgets → `apply-resilience-patterns`
-- repeated boundary logic across services → `shared-platform-library`
-- cross-service pattern confusion → `select-architecture-pattern`
+- missing telemetry field contracts → [`apply-observability-patterns`](../apply-observability-patterns/SKILL.md)
+- retries without idempotency / missing time budgets → [`apply-resilience-patterns`](../apply-resilience-patterns/SKILL.md)
+- repeated boundary logic across services → [`shared-platform-library`](../shared-platform-library/SKILL.md)
+- cross-service pattern confusion → [`select-architecture-pattern`](../select-architecture-pattern/SKILL.md)
 
 ## Guardrails
 
@@ -92,9 +92,9 @@ If you found a systemic gap, capture it:
 
 ## References
 
-- Copy/paste commands: `references/commands.md`
-- Scenario checklists (HTTP/gRPC/consumers): `references/scenarios.md`
-- If telemetry is missing: `apply-observability-patterns`
+- Copy/paste commands: [`references/commands.md`](references/commands.md)
+- Scenario checklists (HTTP/gRPC/consumers): [`references/scenarios.md`](references/scenarios.md)
+- If telemetry is missing: [`apply-observability-patterns`](../apply-observability-patterns/SKILL.md)
 
 ## Output Template
 
@@ -108,4 +108,3 @@ When using this skill, return:
 - **Mitigation**: what you did / recommend doing now (rollback/flag/scale).
 - **Fix plan**: code/config changes to make it correct and durable.
 - **Follow-ups**: telemetry gaps, runbook updates, tests, new invariants.
-

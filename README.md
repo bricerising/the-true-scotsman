@@ -2,7 +2,7 @@
 
 This repo is an opinionated set of **agent skills** meant to drive cohesive, high-quality **enterprise software**: readable, maintainable, testable, and safe to change.
 
-Each skill is a small, self-contained playbook (workflow + checklists + examples) stored in a `SKILL.md` file. Some skills include **language/framework snippets** and **style guides** so an agent can apply the ideas consistently across stacks.
+Each skill is a small, self-contained playbook (workflow + checklists + examples) stored in a `SKILL.md` file. Most skills are language-agnostic; TypeScript is currently the only language-specific style guide.
 
 ## What you get
 
@@ -43,6 +43,7 @@ Please review this enterprise web application.
 **Harden (make it survive reality)**
 
 - [`apply-resilience-patterns/`](apply-resilience-patterns/SKILL.md): Timeouts, retries/backoff, idempotency, circuit breakers, bulkheads.
+- [`apply-security-patterns/`](apply-security-patterns/SKILL.md): Authn/authz, input validation, injection safety, secrets, SSRF guardrails.
 - [`apply-observability-patterns/`](apply-observability-patterns/SKILL.md): Logs/metrics/traces correlation, RED metrics, dashboards/alerts, verification steps.
 - [`observability-triage/`](observability-triage/SKILL.md): Debug workflows (log → trace → metrics) for incidents, regressions, and SLO violations.
 
@@ -75,6 +76,8 @@ These skills bias toward practices that make codebases easier for humans to oper
 ## Docs
 
 - Prompt recipes: [`PROMPTS.md`](PROMPTS.md)
+- Glossary (for less familiar terms): [`GLOSSARY.md`](GLOSSARY.md)
+- Example walkthrough: [`TUTORIAL.md`](TUTORIAL.md)
 - Repo-level specs (source of truth): [`specs/000-index.md`](specs/000-index.md)
 - App-repo integration: [`specs/005-application-integration.md`](specs/005-application-integration.md)
 - App-repo agent instructions template: [`specs/templates/app-repo/AGENTS.md`](specs/templates/app-repo/AGENTS.md)
@@ -132,6 +135,8 @@ Then reference files like `tools/enterprise-software-playbook/typescript-style-g
 The skill list above is grouped by **workflow stage** (Define/Standardize/Harden/Verify/Mechanics), not by scope.
 
 ## A DDD lens
+
+This section is optional background. If you just want to use the playbooks, you can skip it.
 
 If you model a high-performing engineer as a domain-driven system, the “aggregate roots” this repo tries to standardize are:
 

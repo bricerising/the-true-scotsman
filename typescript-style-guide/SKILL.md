@@ -9,6 +9,8 @@ description: Write, review, and refactor TypeScript code for readability, mainta
 
 Produce TypeScript that is easy to read, easy to change, and safe at runtime—by treating the codebase as a *system*: explicit boundaries, explicit dependencies, explicit errors, and explicit lifetimes.
 
+Most of the principles here translate to other languages; the TypeScript-specific parts are mainly about how to enforce them with TS tooling and types.
+
 Default objectives:
 
 - **Consistency**: prefer automated formatting and linting (Prettier + ESLint) to eliminate style drift.
@@ -220,6 +222,14 @@ export type Agent = {
 - Comment the “why” (constraints, trade-offs), not the “what”.
 - Avoid redundant comments; delete/update comments when code changes.
 - Keep public APIs self-documenting via naming/types; use JSDoc/TSDoc only where it improves usage (constraints, examples, edge cases).
+
+## References
+
+- Glossary for common terms: [`GLOSSARY.md`](../GLOSSARY.md)
+- Specs/contracts as sources of truth: [`spec-driven-development`](../spec-driven-development/SKILL.md)
+- Boundary time budgets and idempotency: [`apply-resilience-patterns`](../apply-resilience-patterns/SKILL.md)
+- Telemetry consistency: [`apply-observability-patterns`](../apply-observability-patterns/SKILL.md)
+- Shared “golden path” primitives: [`shared-platform-library`](../shared-platform-library/SKILL.md)
 
 ## Review checklist
 
