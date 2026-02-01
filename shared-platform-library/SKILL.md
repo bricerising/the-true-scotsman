@@ -65,6 +65,7 @@ Prefer **boundary primitives** over “random helpers”:
 - Checklists: `references/checklists.md`
 - Module layout guidance: `references/module-layout.md`
 - Templates/snippets: `references/templates.md`
+- Boundary wrappers (error/idempotency/telemetry contracts): `references/boundary-wrappers.md`
 
 Related skills:
 

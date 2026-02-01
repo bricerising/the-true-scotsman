@@ -30,6 +30,7 @@ Make partial failure and production debugging predictable:
 
 - Timeouts, retries, idempotency, breakers, bulkheads (`apply-resilience-patterns`)
 - Logs/metrics/traces correlation + verification steps (`apply-observability-patterns`)
+- Debug loop (log → trace → metrics) triage workflows (`observability-triage`)
 
 ### Verify (prove behavior)
 

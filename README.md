@@ -27,6 +27,7 @@ Prompt recipes live in [`PROMPTS.md`](PROMPTS.md).
 
 - [`apply-resilience-patterns/`](apply-resilience-patterns/SKILL.md): Timeouts, retries/backoff, idempotency, circuit breakers, bulkheads.
 - [`apply-observability-patterns/`](apply-observability-patterns/SKILL.md): Logs/metrics/traces correlation, RED metrics, dashboards/alerts, verification steps.
+- [`observability-triage/`](observability-triage/SKILL.md): Debug workflows (log → trace → metrics) for incidents, regressions, and SLO violations.
 
 **Verify (prove behavior)**
 

@@ -105,6 +105,19 @@ Goal: Add correlated logs/traces/metrics and local verification steps (log → t
 Define a stable telemetry field contract (IDs, names) and avoid high-cardinality metrics labels.
 ```
 
+### Triage an incident / regression (log → trace → metrics)
+
+```text
+Use observability-triage.
+
+Symptom: <what is broken/slow?>
+Environment: <local/dev/staging/prod>
+Time window: <start/end>
+Exemplar: <traceId/requestId/log line timestamp/etc>
+
+Guide a systematic investigation and end with: evidence, hypothesis, mitigation, and a fix/follow-up plan.
+```
+
 ## Verify (prove behavior)
 
 ### Add consumer-centric tests
@@ -126,4 +139,3 @@ Use apply-<creational|structural|behavioral>-patterns.
 Problem: <what needs structure?>
 Goal: Introduce a pattern seam that improves readability/testability without over-engineering.
 ```
-
