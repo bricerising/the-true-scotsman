@@ -134,18 +134,6 @@ Then reference files like `tools/enterprise-software-playbook/typescript-style-g
 
 The skill list above is grouped by **workflow stage** (Define/Standardize/Harden/Verify/Mechanics), not by scope.
 
-## A DDD lens
-
-This section is optional background. If you just want to use the playbooks, you can skip it.
-
-If you model a high-performing engineer as a domain-driven system, the “aggregate roots” this repo tries to standardize are:
-
-- **Decision record**: pressure + constraints + chosen code/system pattern(s) + trade-offs + validation plan (drives alignment).
-- **Spec bundle**: `spec.md` + `contracts/` + `plan.md` + `tasks.md` + `quickstart.md` (drives cohesion).
-- **Boundary policy**: stable error semantics + time budgets + retries/idempotency + telemetry field contracts (drives operability).
-- **Shared platform primitive**: one “golden path” wrapper/facade used by multiple services (drives consistency).
-- **Verification loop**: consumer-visible tests + local verification steps/runbooks (drives confidence).
-
 ## Contributing
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) and the backlog in [`specs/tasks.md`](specs/tasks.md).
