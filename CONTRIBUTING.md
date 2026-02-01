@@ -19,3 +19,10 @@ This repo is an opinionated system. Changes should preserve coherence and prompt
 - Validate changed skills: `python3 .system/skill-creator/scripts/quick_validate.py <skill-folder>`
 - Keep `README.md` and `PROMPTS.md` aligned with the workflow-stage grouping (Define/Standardize/Harden/Verify/Mechanics).
 
+## Feedback (what helps most)
+
+If you file an issue or request a change, include:
+
+- The prompt you used (and the tool/model if relevant).
+- What you expected vs what happened.
+- Links or snippets to the specific `SKILL.md` / spec section that felt confusing or missing.

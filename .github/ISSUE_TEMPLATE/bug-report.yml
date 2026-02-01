@@ -1,0 +1,44 @@
+name: Bug report (docs/skills)
+description: Something is confusing, incorrect, or inconsistent.
+labels:
+  - bug
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What’s wrong? What did you expect instead?
+      placeholder: Describe the problem and the expected behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: prompt
+    attributes:
+      label: Prompt used (if relevant)
+      description: Paste the exact prompt you gave your assistant (and any key context).
+      render: text
+    validations:
+      required: false
+  - type: input
+    id: assistant
+    attributes:
+      label: Assistant/tool
+      description: e.g. Codex CLI, Claude Code, Cursor, VS Code extension, etc.
+      placeholder: Codex CLI
+    validations:
+      required: false
+  - type: textarea
+    id: location
+    attributes:
+      label: Where in the repo?
+      description: Link to the file(s) or sections that are wrong/confusing.
+      placeholder: e.g. README.md, apply-resilience-patterns/SKILL.md, specs/003-taxonomy-and-workflow.md
+    validations:
+      required: true
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggested change (optional)
+      description: If you have a concrete wording or structure improvement, include it.
+    validations:
+      required: false

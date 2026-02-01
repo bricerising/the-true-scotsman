@@ -45,3 +45,8 @@ Use this as a pressure-driven checklist; apply the relevant items to the boundar
 - Keep lockfiles; pin versions; remove unused deps.
 - Prefer well-maintained libraries; verify licensing/policy constraints in your org.
 
+## Optional external reading
+
+- OWASP Top 10 https://owasp.org/www-project-top-ten/
+- OWASP Cheat Sheet Series https://cheatsheetseries.owasp.org/
+- RFC 8725: JSON Web Token Best Current Practices https://www.rfc-editor.org/rfc/rfc8725

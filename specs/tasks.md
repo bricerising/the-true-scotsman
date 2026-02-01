@@ -63,3 +63,17 @@ Keep tasks small, orderable, and testable. Prefer “acceptance” that is obser
 - **Acceptance**:
   - `GLOSSARY.md` exists and is linked from `README.md`.
   - `TUTORIAL.md` exists and is linked from `README.md`.
+
+## T009: Add a lightweight feedback mechanism
+
+- **Status**: Done (2026-02-01)
+- **Acceptance**:
+  - `.github/ISSUE_TEMPLATE/` exists with at least a bug-report and feature-request template.
+  - `README.md` and/or `CONTRIBUTING.md` points users at Issues for feedback.
+
+## T010: Add optional external references (progressive disclosure)
+
+- **Status**: Done (2026-02-01)
+- **Acceptance**:
+  - Select `*/references/*.md` files include a short “Optional external reading” section.
+  - `SKILL.md` files remain concise; depth stays in `references/`.

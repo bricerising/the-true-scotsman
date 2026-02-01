@@ -67,3 +67,9 @@ For each external boundary (HTTP handler, gRPC method, job run, message consume,
 2. Open the trace and identify the slow/error span (dependency, DB, cache, downstream service).
 3. Use trace-to-metrics and service dashboards to validate whether it’s systemic.
 4. Use logs filtered by `traceId` to capture the exact error semantics and context.
+
+## Optional external reading
+
+- Google SRE Book: “Monitoring Distributed Systems” https://sre.google/sre-book/monitoring-distributed-systems/
+- OpenTelemetry documentation https://opentelemetry.io/docs/
+- OpenTelemetry Semantic Conventions https://opentelemetry.io/docs/specs/semconv/
