@@ -38,6 +38,7 @@ Make partial failure and production debugging predictable:
 Pin behavior at the boundary:
 
 - Consumer-centric tests and characterization (`consumer-test-coverage`)
+- Adversarial code review debate for provable findings (`review-protocol`)
 
 ### Mechanics (in-process building blocks)
 

@@ -140,6 +140,18 @@ Goal: Pin consumer-visible behavior for <feature/bug/refactor>.
 Approach: characterization tests before refactors; avoid asserting implementation details.
 ```
 
+### Run an adversarial code review debate
+
+```text
+Use review-protocol (read review-protocol/SKILL.md).
+
+Review type: general
+Scope: <PR link / diff / commit range / file list>
+Output dir: <where to write 1-critique.txt ... 4-verdict.txt>
+
+Run the 4-phase protocol and finish with the skill’s output template.
+```
+
 ## Mechanics (in-process building blocks)
 
 ### Apply a concrete GoF pattern

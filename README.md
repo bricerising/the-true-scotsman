@@ -64,6 +64,7 @@ Please review this enterprise web application.
 **Verify (prove behavior)**
 
 - [`consumer-test-coverage/`](consumer-test-coverage/SKILL.md): Consumer-focused tests that raise coverage without asserting implementation details.
+- [`review-protocol/`](review-protocol/SKILL.md): Moderator-led adversarial code review debate (critique → defense → rebuttal → verdict) with strict evidence requirements.
 
 **Mechanics (in-process building blocks)**
 
