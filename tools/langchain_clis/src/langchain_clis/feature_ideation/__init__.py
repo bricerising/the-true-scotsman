@@ -1,0 +1,1 @@
+"""Feature ideation CLI implementation."""

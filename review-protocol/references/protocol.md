@@ -15,7 +15,13 @@ Nothing in this protocol depends on any particular repo layout.
 
 ## Outputs (Repo-Agnostic)
 
-Pick any writable output directory and keep the 4 phase artifacts together.
+Pick any writable output directory and keep the artifacts together.
+
+If you’re in a git repo, prefer:
+
+`.codex/review-protocol/<REPO_HEAD_COMMIT>/<REVIEW_TYPE>/`
+
+(where `<REPO_HEAD_COMMIT>` is `git rev-parse HEAD`).
 
 Recommended filenames:
 
@@ -23,8 +29,9 @@ Recommended filenames:
 - `2-defense.txt`
 - `3-rebuttal.txt`
 - `4-verdict.txt`
+- `5-report.md`
 
-If you’re running a “full review” (multiple debates), create one subfolder per debate config and keep the same 4 files inside each.
+If you’re running a “full review” (multiple debates), create one subfolder per debate config and keep the same files inside each.
 
 ## Calling Worker Agents (No Custom Scripts Required)
 
@@ -113,6 +120,45 @@ Exactly one response per finding ID:
 ### <ID>
 - What’s unclear: <short>
 - What would settle it: <specific check>
+```
+
+## Human-readable report (for sharing)
+
+Write `5-report.md` as a shareable summary of `4-verdict.txt` (Slack/email/PR comment friendly). Keep it scannable and avoid long verbatim excerpts.
+
+Suggested structure:
+
+```md
+# Review Report: <REVIEW_TYPE> — <REPO> @ <COMMIT>
+
+- Date: <YYYY-MM-DD>
+- Scope: <what was reviewed>
+- Artifacts:
+  - 1-critique.txt
+  - 2-defense.txt
+  - 3-rebuttal.txt
+  - 4-verdict.txt
+
+## Executive summary
+- 3–5 bullets, lead with P0/P1 CONFIRMED items.
+
+## Counts
+- CONFIRMED: N
+- DISMISSED: N
+- CONTESTED: N
+
+## Top findings (P0/P1)
+- <ID> (<SEVERITY>, P0): <title> — <path>:<line> — <1-line fix direction>
+
+## Full verdict
+### CONFIRMED
+- <ID> (<SEVERITY>, P0/P1/P2): <title> — <path>:<line>
+
+### DISMISSED
+- <ID>: <title>
+
+### CONTESTED
+- <ID>: <title> — What would settle it: <specific check>
 ```
 
 ## Moderation Rules (Make Agents Behave)

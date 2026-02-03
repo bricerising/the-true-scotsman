@@ -30,7 +30,8 @@ Success looks like: findings that a developer can act on immediately (location +
    - Scope boundaries: default to **changed code + immediate call-chain context** unless user requests a full audit
    - Which “workers” you can call (other models, other agents, humans), or whether you will role-play the workers yourself.
 2. **Pick an output directory**
-   - Create 4 phase files: `1-critique.txt`, `2-defense.txt`, `3-rebuttal.txt`, `4-verdict.txt`.
+   - Default: `.codex/review-protocol/<REPO_HEAD_COMMIT>/<REVIEW_TYPE>/` (use `git rev-parse HEAD`)
+   - Create artifacts: `1-critique.txt`, `2-defense.txt`, `3-rebuttal.txt`, `4-verdict.txt`, `5-report.md`
 3. **Phase 1: Critique (Attacker)**
    - Use the base attacker prompt + the type add-on from `references/protocol.md`.
    - Enforce strict format and cap to ~10–12 findings. If off-format, require a rewrite before continuing.
@@ -46,6 +47,8 @@ Success looks like: findings that a developer can act on immediately (location +
 7. **Moderator post-pass**
    - Ensure every CONFIRMED item has: location, evidence, concrete failure mode, and a minimal fix direction.
    - Merge duplicates and collapse “same root cause” items into one finding where possible.
+8. **Write shareable report**
+   - Write `5-report.md` as a human-readable summary of `4-verdict.txt` (template in `references/protocol.md`).
 
 ## Guardrails
 
@@ -75,6 +78,7 @@ When you finish, return:
 1. **Run summary**
    - Review type + scope notes
    - Where outputs were written
+   - Shareable report path (`5-report.md`)
 2. **Counts**
    - `CONFIRMED`: N
    - `DISMISSED`: N

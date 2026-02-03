@@ -1,0 +1,1 @@
+"""Spec alignment CLI implementation."""

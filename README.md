@@ -93,6 +93,7 @@ These skills bias toward practices that make codebases easier for humans to oper
 - Prompt recipes: [`PROMPTS.md`](PROMPTS.md)
 - Glossary (for less familiar terms): [`GLOSSARY.md`](GLOSSARY.md)
 - Example walkthrough: [`TUTORIAL.md`](TUTORIAL.md)
+- Optional tools: LangChain CLIs (review, ideation, progress updates, spec alignment): [`tools/langchain_clis/`](tools/langchain_clis/README.md)
 - Repo-level specs (source of truth): [`specs/000-index.md`](specs/000-index.md)
 - App-repo integration: [`specs/005-application-integration.md`](specs/005-application-integration.md)
 - App-repo agent instructions template: [`specs/templates/app-repo/AGENTS.md`](specs/templates/app-repo/AGENTS.md)
