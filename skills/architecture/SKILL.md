@@ -46,6 +46,12 @@ Use code patterns for in-process structure; use system patterns when the problem
 - **Bulkhead**: isolate resource pools so one dependency can’t starve everything.
 - **Saga**: multi-step business workflow across services with compensations.
 - **API Gateway / BFF**: one entry point / client-specific API to avoid chatty clients.
+- **API Composition**: implement a “distributed query” by aggregating responses from multiple services.
+- **Database per Service**: keep each service’s data private; integrate via APIs and domain events.
+- **Service Discovery (client-side/server-side) + Service Registry**: route service-to-service calls without hardcoding hostnames.
+- **Externalized Configuration**: keep per-environment config outside the deployable artifact.
+- **Health Check API**: standardize liveness/readiness signals for orchestration and ops.
+- **Service Mesh**: offload retries/mTLS/routing/telemetry to infrastructure (still own correctness at the app layer).
 - **Sidecar / Ambassador**: move cross-cutting networking concerns out of the app process (mesh/proxy).
 - **Strangler Fig**: migrate a monolith incrementally by routing slices to new services.
 
@@ -62,6 +68,7 @@ Use code patterns for in-process structure; use system patterns when the problem
 - **Reactive streams + backpressure**: prevent fast producers from overwhelming slow consumers.
 - **Event Sourcing**: store events as source of truth; rebuild state by replay.
 - **CQRS**: separate command (write) model from query (read) model.
+- **Command-side replica**: replicate reference data into the command service to avoid synchronous cross-service reads.
 
 ### Domain-Driven Design (DDD)
 
@@ -102,6 +109,7 @@ Use code patterns for in-process structure; use system patterns when the problem
 ## References
 
 - Decision tree (pressure → patterns → risks): [`references/decision-tree.md`](references/decision-tree.md)
+- Pattern index (one file per pattern): [`references/patterns.md`](references/patterns.md)
 
 ## Output Template
 

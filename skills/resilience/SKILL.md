@@ -89,6 +89,7 @@ export function backoffDelayMs(
 ## References
 
 - Deeper checklists: [`references/checklists.md`](references/checklists.md)
+- Related patterns: [`Circuit Breaker`](../architecture/references/circuit-breaker.md), [`Idempotent Consumer`](../architecture/references/idempotent-consumer.md), [`Transactional outbox`](../architecture/references/transactional-outbox.md)
 - Instrumentation guidance: [`observability`](../observability/SKILL.md)
 - Typed error semantics and explicit lifetimes: [`typescript`](../typescript/SKILL.md)
 - Wrapping clients: [`patterns-structural`](../patterns-structural/SKILL.md) (Proxy/Decorator)

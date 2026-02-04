@@ -66,6 +66,7 @@ Prefer **boundary primitives** over “random helpers”:
 - Module layout guidance: [`references/module-layout.md`](references/module-layout.md)
 - Templates/snippets: [`references/templates.md`](references/templates.md)
 - Boundary wrappers (error/idempotency/telemetry contracts): [`references/boundary-wrappers.md`](references/boundary-wrappers.md)
+- Related patterns: [`Microservice chassis`](../architecture/references/microservice-chassis.md), [`Service Template`](../architecture/references/service-template.md), [`Service deployment platform`](../architecture/references/service-deployment-platform.md)
 
 Related skills:
 

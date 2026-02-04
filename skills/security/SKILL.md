@@ -56,6 +56,7 @@ This is not a full security audit. If the change is high-risk (auth overhaul, mu
 ## References
 
 - Deeper checklist: [`references/checklists.md`](references/checklists.md)
+- Related patterns: [`Access token`](../architecture/references/access-token.md)
 - Boundary resiliency: [`resilience`](../resilience/SKILL.md)
 - Telemetry privacy: [`observability`](../observability/SKILL.md)
 - Consumer-visible verification: [`testing`](../testing/SKILL.md)

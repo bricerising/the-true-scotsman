@@ -94,6 +94,7 @@ export function getTraceLogFields(): { traceId?: string; spanId?: string } {
 ## References
 
 - Deeper checklists: [`references/checklists.md`](references/checklists.md)
+- Related patterns: [`Application metrics`](../architecture/references/application-metrics.md), [`Log aggregation`](../architecture/references/log-aggregation.md), [`Distributed tracing`](../architecture/references/distributed-tracing.md), [`Health Check API`](../architecture/references/health-check-api.md), [`Audit logging`](../architecture/references/audit-logging.md), [`Exception tracking`](../architecture/references/exception-tracking.md), [`Log deployments and changes`](../architecture/references/log-deployments-and-changes.md)
 - Boundary tests: [`testing`](../testing/SKILL.md)
 - Typed errors + explicit lifetimes: [`typescript`](../typescript/SKILL.md)
 

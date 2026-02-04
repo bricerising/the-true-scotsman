@@ -40,6 +40,7 @@ Improve coverage by exercising consumer-visible behavior with infra mocked and b
 ## References
 
 - Specs and contracts as test sources: [`spec`](../spec/SKILL.md)
+- Related patterns: [`Consumer-side contract test`](../architecture/references/consumer-side-contract-test.md), [`Service integration contract test`](../architecture/references/service-integration-contract-test.md), [`Service component test`](../architecture/references/service-component-test.md)
 - Telemetry verification (when tests cover boundary logging/metrics): [`observability`](../observability/SKILL.md)
 
 ## Output Template
