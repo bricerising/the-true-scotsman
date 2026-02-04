@@ -39,7 +39,7 @@ Prefer **boundary primitives** over “random helpers”:
 
 ## What Does *Not* Belong
 
-- Business/domain logic (poker rules, billing rules, table invariants, etc.)
+- Business/domain logic (rules, invariants, etc.)
 - One-off utilities used by one call site (“utils junk drawer” risk)
 - Hidden I/O at import time (no global clients created on module load)
 - High-cardinality or PII-heavy telemetry helpers (keep privacy discipline explicit)

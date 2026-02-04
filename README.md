@@ -26,7 +26,7 @@ Non-goals:
 
 ## 60-second start
 
-1. Install the skills (pick one): [Codex CLI](#codex-cli), [Claude Code](#claude-code), or [vendor via submodule](#tool-agnostic-vendor-it-into-your-project).
+1. Install the skills (pick one): [Codex CLI](#codex-cli), [Claude Code](#claude-code), [Antigravity](#antigravity), or [vendor via submodule](#tool-agnostic-vendor-it-into-your-project).
 2. Add agent instructions to your app repo (start from [`specs/templates/app-repo/AGENTS.md`](specs/templates/app-repo/AGENTS.md)).
 3. Paste the “Conversational bootstrap” from [`PROMPTS.md`](PROMPTS.md#conversational-bootstrap-auto-route).
 
@@ -101,11 +101,21 @@ These skills bias toward practices that make codebases easier for humans to oper
 
 ## Install & integrate
 
+**Note:** Installation differs by assistant/platform. Codex CLI and Claude Code use different local “skills” directories; Antigravity Kit-style projects load skills from `.agent/skills/`; tool-agnostic assistants often work best by vendoring this repo into the app repo.
+
 This repo is designed to be used directly with **Codex CLI**, but you can also integrate it with other popular code assistants by copying/linking the relevant guides into their “project rules / instructions” mechanism.
 
 ### Codex CLI
 
 Codex CLI is OpenAI’s terminal-based coding agent: https://github.com/openai/codex
+
+Tell Codex:
+
+```text
+Fetch and follow instructions from https://raw.githubusercontent.com/bricerising/enterprise-software-playbook/refs/heads/main/.codex/INSTALL.md
+```
+
+Manual install (shell):
 
 1. Clone this repo anywhere you like.
 2. Symlink (or copy) the skill folders into `$CODEX_HOME/skills` (commonly `~/.codex/skills`).
@@ -113,9 +123,9 @@ Codex CLI is OpenAI’s terminal-based coding agent: https://github.com/openai/c
 Example (symlinks; installs every skill folder in this repo):
 
 ```sh
-git clone https://github.com/bricerising/enterprise-software-playbook.git ~/enterprise-software-playbook
+git clone https://github.com/bricerising/enterprise-software-playbook.git ~/.codex/enterprise-software-playbook
 mkdir -p ~/.codex/skills
-for f in ~/enterprise-software-playbook/skills/*/SKILL.md; do
+for f in ~/.codex/enterprise-software-playbook/skills/*/SKILL.md; do
   ln -s "${f%/SKILL.md}" ~/.codex/skills/
 done
 ```
@@ -124,18 +134,41 @@ done
 
 Claude Code is Anthropic’s terminal-based coding agent: https://docs.anthropic.com/en/docs/claude-code
 
+Tell Claude Code:
+
+```text
+Fetch and follow instructions from https://raw.githubusercontent.com/bricerising/enterprise-software-playbook/refs/heads/main/.claude/INSTALL.md
+```
+
+Manual install (shell):
+
 1. Clone this repo anywhere you like.
 2. Symlink (or copy) the skill folders into your Claude Code skills directory (commonly `~/.claude/skills`).
 
 Example (symlinks; installs every skill folder in this repo):
 
 ```sh
-git clone https://github.com/bricerising/enterprise-software-playbook.git ~/enterprise-software-playbook
+git clone https://github.com/bricerising/enterprise-software-playbook.git ~/.claude/enterprise-software-playbook
 mkdir -p ~/.claude/skills
-for f in ~/enterprise-software-playbook/skills/*/SKILL.md; do
+for f in ~/.claude/enterprise-software-playbook/skills/*/SKILL.md; do
   ln -s "${f%/SKILL.md}" ~/.claude/skills/
 done
 ```
+
+### Antigravity
+
+Antigravity Kit-style projects load skills from `.agent/skills/` in the project root.
+
+Tell Antigravity:
+
+```text
+Fetch and follow instructions from https://raw.githubusercontent.com/bricerising/enterprise-software-playbook/refs/heads/main/.antigravity/INSTALL.md
+```
+
+Manual install (shell):
+
+1. Vendor this repo into your project (submodule or clone).
+2. Symlink `tools/enterprise-software-playbook/skills/*` into `.agent/skills/*`.
 
 ### Tool-agnostic: vendor it into your project
 
