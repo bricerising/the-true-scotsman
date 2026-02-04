@@ -17,6 +17,11 @@ def resolve_skills_dir(provided: Optional[Path]) -> Path:
     if env:
         return _validate_skills_dir(Path(env))
 
+    # Default install location (Codex skills live under ~/.codex/skills).
+    default = Path.home() / ".codex" / "skills"
+    if default.exists() and default.is_dir():
+        return _validate_skills_dir(default)
+
     # Auto-detect: walk up from cwd looking for review-protocol/SKILL.md
     cwd = Path.cwd().resolve()
     for root in [cwd, *cwd.parents]:

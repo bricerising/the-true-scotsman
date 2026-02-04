@@ -38,7 +38,7 @@ pipx install --editable tools/langchain_clis
 ## Environment
 
 - `OPENAI_API_KEY` (for the default OpenAI-backed LangChain model)
-- Optional: `ESB_SKILLS_DIR` (path to this skills repo root). If omitted, the CLI tries to auto-detect.
+- Optional: `ESB_SKILLS_DIR` (path to this skills repo root). If omitted, the CLI tries to auto-detect (including `~/.codex/skills`).
 
 ## Usage
 
@@ -102,3 +102,15 @@ spec-align run --git-base origin/main
 
 - These tools are intentionally strict about output formats (they will request rewrites if off-contract).
 - For `spec-align`, missing/insufficient specs will result in `Alignment: PARTIAL` with concrete follow-ups.
+
+## Tests
+
+Run consumer-centric dry-run tests (no model calls):
+
+```bash
+# From the skills repo root:
+python3 -m unittest discover -s tools/langchain_clis/tests -p 'test_*.py'
+
+# Or, from tools/langchain_clis/:
+python3 -m unittest discover -s tests -p 'test_*.py'
+```
