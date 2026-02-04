@@ -30,12 +30,12 @@ Non-goals:
 2. Add agent instructions to your app repo (start from [`specs/templates/app-repo/AGENTS.md`](specs/templates/app-repo/AGENTS.md)).
 3. Paste the “Conversational bootstrap” from [`PROMPTS.md`](PROMPTS.md#conversational-bootstrap-auto-route).
 
-You do **not** need to read this repo cover-to-cover. Start with the three steps above, then open the specific `*/SKILL.md` playbook(s) you need as you go.
+You do **not** need to read this repo cover-to-cover. Start with the three steps above, then open the specific `skills/*/SKILL.md` playbook(s) you need as you go.
 
 Minimal “try it now” prompt:
 
 ```text
-Use enterprise-web-app-workflow (read enterprise-web-app-workflow/SKILL.md).
+Use workflow (read skills/workflow/SKILL.md).
 
 Please review this enterprise web application.
 ```
@@ -44,37 +44,39 @@ Please review this enterprise web application.
 
 **Define (what are we building?)**
 
-- [`enterprise-web-app-workflow/`](enterprise-web-app-workflow/SKILL.md): Auto-route work across skills (conversational mode: choose appropriate skills even if the user doesn’t name them).
-- [`spec-driven-development/`](spec-driven-development/SKILL.md): Write specs, contracts, plans, and task lists so agents converge on cohesive solutions.
-- [`select-architecture-pattern/`](select-architecture-pattern/SKILL.md): Choose the smallest system pattern(s) for cross-service pressures.
-- [`select-design-pattern/`](select-design-pattern/SKILL.md): Choose the smallest code pattern(s) for in-process design pressures.
+- [`skills/workflow/`](skills/workflow/SKILL.md): Auto-route work across skills (conversational mode: choose appropriate skills even if the user doesn’t name them).
+- [`skills/plan/`](skills/plan/SKILL.md): Turn a request into an executable plan (tasks + acceptance + verification).
+- [`skills/spec/`](skills/spec/SKILL.md): Write specs, contracts, plans, and task lists so agents converge on cohesive solutions.
+- [`skills/architecture/`](skills/architecture/SKILL.md): Choose the smallest system pattern(s) for cross-service pressures.
+- [`skills/design/`](skills/design/SKILL.md): Choose the smallest code pattern(s) for in-process design pressures.
 
 **Standardize (make it consistent)**
 
-- [`typescript-style-guide/`](typescript-style-guide/SKILL.md): TypeScript guidance focused on runtime safety, explicit boundaries, typed errors, and maintainable module structure.
-- [`shared-platform-library/`](shared-platform-library/SKILL.md): Design and evolve a shared platform package (`packages/shared`) without becoming a “utils junk drawer”.
+- [`skills/typescript/`](skills/typescript/SKILL.md): TypeScript guidance focused on runtime safety, explicit boundaries, typed errors, and maintainable module structure.
+- [`skills/platform/`](skills/platform/SKILL.md): Design and evolve a shared platform package (`packages/shared`) without becoming a “utils junk drawer”.
 
 **Harden (make it survive reality)**
 
-- [`apply-resilience-patterns/`](apply-resilience-patterns/SKILL.md): Timeouts, retries/backoff, idempotency, circuit breakers, bulkheads.
-- [`apply-security-patterns/`](apply-security-patterns/SKILL.md): Authn/authz, input validation, injection safety, secrets, SSRF guardrails.
-- [`apply-observability-patterns/`](apply-observability-patterns/SKILL.md): Logs/metrics/traces correlation, RED metrics, dashboards/alerts, verification steps.
-- [`observability-triage/`](observability-triage/SKILL.md): Debug workflows (log → trace → metrics) for incidents, regressions, and SLO violations.
+- [`skills/resilience/`](skills/resilience/SKILL.md): Timeouts, retries/backoff, idempotency, circuit breakers, bulkheads.
+- [`skills/security/`](skills/security/SKILL.md): Authn/authz, input validation, injection safety, secrets, SSRF guardrails.
+- [`skills/observability/`](skills/observability/SKILL.md): Logs/metrics/traces correlation, RED metrics, dashboards/alerts, verification steps.
+- [`skills/debug/`](skills/debug/SKILL.md): Debug workflows (log → trace → metrics) for incidents, regressions, and SLO violations.
 
 **Verify (prove behavior)**
 
-- [`consumer-test-coverage/`](consumer-test-coverage/SKILL.md): Consumer-focused tests that raise coverage without asserting implementation details.
-- [`review-protocol/`](review-protocol/SKILL.md): Moderator-led adversarial code review debate (critique → defense → rebuttal → verdict) with strict evidence requirements.
+- [`skills/testing/`](skills/testing/SKILL.md): Consumer-focused tests that raise coverage without asserting implementation details.
+- [`skills/review/`](skills/review/SKILL.md): Moderator-led adversarial code review debate (critique → defense → rebuttal → verdict) with strict evidence requirements.
+- [`skills/finish/`](skills/finish/SKILL.md): Definition-of-done pass (verification + boundary spot-check + crisp summary).
 
 **Mechanics (in-process building blocks)**
 
-- [`apply-creational-patterns/`](apply-creational-patterns/SKILL.md): Factory Method, Abstract Factory, Builder, Prototype, and (careful) Singleton.
-- [`apply-structural-patterns/`](apply-structural-patterns/SKILL.md): Adapter, Bridge, Composite, Decorator, Facade, Flyweight, and Proxy.
-- [`apply-behavioral-patterns/`](apply-behavioral-patterns/SKILL.md): Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, and Visitor.
+- [`skills/patterns-creational/`](skills/patterns-creational/SKILL.md): Factory Method, Abstract Factory, Builder, Prototype, and (careful) Singleton.
+- [`skills/patterns-structural/`](skills/patterns-structural/SKILL.md): Adapter, Bridge, Composite, Decorator, Facade, Flyweight, and Proxy.
+- [`skills/patterns-behavioral/`](skills/patterns-behavioral/SKILL.md): Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, and Visitor.
 
 ## Using these skills
 
-Each folder contains a `SKILL.md` playbook. The primary mode is **conversational**: ask for what you want and let the agent auto-select the right skills. If you want deterministic control, name specific skills explicitly.
+Each skill lives under `skills/<name>/SKILL.md`. The primary mode is **conversational**: ask for what you want and let the agent auto-select the right skills. If you want deterministic control, name specific skills explicitly.
 
 For more prompt recipes (including a conversational bootstrap), see [`PROMPTS.md`](PROMPTS.md).
 
@@ -113,7 +115,7 @@ Example (symlinks; installs every skill folder in this repo):
 ```sh
 git clone https://github.com/bricerising/enterprise-software-playbook.git ~/enterprise-software-playbook
 mkdir -p ~/.codex/skills
-for f in ~/enterprise-software-playbook/*/SKILL.md; do
+for f in ~/enterprise-software-playbook/skills/*/SKILL.md; do
   ln -s "${f%/SKILL.md}" ~/.codex/skills/
 done
 ```
@@ -130,7 +132,7 @@ Example (symlinks; installs every skill folder in this repo):
 ```sh
 git clone https://github.com/bricerising/enterprise-software-playbook.git ~/enterprise-software-playbook
 mkdir -p ~/.claude/skills
-for f in ~/enterprise-software-playbook/*/SKILL.md; do
+for f in ~/enterprise-software-playbook/skills/*/SKILL.md; do
   ln -s "${f%/SKILL.md}" ~/.claude/skills/
 done
 ```
@@ -143,7 +145,7 @@ Many assistants can only reliably follow rules that live *inside the repo they�
 git submodule add https://github.com/bricerising/enterprise-software-playbook.git tools/enterprise-software-playbook
 ```
 
-Then reference files like `tools/enterprise-software-playbook/typescript-style-guide/SKILL.md` in your assistant’s project instructions.
+Then reference files like `tools/enterprise-software-playbook/skills/typescript/SKILL.md` in your assistant’s project instructions.
 
 ## Terminology
 

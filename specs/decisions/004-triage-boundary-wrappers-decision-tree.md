@@ -17,13 +17,12 @@ These capabilities are already captured as backlog tasks (T003/T004/T005) and fi
 
 Implement three additions:
 
-1. Add a new skill `observability-triage/` focused on triage workflows (not instrumentation).
-2. Extend `shared-platform-library/` with explicit guidance + templates for boundary wrappers, keeping depth in `references/`.
-3. Extend `select-architecture-pattern/` with a compact decision tree in `references/`, including common anti-pattern guardrails.
+1. Add a new skill `debug/` focused on triage workflows (not instrumentation).
+2. Extend `platform/` with explicit guidance + templates for boundary wrappers, keeping depth in `references/`.
+3. Extend `architecture/` with a compact decision tree in `references/`, including common anti-pattern guardrails.
 
 ## Consequences
 
 - Positive: Improves operational usefulness (day-2), reduces “what do I do next?” friction, and makes recommendations more procedural and auditable.
 - Trade-off: Slightly more surface area to maintain; mitigated by keeping deep detail in `references/`.
 - Compatibility: Additive only (new skill + references); no renames or breaking prompt contracts.
-

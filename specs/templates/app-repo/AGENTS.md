@@ -11,7 +11,9 @@ Prefer one of:
 1. Vendored into the repo (recommended): `tools/enterprise-software-playbook/` (submodule or copy)
 2. Installed in your assistant environment (e.g., Codex CLI skills directory)
 
-If skills are vendored, read the relevant `SKILL.md` files from that location.
+If skills are vendored, read the relevant `SKILL.md` files from:
+
+- `tools/enterprise-software-playbook/skills/<skill>/SKILL.md`
 
 ## Default Workflow (Auto)
 
@@ -19,7 +21,7 @@ Follow this loop for all non-trivial work:
 
 **Define → Standardize → Harden → Verify → Mechanics**
 
-If your agent supports skills, you can treat `enterprise-web-app-workflow` as the router that selects the rest.
+If your agent supports skills, you can treat `workflow` as the router that selects the rest.
 
 ## High-Signal Rules
 

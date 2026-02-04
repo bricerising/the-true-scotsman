@@ -2,20 +2,21 @@
 
 Copy/paste prompts for using **enterprise-software-playbook** with an AI coding assistant.
 
-If your assistant supports “skills”, name them explicitly (e.g., `enterprise-web-app-workflow`). If not, point it at the referenced `SKILL.md` files.
+If your assistant supports “skills”, name them explicitly (e.g., `workflow`). If not, point it at the referenced `SKILL.md` files.
 
 ## Conversational bootstrap (auto-route)
 
 Use this to start most sessions:
 
 ```text
-Use enterprise-web-app-workflow (read enterprise-web-app-workflow/SKILL.md).
+Use workflow (read skills/workflow/SKILL.md).
 
 Follow the default loop: Define → Standardize → Harden → Verify → Mechanics.
 Keep overhead proportional (tiny changes stay lightweight).
 
 If you change a boundary contract/semantics (HTTP/gRPC/events/WS), update specs/contracts first and pin behavior with tests.
 
+For non-trivial work, run finish first.
 When you finish, report: skills applied, what changed, verification, follow-ups.
 
 Task: <describe what you want>
@@ -26,7 +27,7 @@ Task: <describe what you want>
 ### Write/update a spec bundle
 
 ```text
-Use spec-driven-development.
+Use spec (read skills/spec/SKILL.md).
 
 Goal: <feature/bug/refactor intent>
 
@@ -37,10 +38,21 @@ Before implementing, write or update the relevant spec bundle:
 Include: acceptance scenarios, edge cases, failure-mode expectations, and a verification plan.
 ```
 
+### Create an implementation plan (tasks + verification)
+
+```text
+Use plan (read skills/plan/SKILL.md).
+
+Task: <what do you want to build/fix?>
+
+Produce an ordered checklist of tasks with acceptance checks and exact verification commands (or ask once if unknown).
+Keep it short and reversible.
+```
+
 ### Choose a system/architecture pattern
 
 ```text
-Use select-architecture-pattern.
+Use architecture (read skills/architecture/SKILL.md).
 
 Context: <system pressure(s): partial failures, consistency, cross-service workflows, integration seams>
 Constraints: <latency/SLOs, scalability, team boundaries, compliance>
@@ -51,7 +63,7 @@ Recommend the smallest viable pattern(s), risks/anti-patterns, and a validation 
 ### Choose an in-process/design pattern
 
 ```text
-Use select-design-pattern.
+Use design (read skills/design/SKILL.md).
 
 Context: <construction/structure/behavior pressure>
 Constraints: <testability, extensibility, performance, simplicity>
@@ -64,7 +76,7 @@ Recommend the smallest viable pattern and show how it fits this codebase.
 ### Extract a shared “golden path” primitive
 
 ```text
-Use shared-platform-library.
+Use platform (read skills/platform/SKILL.md).
 
 Problem: We have repeated boundary logic across services (timeouts/retries/error mapping/telemetry fields/etc.).
 Goal: Propose a small shared primitive (two-consumer rule) that removes copy/paste drift.
@@ -75,7 +87,7 @@ Include: API shape, error envelope, time budget policy, telemetry field contract
 ### TypeScript safety/refactor pass
 
 ```text
-Use typescript-style-guide.
+Use typescript (read skills/typescript/SKILL.md).
 
 Goal: Improve maintainability and runtime safety without changing behavior.
 Focus: typed boundaries, explicit lifetimes, safe module structure, and predictable error handling.
@@ -86,7 +98,7 @@ Focus: typed boundaries, explicit lifetimes, safe module structure, and predicta
 ### Resilience hardening for I/O boundaries
 
 ```text
-Use apply-resilience-patterns.
+Use resilience (read skills/resilience/SKILL.md).
 
 Boundary: <HTTP/gRPC/DB/cache/queue/external API>
 Risk: <timeouts, retries, at-least-once delivery, partial failure>
@@ -97,7 +109,7 @@ Add explicit time budgets + cancellation propagation. Only add retries when safe
 ### Security hardening for boundaries
 
 ```text
-Use apply-security-patterns.
+Use security (read skills/security/SKILL.md).
 
 Boundary: <HTTP/gRPC/WS/events/outbound HTTP/DB/etc>
 Risk: <authn/authz, injection, SSRF, secrets/PII, multi-tenant isolation>
@@ -108,7 +120,7 @@ Add authn/authz checks, strict input validation, safe logging/telemetry, and SSR
 ### Observability instrumentation + verification
 
 ```text
-Use apply-observability-patterns.
+Use observability (read skills/observability/SKILL.md).
 
 Boundary: <HTTP/gRPC/events/jobs>
 Goal: Add correlated logs/traces/metrics and local verification steps (log → trace → metrics).
@@ -119,7 +131,7 @@ Define a stable telemetry field contract (IDs, names) and avoid high-cardinality
 ### Triage an incident / regression (log → trace → metrics)
 
 ```text
-Use observability-triage.
+Use debug (read skills/debug/SKILL.md).
 
 Symptom: <what is broken/slow?>
 Environment: <local/dev/staging/prod>
@@ -134,7 +146,7 @@ Guide a systematic investigation and end with: evidence, hypothesis, mitigation,
 ### Add consumer-centric tests
 
 ```text
-Use consumer-test-coverage.
+Use testing (read skills/testing/SKILL.md).
 
 Goal: Pin consumer-visible behavior for <feature/bug/refactor>.
 Approach: characterization tests before refactors; avoid asserting implementation details.
@@ -143,7 +155,7 @@ Approach: characterization tests before refactors; avoid asserting implementatio
 ### Run an adversarial code review debate
 
 ```text
-Use review-protocol (read review-protocol/SKILL.md).
+Use review (read skills/review/SKILL.md).
 
 Review type: general
 Scope: <PR link / diff / commit range / file list>
@@ -152,12 +164,23 @@ Output dir: <where to write 1-critique.txt ... 4-verdict.txt>
 Run the 4-phase protocol and finish with the skill’s output template.
 ```
 
+### Finish (definition-of-done pass)
+
+```text
+Use finish (read skills/finish/SKILL.md).
+
+Before calling the work done:
+- run the best-available verification commands (tests/typecheck/lint/build)
+- spot-check boundary discipline where applicable (timeouts/authz/telemetry)
+- report: what changed, verification, risks/follow-ups
+```
+
 ## Mechanics (in-process building blocks)
 
 ### Apply a concrete GoF pattern
 
 ```text
-Use apply-<creational|structural|behavioral>-patterns.
+Use patterns-<creational|structural|behavioral> (read the matching `skills/patterns-*/SKILL.md`).
 
 Problem: <what needs structure?>
 Goal: Introduce a pattern seam that improves readability/testability without over-engineering.

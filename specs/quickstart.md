@@ -7,13 +7,13 @@ This repo is designed to be iterated on locally without network access.
 Validate a single skill:
 
 ```sh
-python3 .system/skill-creator/scripts/quick_validate.py <skill-folder>
+python3 .system/skill-creator/scripts/quick_validate.py skills/<skill-folder>
 ```
 
 Validate every skill folder in the repo:
 
 ```sh
-for f in */SKILL.md; do python3 .system/skill-creator/scripts/quick_validate.py "${f%/SKILL.md}"; done
+for f in skills/*/SKILL.md; do python3 .system/skill-creator/scripts/quick_validate.py "${f%/SKILL.md}"; done
 ```
 
 ## Package Skills (Optional)
@@ -21,7 +21,7 @@ for f in */SKILL.md; do python3 .system/skill-creator/scripts/quick_validate.py 
 Package a skill into `dist/<skill-name>.skill`:
 
 ```sh
-python3 .system/skill-creator/scripts/package_skill.py <skill-folder> ./dist
+python3 .system/skill-creator/scripts/package_skill.py skills/<skill-folder> ./dist
 ```
 
 ## Create a New Skill (Optional)
@@ -29,12 +29,12 @@ python3 .system/skill-creator/scripts/package_skill.py <skill-folder> ./dist
 Initialize a new skill folder:
 
 ```sh
-python3 .system/skill-creator/scripts/init_skill.py <skill-name> --path . --resources scripts,references --examples
+python3 .system/skill-creator/scripts/init_skill.py <skill-name> --path skills --resources scripts,references --examples
 ```
 
 Then:
 
-1. Edit `<skill-name>/SKILL.md`
+1. Edit `skills/<skill-name>/SKILL.md`
 2. Add only the minimal `references/` and `scripts/` needed
 3. Validate and update `README.md` + `PROMPTS.md`
 

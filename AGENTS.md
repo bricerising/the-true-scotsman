@@ -9,16 +9,16 @@ This repo is itself an opinionated system for writing agent skills. To prevent d
 
 ## Change Rules (High Signal)
 
-- Treat skill names as API: avoid renaming skill folders or `name:` values without a migration/shim (`specs/002-skill-contract.md`).
+- Treat skill names as API: prefer stable names; if you rename, capture it in a decision record and update docs (`specs/002-skill-contract.md`).
 - For non-trivial changes, add/update a decision record in `specs/decisions/`.
 - Keep skills concise; put depth in `references/` (progressive disclosure).
 - Prefer cross-links between skills over duplicating content.
 
 ## Verification
 
-- Validate changed skills: `python3 .system/skill-creator/scripts/quick_validate.py <skill-folder>`
+- Validate changed skills: `python3 .system/skill-creator/scripts/quick_validate.py skills/<skill-folder>`
 - Keep `README.md` and `PROMPTS.md` aligned with the workflow-stage grouping (Define/Standardize/Harden/Verify/Mechanics).
 
 ## Packaging (Optional)
 
-- Package skills to `dist/` (build output): `python3 .system/skill-creator/scripts/package_skill.py <skill-folder> ./dist`
+- Package skills to `dist/` (build output): `python3 .system/skill-creator/scripts/package_skill.py skills/<skill-folder> ./dist`

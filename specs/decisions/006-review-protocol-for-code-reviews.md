@@ -5,7 +5,7 @@
 
 ## Context
 
-The repo includes a `review-protocol` skill, but it was missing “default code review” guidance and wasn’t listed alongside other skills in the workflow-stage navigation (`README.md`, `PROMPTS.md`, Spec 003).
+The repo includes a `review` skill, but it was missing “default code review” guidance and wasn’t listed alongside other skills in the workflow-stage navigation (`README.md`, `PROMPTS.md`, Spec 003).
 
 For real code reviews (especially PR/diff reviews), reviewers also need:
 
@@ -15,7 +15,7 @@ For real code reviews (especially PR/diff reviews), reviewers also need:
 
 ## Decision
 
-- Treat `review-protocol` as a code review skill and list it under **Verify** in `README.md`, `PROMPTS.md`, and Spec 003.
+- Treat `review` as a code review skill and list it under **Verify** in `README.md`, `PROMPTS.md`, and Spec 003.
 - Add `general` and `correctness` review types.
 - Recommend an “Anchor” field (symbol/snippet) alongside file+line evidence to keep findings locatable across diffs.
 - Add brief severity calibration guidance tuned for code review usage.

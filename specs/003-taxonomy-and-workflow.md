@@ -12,41 +12,43 @@ This reduces decision friction: an agent can follow a reliable loop without deba
 
 Intent and boundaries:
 
-- Auto-routing across this library in conversational mode (`enterprise-web-app-workflow`)
-- Specs and contracts (`spec-driven-development`)
-- System-pattern selection for cross-service pressures (`select-architecture-pattern`)
-- Code-pattern selection for in-process pressures (`select-design-pattern`)
+- Auto-routing across this library in conversational mode (`workflow`)
+- Turn intent into an executable task list (`plan`)
+- Specs and contracts (`spec`)
+- System-pattern selection for cross-service pressures (`architecture`)
+- Code-pattern selection for in-process pressures (`design`)
 
 ### Standardize (make it consistent)
 
 Make the “golden path” boring and reusable:
 
-- Shared platform primitives (`shared-platform-library`)
-- Language conventions for safety and maintainability (`typescript-style-guide`)
+- Shared platform primitives (`platform`)
+- Language conventions for safety and maintainability (`typescript`)
 
 ### Harden (make it survive reality)
 
 Make partial failure and production debugging predictable:
 
-- Timeouts, retries, idempotency, breakers, bulkheads (`apply-resilience-patterns`)
-- Practical security guardrails (authn/authz, input validation, injection safety, secrets, SSRF) (`apply-security-patterns`)
-- Logs/metrics/traces correlation + verification steps (`apply-observability-patterns`)
-- Debug loop (log → trace → metrics) triage workflows (`observability-triage`)
+- Timeouts, retries, idempotency, breakers, bulkheads (`resilience`)
+- Practical security guardrails (authn/authz, input validation, injection safety, secrets, SSRF) (`security`)
+- Logs/metrics/traces correlation + verification steps (`observability`)
+- Debug loop (log → trace → metrics) triage workflows (`debug`)
 
 ### Verify (prove behavior)
 
 Pin behavior at the boundary:
 
-- Consumer-centric tests and characterization (`consumer-test-coverage`)
-- Adversarial code review debate for provable findings (`review-protocol`)
+- Consumer-centric tests and characterization (`testing`)
+- Adversarial code review debate for provable findings (`review`)
+- Definition-of-done pass (verification + crisp summary) (`finish`)
 
 ### Mechanics (in-process building blocks)
 
 Apply classic in-process patterns when implementation needs structure:
 
-- Creation (`apply-creational-patterns`)
-- Wrapping/indirection (`apply-structural-patterns`)
-- Pipelines/eventing/state machines (`apply-behavioral-patterns`)
+- Creation (`patterns-creational`)
+- Wrapping/indirection (`patterns-structural`)
+- Pipelines/eventing/state machines (`patterns-behavioral`)
 
 ## Terminology (Scope Words, Not Navigation)
 
@@ -60,14 +62,16 @@ These terms describe *scope*, but the repo groups skills by *workflow stage*.
 
 Unless you have a strong reason to deviate:
 
-1. `spec-driven-development`
-2. `select-architecture-pattern` (if cross-service/system pressure exists)
-3. `shared-platform-library` (if multiple services need the same boundary behavior)
-4. `typescript-style-guide` (or the relevant language style guide)
-5. `apply-resilience-patterns`
-6. `apply-security-patterns`
-7. `apply-observability-patterns`
-8. `consumer-test-coverage`
+1. `plan` (for non-trivial work)
+2. `spec` (when boundary contracts/semantics change)
+3. `architecture` (if cross-service/system pressure exists)
+4. `platform` (if multiple services need the same boundary behavior)
+5. `typescript` (or the relevant language style guide)
+6. `resilience`
+7. `security`
+8. `observability`
+9. `testing`
+10. `finish`
 
 In-process pattern application (`apply-*-patterns`) is usually a supporting step during implementation, not the starting point.
 
