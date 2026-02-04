@@ -24,7 +24,7 @@ Update `specs/` (and usually add a decision record) when you:
    - Keep diffs small; avoid broad renames/moves.
    - Prefer cross-links to other skills over duplicating content.
 3. **Validate**
-   - Run `python3 .system/skill-creator/scripts/quick_validate.py <skill>` for changed skills.
+   - Run `python3 .system/skill-creator/scripts/quick_validate.py skills/<skill>` for changed skills.
 4. **Update navigation**
    - Update `README.md` and `PROMPTS.md` so users can find the new/changed skill.
 5. **Add verification guidance**

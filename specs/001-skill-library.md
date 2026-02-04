@@ -89,5 +89,5 @@ This repo satisfies this spec when:
 
 - `specs/` exists and is maintained as the source of truth for repo organization.
 - `README.md` and `PROMPTS.md` reflect the taxonomy and default workflow defined in Spec 003.
-- All skill folders validate via `python3 .system/skill-creator/scripts/quick_validate.py <skill>`.
+- All skill folders validate via `python3 .system/skill-creator/scripts/quick_validate.py skills/<skill>`.
 - Each new/changed skill includes an output template and references the other relevant skills rather than duplicating content.

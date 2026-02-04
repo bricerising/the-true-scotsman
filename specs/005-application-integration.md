@@ -36,7 +36,7 @@ Use when assistants only follow rules that live inside the repo:
 1. Add this repo as a submodule or vendored copy (recommended path):
    - `tools/enterprise-software-playbook/`
 2. Add `AGENTS.md` at the app repo root (copy from `specs/templates/app-repo/AGENTS.md`) and point it at:
-   - `tools/enterprise-software-playbook/<skill>/SKILL.md`
+   - `tools/enterprise-software-playbook/skills/<skill>/SKILL.md`
 3. (Optional) Add a short “project rules” file for your assistant if it supports one (e.g., instructions in `.github/`), pointing to the same docs.
 
 ## Suggested App-Repo Spec Layout
@@ -46,7 +46,7 @@ For enterprise apps, encourage convergent iteration:
 - `specs/`: system-wide constraints, decisions, and tasks
 - `apps/<service>/spec/`: service-local spec bundle (spec/contracts/plan/tasks/quickstart)
 
-This mirrors `spec-driven-development`.
+This mirrors `spec`.
 
 ## Acceptance
 

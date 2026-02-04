@@ -8,10 +8,10 @@ Skill names and folder layout are treated as an API: prompts depend on them.
 
 ## Folder Contract
 
-Each skill lives at:
+In this repo, installable skills live under:
 
 ```
-<skill-name>/
+skills/<skill-name>/
   SKILL.md
   references/   (optional)
   scripts/      (optional)
@@ -45,15 +45,18 @@ Each skill SHOULD contain:
 
 ## Compatibility Rules (Skill Names Are API)
 
-- Avoid renaming skill folders or `name:` values.
-- If a rename is required, create a **shim skill** under the old name that clearly redirects to the new name and explains why.
+- Prefer stable skill names and avoid renaming skill folders or `name:` values.
+- If a rename is required:
+  - capture it in a decision record under `specs/decisions/` (include a rename map)
+  - update `README.md`, `PROMPTS.md`, and templates in the same change
+  - add shim skills only when compatibility is a requirement (optional in early-stage/breaking revamps)
 
 ## Validation + Packaging
 
 - Skills MUST pass validation:
-  - `python3 .system/skill-creator/scripts/quick_validate.py <skill-folder>`
+  - `python3 .system/skill-creator/scripts/quick_validate.py skills/<skill-folder>`
 - Skills MAY be packaged into `.skill` files for distribution:
-  - `python3 .system/skill-creator/scripts/package_skill.py <skill-folder> ./dist`
+  - `python3 .system/skill-creator/scripts/package_skill.py skills/<skill-folder> ./dist`
 - `dist/` is intentionally not committed; treat packaged artifacts as build output.
 
 ## Acceptance
@@ -63,3 +66,4 @@ This contract is satisfied when:
 - Every skill folder matches the folder/frontmatter contract.
 - Validation passes for every skill in the repo.
 - Significant behavior changes come with spec updates under `specs/` and a migration story if skill APIs change.
+  - For breaking renames, the migration story may be “no shims” as long as the decision record includes the mapping.

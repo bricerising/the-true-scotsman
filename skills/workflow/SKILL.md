@@ -1,0 +1,88 @@
+---
+name: workflow
+description: Orchestrate enterprise-software-playbook skills end-to-end for enterprise web app work (features/bugs/refactors) in conversational mode. Use when the user wants you to choose and apply the appropriate skills automatically (even if they don’t name them), keeping overhead proportional to the change.
+---
+
+# Workflow (Auto Router)
+
+## Overview
+
+This skill is a workflow orchestrator: it routes work across the other skills in this repo so you can deliver cohesive enterprise web app changes without the user needing to micromanage “which skill to use”.
+
+Default loop: **Define → Standardize → Harden → Verify → Mechanics**.
+
+## Workflow
+
+### 0) Calibrate scope (keep overhead proportional)
+
+Classify the request:
+
+- **Tiny change**: small UI copy tweaks, rename a local variable, fix a typo. No behavior/contract change.
+- **Normal change**: touches behavior, boundary semantics, or adds a feature.
+- **Big change**: cross-service work, migrations, or changes that affect multiple boundaries/teams.
+
+Rule: only create/expand specs and platform primitives when they reduce future drift for the expected scope.
+
+### 1) Define (what are we building?)
+
+Pick the minimal “definition artifacts” needed:
+
+- For **normal/big** changes, consider using `plan` early to produce an executable task list + verification plan.
+- If work changes externally visible behavior (API/WS/event schema, boundary error semantics, auth rules), **use `spec`** first:
+  - update the relevant `specs/*.md` and/or `apps/<service>/spec/` bundle
+  - update contracts (`contracts/`: OpenAPI/proto/WS docs)
+  - write acceptance scenarios and failure-mode expectations
+- If the primary pressure is cross-service (partial failures, sagas, event-driven, domain boundaries), **use `architecture`**.
+- If the primary pressure is in-process design (construction/structure/behavior), **use `design`**.
+
+### 2) Standardize (make it consistent)
+
+Prevent copy/paste drift:
+
+- If the same boundary behavior repeats across services (timeouts, retries, error mapping, telemetry fields), **use `platform`** and extract a small “golden path” primitive.
+- If editing TypeScript, apply `typescript` while implementing (typed boundaries, explicit lifetimes, safe module structure).
+
+### 3) Harden (make it survive reality)
+
+If the change touches I/O boundaries (HTTP/gRPC/DB/cache/queues/events/WS), apply these:
+
+- `resilience`: timeouts + cancellation, bounded retries (only when safe), idempotency/dedupe, breakers/bulkheads when needed.
+- `security`: authn/authz checks, strict input validation, secrets/PII safety, and SSRF/injection guardrails where applicable.
+- `observability`: log/trace/metric correlation, stable field contract, and local verification steps (log → trace → metrics).
+
+### 4) Verify (prove behavior)
+
+- Use `testing` for non-trivial changes:
+  - characterization tests before refactors
+  - consumer-visible tests for new behavior and failure semantics
+  - avoid asserting implementation details
+
+### 5) Mechanics (in-process building blocks)
+
+Only when implementation needs it:
+
+- Apply a specific in-process pattern via `patterns-creational`, `patterns-structural`, or `patterns-behavioral`.
+- Prefer wrappers/facades at boundaries; keep pattern seams small.
+
+## Guardrails
+
+- Don’t create “spec theater”: if the change is tiny, keep docs minimal and move on.
+- Don’t skip specs for boundary/contract changes: pin behavior with contracts + tests.
+- Don’t introduce retries without idempotency.
+- Don’t add telemetry labels with unbounded/high-cardinality values.
+- Don’t “helpfully” change response shapes or error semantics unless the spec says so.
+
+## Output Template
+
+When you finish work, report:
+
+- For non-trivial changes, run `finish` before reporting.
+- **Skills applied**: which ones you used and why (1 line each).
+- **What changed**: behavior + contract impacts + key files touched.
+- **Verification**: commands run and results (or why they couldn’t be run).
+- **Follow-ups**: optional next tasks (if any).
+
+## References
+
+- Workflow taxonomy: [`specs/003-taxonomy-and-workflow.md`](../../specs/003-taxonomy-and-workflow.md)
+- Change process: [`specs/004-change-process.md`](../../specs/004-change-process.md)

@@ -19,7 +19,7 @@ Without an explicit security checklist, agents can produce “correct” changes
 
 ## Decision
 
-Add a new skill, `apply-security-patterns`, under the **Harden** stage.
+Add a new skill, `security`, under the **Harden** stage.
 
 The skill is intentionally pragmatic (not an exhaustive security audit) and focuses on:
 
@@ -29,11 +29,10 @@ The skill is intentionally pragmatic (not an exhaustive security audit) and focu
 - secrets/PII safe handling (especially in logs/telemetry)
 - SSRF guardrails for outbound requests
 
-Update the default workflow documentation and prompt recipes to include it, and add it as a default hardening step in `enterprise-web-app-workflow`.
+Update the default workflow documentation and prompt recipes to include it, and add it as a default hardening step in `workflow`.
 
 ## Consequences
 
 - Positive: Raises baseline security hygiene for boundary changes; makes security review steps explicit and repeatable.
 - Trade-off: Some overlap with resilience/observability guidance; mitigated by keeping security-specific checks focused and cross-linking rather than duplicating.
 - Compatibility: Additive only (new skill + documentation updates); no renames or breaking prompt contracts.
-
