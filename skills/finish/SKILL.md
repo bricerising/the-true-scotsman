@@ -1,6 +1,6 @@
 ---
 name: finish
-description: Run a ship-quality “definition of done” pass: verify, tighten contracts/docs, and produce a crisp change summary. Use at the end of non-trivial work before calling it done.
+description: 'Run a ship-quality “definition of done” pass: verify, tighten contracts/docs, and produce a crisp change summary. Use at the end of non-trivial work before calling it done.'
 ---
 
 # Finish
@@ -42,4 +42,3 @@ Return:
 - **Files touched**: key paths only.
 - **Verification**: commands run + results (or why not run).
 - **Risks/follow-ups**: anything to watch in rollout, plus next tasks.
-

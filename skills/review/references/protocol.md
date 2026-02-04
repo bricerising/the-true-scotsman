@@ -15,16 +15,20 @@ Nothing in this protocol depends on any particular repo layout.
 
 ## Outputs (Repo-Agnostic)
 
-Pick any writable output directory and keep the 4 phase artifacts together.
+Default to **report-only** output for the user, and treat phase artifacts as scratch:
 
-Recommended filenames:
+- Write raw phase outputs into **temporary directories** (outside the repo).
+- Return only a **human-readable report** of findings (built from the verdict), unless the user asks for the raw transcripts.
 
-- `1-critique.txt`
-- `2-defense.txt`
-- `3-rebuttal.txt`
-- `4-verdict.txt`
+Recommended debate directory layout:
 
-If you’re running a “full review” (multiple debates), create one subfolder per debate config and keep the same 4 files inside each.
+- `debate-01/`
+  - `1-critique.md`
+  - `2-defense.md`
+  - `3-rebuttal.md`
+  - `4-verdict.md`
+
+If you’re running a “full review” (multiple debates), create one subfolder per debate config under the temp run directory. This avoids filename collisions (each debate gets its own `1-critique.md`, etc.).
 
 ## Calling Worker Agents (No Custom Scripts Required)
 
@@ -34,13 +38,13 @@ If you have CLIs available, here are examples:
 ### Codex worker
 
 ```bash
-codex exec -m gpt-5.2 "$PROMPT" -o "$OUT/1-critique.txt"
+codex exec -m gpt-5.2 "$PROMPT" -o "$OUT/1-critique.md"
 ```
 
 ### Claude worker
 
 ```bash
-claude --print --model opus "$PROMPT" > "$OUT/1-critique.txt"
+claude --print --model opus "$PROMPT" > "$OUT/1-critique.md"
 ```
 
 If your environment blocks shell redirection, run `claude --print ...` and write the output to the phase file using your editor/tools.

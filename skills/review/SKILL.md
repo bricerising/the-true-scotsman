@@ -29,8 +29,15 @@ Success looks like: findings that a developer can act on immediately (location +
    - Review artifact (preferred): PR link / diff / commit range / file list (vs “entire repo”)
    - Scope boundaries: default to **changed code + immediate call-chain context** unless user requests a full audit
    - Which “workers” you can call (other models, other agents, humans), or whether you will role-play the workers yourself.
-2. **Pick an output directory**
-   - Create 4 phase files: `1-critique.txt`, `2-defense.txt`, `3-rebuttal.txt`, `4-verdict.txt`.
+2. **Create a temporary run directory (scratch)**
+   - Create a temporary run directory (outside the repo, e.g. `mktemp -d`).
+   - If you run multiple debates in one session, create one subfolder per debate (e.g. `debate-01/`, `debate-02/`).
+   - Inside each debate folder, save the raw phase outputs as:
+     - `1-critique.md` (or `.txt`)
+     - `2-defense.md` (or `.txt`)
+     - `3-rebuttal.md` (or `.txt`)
+     - `4-verdict.md` (or `.txt`)
+   - Do **not** show raw phase artifacts to the user unless they ask; default to a single human-readable report.
 3. **Phase 1: Critique (Attacker)**
    - Use the base attacker prompt + the type add-on from `references/protocol.md`.
    - Enforce strict format and cap to ~10–12 findings. If off-format, require a rewrite before continuing.
@@ -55,6 +62,7 @@ Success looks like: findings that a developer can act on immediately (location +
 - Avoid pure style/nit findings unless the user explicitly requests them.
 - Prefer minimal fixes; avoid broad refactors unless the user explicitly requests them.
 - If a phase output is off-format, require a rewrite *in the contract format* before moving to the next phase.
+- Default to **report-only**: don’t paste critique/defense/rebuttal transcripts or scratch paths unless requested.
 
 ## References
 
@@ -74,7 +82,6 @@ When you finish, return:
 
 1. **Run summary**
    - Review type + scope notes
-   - Where outputs were written
 2. **Counts**
    - `CONFIRMED`: N
    - `DISMISSED`: N
