@@ -8,6 +8,10 @@ import sys
 from pathlib import Path
 
 MAX_SKILL_NAME_LENGTH = 64
+REQUIRED_SECTION_PATTERNS = {
+    "workflow": re.compile(r"^##\s+.*workflow\b", re.IGNORECASE | re.MULTILINE),
+    "output template": re.compile(r"^##\s+.*output template\b", re.IGNORECASE | re.MULTILINE),
+}
 
 
 def _parse_frontmatter(frontmatter_text: str) -> tuple[dict, str | None]:
@@ -136,37 +140,47 @@ def validate_skill(skill_path):
     if not isinstance(name, str):
         return False, f"Name must be a string, got {type(name).__name__}"
     name = name.strip()
-    if name:
-        if name != skill_path.name:
-            return False, f"Name '{name}' must match skill folder name '{skill_path.name}'"
-        if not re.match(r"^[a-z0-9-]+$", name):
-            return (
-                False,
-                f"Name '{name}' should be hyphen-case (lowercase letters, digits, and hyphens only)",
-            )
-        if name.startswith("-") or name.endswith("-") or "--" in name:
-            return (
-                False,
-                f"Name '{name}' cannot start/end with hyphen or contain consecutive hyphens",
-            )
-        if len(name) > MAX_SKILL_NAME_LENGTH:
-            return (
-                False,
-                f"Name is too long ({len(name)} characters). "
-                f"Maximum is {MAX_SKILL_NAME_LENGTH} characters.",
-            )
+    if not name:
+        return False, "Frontmatter 'name' must be non-empty"
+    if name != skill_path.name:
+        return False, f"Name '{name}' must match skill folder name '{skill_path.name}'"
+    if not re.match(r"^[a-z0-9-]+$", name):
+        return (
+            False,
+            f"Name '{name}' should be hyphen-case (lowercase letters, digits, and hyphens only)",
+        )
+    if name.startswith("-") or name.endswith("-") or "--" in name:
+        return (
+            False,
+            f"Name '{name}' cannot start/end with hyphen or contain consecutive hyphens",
+        )
+    if len(name) > MAX_SKILL_NAME_LENGTH:
+        return (
+            False,
+            f"Name is too long ({len(name)} characters). "
+            f"Maximum is {MAX_SKILL_NAME_LENGTH} characters.",
+        )
 
     description = frontmatter.get("description", "")
     if not isinstance(description, str):
         return False, f"Description must be a string, got {type(description).__name__}"
     description = description.strip()
-    if description:
-        if "<" in description or ">" in description:
-            return False, "Description cannot contain angle brackets (< or >)"
-        if len(description) > 1024:
+    if not description:
+        return False, "Frontmatter 'description' must be non-empty"
+    if "<" in description or ">" in description:
+        return False, "Description cannot contain angle brackets (< or >)"
+    if len(description) > 1024:
+        return (
+            False,
+            f"Description is too long ({len(description)} characters). Maximum is 1024 characters.",
+        )
+
+    for section_name, pattern in REQUIRED_SECTION_PATTERNS.items():
+        if not pattern.search(content):
             return (
                 False,
-                f"Description is too long ({len(description)} characters). Maximum is 1024 characters.",
+                "Missing required SKILL.md section heading for "
+                f"'{section_name}' (expected an H2 such as '## Workflow')",
             )
 
     return True, "Skill is valid!"

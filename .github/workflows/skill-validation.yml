@@ -38,5 +38,11 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/skill-dist
-          python3 .system/skill-creator/scripts/package_skill.py skills/plan /tmp/skill-dist
-          test -f /tmp/skill-dist/plan.skill
+          skill_count=0
+          for d in skills/*; do
+            [ -d "$d" ] || continue
+            python3 .system/skill-creator/scripts/package_skill.py "$d" /tmp/skill-dist
+            skill_count=$((skill_count + 1))
+          done
+          package_count="$(find /tmp/skill-dist -maxdepth 1 -type f -name '*.skill' | wc -l | tr -d ' ')"
+          test "$package_count" -eq "$skill_count"

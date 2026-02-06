@@ -10,6 +10,7 @@ The repo requires stable skill APIs and aligned docs/specs, but enforcement was 
 - `PROMPTS.md` had contradictory workflow guidance (`finish` sequencing).
 - Packaging docs referenced `package_skill.py`, but the script did not exist.
 - Validation did not enforce `SKILL.md` `name` matching the skill folder.
+- Validation accepted empty required frontmatter fields and did not enforce required section headings.
 - CI did not gate on skill validation or README/PROMPTS consistency.
 
 Goal: restore executable build/verification commands and prevent silent drift.
@@ -27,12 +28,15 @@ Goal: restore executable build/verification commands and prevent silent drift.
 Adopt Option B:
 
 1. Restore packaging command compatibility by adding `.system/skill-creator/scripts/package_skill.py`.
-2. Strengthen `quick_validate.py` to enforce `frontmatter.name == folder name`.
+2. Strengthen `quick_validate.py` to enforce:
+   - non-empty required frontmatter fields (`name`, `description`)
+   - `frontmatter.name == folder name`
+   - required `SKILL.md` sections (`Workflow`, `Output Template`)
 3. Add `.system/skill-creator/scripts/check_repo_consistency.py` for workflow-stage/doc prompt drift checks.
 4. Add CI workflow `.github/workflows/skill-validation.yml` to run:
    - all-skill validation
    - repo consistency checks
-   - packaging smoke test
+   - packaging checks for all skill folders
 5. Update prompts/spec docs to align with the default workflow (`finish` at end) and publish new validation command in contributor docs.
 
 ## Kill criteria / reversal trigger
