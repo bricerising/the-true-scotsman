@@ -29,13 +29,16 @@ Skill folders SHOULD NOT include extra docs like `README.md`, changelogs, or lon
 
 ## `SKILL.md` Body Contract (Minimum Shape)
 
-Each skill SHOULD contain:
+Each skill MUST contain:
 
 - **Overview**: what problem it solves and what success looks like.
 - **Workflow**: a short numbered procedure that can be followed.
+- **Output template**: what the agent should return (plan + verification + summary).
+
+Each skill SHOULD contain:
+
 - **Guardrails**: what not to do / common pitfalls.
 - **References**: pointers to `references/` files (progressive disclosure).
-- **Output template**: what the agent should return (plan + verification + summary).
 
 ## Progressive Disclosure Rules
 

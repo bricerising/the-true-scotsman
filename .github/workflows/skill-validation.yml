@@ -1,0 +1,48 @@
+name: Skill Validation
+
+on:
+  push:
+  pull_request:
+
+permissions: read-all
+
+jobs:
+  validate:
+    name: Validate Skills And Docs
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate all skills
+        run: |
+          set -euo pipefail
+          for d in skills/*; do
+            [ -d "$d" ] || continue
+            python3 .system/skill-creator/scripts/quick_validate.py "$d"
+          done
+
+      - name: Validate README/PROMPTS consistency
+        run: |
+          set -euo pipefail
+          python3 .system/skill-creator/scripts/check_repo_consistency.py
+
+      - name: Packaging smoke test
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/skill-dist
+          skill_count=0
+          for d in skills/*; do
+            [ -d "$d" ] || continue
+            python3 .system/skill-creator/scripts/package_skill.py "$d" /tmp/skill-dist
+            skill_count=$((skill_count + 1))
+          done
+          package_count="$(find /tmp/skill-dist -maxdepth 1 -type f -name '*.skill' | wc -l | tr -d ' ')"
+          test "$package_count" -eq "$skill_count"

@@ -22,7 +22,7 @@ For non-trivial work, externalize first:
 
 If you change a boundary contract/semantics (HTTP/gRPC/events/WS), update specs/contracts first and pin behavior with tests.
 
-For non-trivial work, run finish first.
+For non-trivial work, run finish before reporting completion.
 When you finish, report: skills applied, what changed, verification, follow-ups.
 
 Task: <describe what you want>

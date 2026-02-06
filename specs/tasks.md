@@ -86,3 +86,11 @@ Keep tasks small, orderable, and testable. Prefer “acceptance” that is obser
   - Decision records/templates include options, trade-offs, kill criteria, and review ritual.
   - Skills/templates/prompts include measurement ladder and blast-radius/dynamics checks.
   - Finish reporting supports executive + engineer packet outputs.
+
+## T012: Add build guardrails for skill validation and docs drift
+
+- **Status**: Done (2026-02-06)
+- **Acceptance**:
+  - Packaging command in specs/quickstart is executable (`package_skill.py` exists).
+  - Skill validation enforces folder-name/frontmatter-name consistency.
+  - CI runs skill validation + repo consistency checks on PRs.

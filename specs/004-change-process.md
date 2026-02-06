@@ -26,6 +26,7 @@ Update `specs/` (and usually add a decision record) when you:
    - Prefer cross-links to other skills over duplicating content.
 3. **Validate**
    - Run `python3 .system/skill-creator/scripts/quick_validate.py skills/<skill>` for changed skills.
+   - Run `python3 .system/skill-creator/scripts/check_repo_consistency.py` for README/PROMPTS taxonomy and prompt drift.
 4. **Update navigation**
    - Update `README.md` and `PROMPTS.md` so users can find the new/changed skill.
 5. **Add verification guidance**
