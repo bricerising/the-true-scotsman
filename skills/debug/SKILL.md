@@ -64,7 +64,13 @@ Use metrics to answer:
 
 Start with RED for the boundary (HTTP route / gRPC method / consumer group).
 
-### 4) Decide: mitigate vs investigate
+### 4) Map failure propagation (technical + organizational)
+
+- If this component degrades, what fails next?
+- What is likely failing silently (data drift, dropped work, partial writes, stale reads)?
+- What is the organizational cascade (handoff queue, approvals, unclear ownership)?
+
+### 5) Decide: mitigate vs investigate
 
 If impact is high and evidence points to a recent change:
 
@@ -74,7 +80,7 @@ If impact is moderate or unclear:
 
 - tighten the hypothesis with 1–2 targeted checks (another exemplar trace, compare two instances, check downstream health)
 
-### 5) Capture learnings (don’t lose the fix)
+### 6) Capture learnings (don’t lose the fix)
 
 If you found a systemic gap, capture it:
 
@@ -105,6 +111,7 @@ When using this skill, return:
 - **Time window**: start/end and whether it correlates with deploy/config change.
 - **Evidence**: exemplar IDs + the key log/trace/metric observations.
 - **Hypothesis**: most likely cause + 1 alternative (if applicable).
+- **Failure propagation**: what breaks next, what breaks silently, organizational cascade points.
 - **Mitigation**: what you did / recommend doing now (rollback/flag/scale).
 - **Fix plan**: code/config changes to make it correct and durable.
 - **Follow-ups**: telemetry gaps, runbook updates, tests, new invariants.

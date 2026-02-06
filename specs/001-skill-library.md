@@ -42,6 +42,7 @@ Skills are not essays: they are playbooks that turn intent into repeatable actio
 - **R-003**: Skills MUST cross-link rather than duplicate (e.g., resilience references observability; system patterns map to code patterns).
 - **R-004**: The repo MUST include prompt recipes (`PROMPTS.md`) that demonstrate a reliable default sequence for enterprise web apps.
 - **R-005**: The repo MUST include an adoption path that enables auto-skill usage in conversational mode (router skill + app-repo instructions template).
+- **R-006**: For non-trivial work, skills SHOULD externalize a system model (objective function + boundary/time horizon + actors/flows), explicit option trade-offs, and measurement ritual.
 
 ### Non-functional
 
@@ -60,6 +61,8 @@ These are non-negotiable defaults for enterprise web apps that this repo should 
 - Time budgets and cancellation propagate across calls; retries are bounded and only used when safe.
 - Idempotency/deduplication exists wherever retries or at-least-once delivery exists.
 - Telemetry is consistent: logs, traces, and metrics correlate via stable IDs/fields; avoid high-cardinality metric labels.
+- No metric exists without a named decision, owner, and review cadence.
+- Significant changes document reversibility (kill criteria / reversal trigger).
 - Shared libraries contain cross-cutting concerns only (no domain/business logic); follow the “two consumers” rule.
 - Verification is mandatory: consumer-visible tests for behavior; local smoke steps for operability (log → trace → metrics, failure-mode simulation).
 

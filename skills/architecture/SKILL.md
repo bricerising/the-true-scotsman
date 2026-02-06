@@ -13,8 +13,11 @@ Use code patterns for in-process structure; use system patterns when the problem
 
 ## Workflow
 
-1. Classify the problem: single-process design vs multi-process/distributed.
-2. Identify the main pressure (pick 1):
+1. Externalize the system model:
+   - objective function (goal, constraints, anti-goals)
+   - boundary (in/out), time horizon, actors/incentives, and key flows
+2. Classify the problem: single-process design vs multi-process/distributed.
+3. Identify the main pressure (pick 1):
    - Reliability under partial failure (timeouts/retries/circuit breaker/bulkheads)
    - Data consistency across boundaries (saga, event sourcing, CQRS)
    - Domain complexity and ownership (bounded contexts, aggregates, repositories, domain events)
@@ -22,10 +25,21 @@ Use code patterns for in-process structure; use system patterns when the problem
    - Migration/integration (anti-corruption layer, strangler fig, API gateway/BFF)
    - Streaming/reactivity (pub/sub, reactive streams/backpressure)
    - ML lifecycle (data pipeline, feature store, canary/blue-green, transfer learning)
-3. State what’s stable and what can change (contracts, schemas, SLAs).
-4. Choose a primary pattern and 0–2 supporting ones (avoid “pattern soup”).
-5. Validate with: happy path, failure path, and ops path (metrics/alerts, retries, backoff, fallbacks).
-6. Map to implementation tactics (often code-pattern wrappers/pipelines) and a testing strategy.
+4. State what’s stable and what can change (contracts, schemas, SLAs).
+5. Build a compact decision table (2–3 options including no-pattern baseline):
+   - what each option optimizes
+   - what each option knowingly worsens
+   - kill criteria / reversal trigger
+6. Choose a primary pattern and 0–2 supporting ones (avoid “pattern soup”).
+7. Stress-test with: happy path, failure path, ops path, and blast-radius path:
+   - if X degrades, what breaks next?
+   - what breaks silently?
+   - what is the organizational cascade (handoffs/approvals/ownership gaps)?
+8. Run a dynamics check:
+   - where are delays (feedback, approvals, recovery)?
+   - what accumulates (toil, backlog, queue lag, exceptions)?
+   - what balancing loop prevents runaway growth?
+9. Map to implementation tactics (often code-pattern wrappers/pipelines), testing strategy, and measurement ritual.
 
 ## Clarifying Questions
 
@@ -37,6 +51,9 @@ Use code patterns for in-process structure; use system patterns when the problem
 - Do operations need to be idempotent? Do we have request IDs?
 - What is the expected load profile (spikes, fan-out, long tails)?
 - Can we tolerate duplication / reordering of messages?
+- Where are the key delays between signal and action?
+- What work or risk accumulates if this runs “hot” for weeks?
+- What behavior might teams game once metrics are introduced?
 
 ## Pattern Chooser
 
@@ -116,5 +133,6 @@ Use code patterns for in-process structure; use system patterns when the problem
 When recommending a pattern:
 
 - 1–2 sentences: pattern + why it fits (pressure, assumptions).
-- 3 bullets: key trade-offs, key failure modes, and a “no-pattern” alternative.
-- A minimal implementation plan (boundaries, contracts, data ownership, and tests/metrics).
+- Decision table summary: options considered, explicit trade-offs, and kill criteria.
+- Blast-radius + dynamics notes: failure propagation, silent failures, delays, accumulations, balancing loop.
+- A minimal implementation plan (boundaries, contracts, data ownership, tests/metrics, and review ritual owner/cadence).

@@ -5,8 +5,16 @@ Use this to review a spec before implementation (or when a spec has drifted).
 ## Scope & Intent
 
 - The problem statement is 1–3 paragraphs and names the affected services/boundaries.
-- Goals and non-goals are explicit (prevents scope creep).
+- Goals, constraints, and anti-goals are explicit (prevents scope creep).
+- Boundary (in/out) and time horizon are explicit.
 - Definitions exist for ambiguous terms (domain vocabulary, “table”, “session”, “order”, etc.).
+
+## System Model & Trade-offs
+
+- Actors and incentives are listed (teams/systems that benefit, pay cost, or can block).
+- Key flows are explicit (work/data/risk/attention).
+- Top 3 constraints or bottlenecks are named.
+- A decision table exists (options, what is optimized, what is worsened, kill criteria).
 
 ## Acceptance & Testability
 
@@ -40,6 +48,15 @@ Use this to review a spec before implementation (or when a spec has drifted).
 - Tracing boundaries and propagation expectations are stated.
 - Metrics expectations exist (RED + a few domain metrics).
 - There is a minimal “how to verify” section (commands, URLs, smoke checks).
+- Metrics are mapped to named decisions (no orphan metrics).
+- Review ritual is explicit (owner, cadence, action trigger).
+
+## Dynamics & Failure Propagation
+
+- There is a blast-radius map (if X degrades, what breaks next).
+- Silent failure modes are listed (drift, stale reads, dropped work, partial writes).
+- Delays and accumulations are named (queue lag, toil, approvals, exception debt).
+- A balancing loop is identified to prevent runaway growth.
 
 ## Change Control
 

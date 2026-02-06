@@ -134,3 +134,15 @@ Rule: pick **one primary pressure**, then choose **one primary pattern** and 0�
 - **Saga misuse**: don’t use saga for simple CRUD; do use it when compensations are real and modeled.
 - **Event sourcing misuse**: don’t use it to “sound advanced”; use it when audit/temporal requirements demand it.
 - **Pattern soup**: if you can’t explain the primary pressure in one sentence, stop and re-scope.
+
+## Rapid Stress-Test Worksheet (10 minutes)
+
+For your selected option, answer these before implementation:
+
+- **Failure propagation**: if the primary dependency fails, what breaks next?
+- **Silent failures**: what can degrade without obvious alerts?
+- **Organizational cascade**: where can handoffs/approvals/ownership create incident amplification?
+- **Delay points**: where is the lag between signal and action?
+- **Accumulations**: what can build up over time (queue lag, toil, exception debt)?
+- **Balancing loop**: what mechanism caps runaway growth?
+- **Kill criteria**: what evidence would make you reverse the decision?

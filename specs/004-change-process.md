@@ -20,6 +20,7 @@ Update `specs/` (and usually add a decision record) when you:
 1. **Write/Update the spec**
    - Update the relevant `specs/00x-*.md` file(s).
    - For non-trivial changes, add a decision record under `specs/decisions/`.
+   - For non-trivial workflow/process updates, include: objective function, options + trade-offs, kill criteria, and measurement ritual.
 2. **Implement the change**
    - Keep diffs small; avoid broad renames/moves.
    - Prefer cross-links to other skills over duplicating content.
@@ -50,7 +51,10 @@ Store significant decisions in `specs/decisions/NNN-<topic>.md`.
 Each decision SHOULD include:
 
 - Context (what problem we’re solving)
+- Options considered (what each optimizes and worsens)
 - Decision (what we chose)
+- Kill criteria / reversal trigger
+- Measurement + review ritual (owner/cadence/action trigger)
 - Consequences (trade-offs, migration impact)
 
 ## Acceptance

@@ -17,9 +17,25 @@ What problem this spec solves and which services/teams it applies to.
 
 - ...
 
+## Constraints
+
+- ...
+
 ## Non-goals
 
 - ...
+
+## Anti-goals
+
+- ...
+
+## System Sketch
+
+- Boundary (in/out):
+- Time horizon:
+- Actors + incentives:
+- Key flows (work/data/risk):
+- Top constraints/bottlenecks:
 
 ## Definitions
 
@@ -58,6 +74,29 @@ Non-negotiable system rules (security boundaries, consistency boundaries, audit 
 - authn/authz rules
 - PII handling rules
 
+## Decision Table
+
+| Option | Optimizes for | Knowingly worsens | Kill criteria |
+| --- | --- | --- | --- |
+| A | ... | ... | ... |
+| B | ... | ... | ... |
+| C (optional) | ... | ... | ... |
+
+## Measurement Ladder
+
+- Decision being measured:
+- Leading indicators (early):
+- Lagging outcomes:
+- Instrumentation source:
+- Review ritual (owner + cadence + action trigger):
+
+## Dynamics + Blast Radius
+
+- If X degrades, what breaks next?
+- What breaks silently?
+- What accumulates over time (toil/backlog/lag/exceptions)?
+- What balancing loop limits runaway growth?
+
 ## Acceptance
 
 How you’ll verify the spec is satisfied (tests, e2e flows, manual checks).
@@ -79,15 +118,44 @@ Use this when making a choice that has meaningful trade-offs or migration impact
 
 What problem are we solving? What pressures/constraints matter?
 
+- **Goal**:
+- **Constraints**:
+- **Anti-goals**:
+- **Boundary + time horizon**:
+- **Actors + incentives**:
+
+## Options considered
+
+| Option | Optimizes for | Knowingly worsens | Reversibility |
+| --- | --- | --- | --- |
+| A | ... | ... | ... |
+| B | ... | ... | ... |
+| C (optional) | ... | ... | ... |
+
 ## Decision
 
 What we chose and why (short, concrete).
+
+## Kill criteria / reversal trigger
+
+- ...
+
+## Measurement + review ritual
+
+- **Leading indicators (early)**:
+- **Lagging outcomes**:
+- **Instrumentation source**:
+- **Owner + cadence + action trigger**:
 
 ## Consequences
 
 - Positive outcomes / what gets simpler
 - Trade-offs / what gets harder
 - Compatibility/migration impact
+
+## Review date
+
+YYYY-MM-DD
 ```
 
 ## Service Spec Template (`apps/<service>/spec/spec.md`)
@@ -102,6 +170,20 @@ What we chose and why (short, concrete).
 ## Overview
 
 What the service does, who uses it, how it integrates (HTTP/gRPC/events), and what it does not do.
+
+## Objective Function
+
+- Goal:
+- Constraints:
+- Anti-goals:
+
+## System Sketch
+
+- Boundary (in/out):
+- Time horizon:
+- Actors + incentives:
+- Key flows:
+- Top bottlenecks:
 
 ## User Scenarios & Testing
 
@@ -155,6 +237,21 @@ Measurable outcomes (latency, error rate, correctness invariants, coverage).
 
 - ...
 
+## Decision Table
+
+| Option | Optimizes for | Knowingly worsens | Kill criteria |
+| --- | --- | --- | --- |
+| A | ... | ... | ... |
+| B | ... | ... | ... |
+
+## Measurement Ladder
+
+- Decision being measured:
+- Leading indicators:
+- Lagging outcomes:
+- Instrumentation source:
+- Review ritual (owner + cadence + action trigger):
+
 ## Assumptions
 
 - ...
@@ -172,6 +269,18 @@ What you’re building, and how it fits the system.
 ## Architecture (High Level)
 
 Diagram or bullet list of dependencies and boundaries.
+
+## Failure Propagation Map
+
+- If X degrades, what breaks next?
+- What breaks silently?
+- Organizational cascade points (handoffs/approvals/ownership gaps):
+
+## Dynamics Check
+
+- Where are the main delays?
+- What accumulates over time?
+- What balancing loop prevents runaway growth?
 
 ## Directory Structure (Planned)
 

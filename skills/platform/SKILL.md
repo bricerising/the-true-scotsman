@@ -13,17 +13,24 @@ The goal is not reuse-for-reuse’s-sake; it’s consistent behavior and lower c
 
 ## Workflow
 
-1. Define the “platform surface” (what belongs here vs per-service).
-2. Inventory repetition across services and pick 1–2 extractions with the highest leverage.
-3. Design the module boundaries and dependency direction (avoid cycles, keep exports stable).
-4. Design APIs that are:
+1. Define the objective function:
+   - what this extraction optimizes (for example: reliability, cognitive load, release speed)
+   - constraints and anti-goals
+2. Define the “platform surface” (what belongs here vs per-service).
+3. Inventory repetition across services and pick 1–2 extractions with the highest leverage.
+4. Design the module boundaries and dependency direction (avoid cycles, keep exports stable).
+5. Design APIs that are:
    - explicit about inputs/outputs and expected failures (`Result` / tagged errors)
    - explicit about lifetimes (create/start/stop/dispose)
    - explicit about cancellation/time budgets (`AbortSignal`, deadlines)
    - explicit about telemetry fields (trace/log/metrics correlation)
-5. Implement minimal primitives + one “golden path” usage in at least two services.
-6. Add tests at the seam (unit tests for primitives + characterization tests for adopters if needed).
-7. Document usage and deprecation/migration guidance.
+6. Define adoption maturity tracks with entry criteria:
+   - **V0 (minimum viable)**: almost impossible to fail; one golden path; minimal config
+   - **V1 (standard)**: default for most services; stronger contracts and verification
+   - **V2 (advanced)**: optional optimizations for high-scale/high-complexity cases
+7. Implement minimal primitives + one “golden path” usage in at least two services.
+8. Add tests at the seam (unit tests for primitives + characterization tests for adopters if needed).
+9. Document usage, deprecation/migration guidance, and reversal triggers.
 
 ## What Belongs In The Shared Platform Library
 
@@ -52,6 +59,7 @@ Prefer **boundary primitives** over “random helpers”:
 - Make operation names explicit (don’t depend on framework reflection/casing quirks).
 - Keep dependencies minimal; avoid pulling in large frameworks into every service accidentally.
 - If you introduce retries, you must introduce idempotency guidance.
+- Don’t make V2 requirements mandatory for V0/V1 adopters.
 
 ## Pattern Catalogue (Common Shared Primitives)
 
@@ -84,4 +92,5 @@ When applying this skill, return:
 - Proposed module(s) and public API surface (what’s exported).
 - What duplication this removes (call sites) and what invariants it enforces.
 - Error semantics, cancellation/timeouts strategy, and telemetry fields.
-- Adoption plan (first two migrations) + tests/verification.
+- Adoption tracks (V0/V1/V2 entry criteria), first two migrations, and reversal triggers.
+- Tests/verification and the review ritual for adoption progress.

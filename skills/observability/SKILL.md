@@ -13,14 +13,23 @@ This is intentionally opinionated: you should be able to answer “what happened
 
 ## Workflow
 
-1. Define the **unit of work** (one trace): HTTP request, gRPC call, job run, queue message, WebSocket action.
-2. Instrument end-to-end:
+1. Name the **decision** this telemetry will inform (for example: keep current architecture, tune a timeout, roll out a migration).
+2. Define the **unit of work** (one trace): HTTP request, gRPC call, job run, queue message, WebSocket action.
+3. Define the measurement ladder:
+   - 3 leading indicators (move within days)
+   - 3 lagging outcomes (move within weeks/months)
+   - owner + review cadence + trigger for action
+4. Instrument end-to-end:
    - traces: spans around the unit of work + key downstream calls
    - metrics: RED for the boundary + a few domain metrics
    - logs: structured JSON that includes correlation IDs
-3. Declare the field contract (stable keys).
-4. Add guardrails (PII rules, label cardinality rules, sampling/log levels).
-5. Verify correlation in a failure case (error log includes `traceId`; trace contains downstream spans; metrics show error rate).
+5. Declare the field contract (stable keys).
+6. Add guardrails (PII rules, label cardinality rules, sampling/log levels).
+7. Verify correlation in a failure case (error log includes `traceId`; trace contains downstream spans; metrics show error rate).
+8. Define the operating ritual:
+   - where metrics/logs/traces are reviewed
+   - who decides and who executes follow-up
+   - what threshold triggers rollback/escalation
 
 ## Chooser (What To Instrument)
 
@@ -67,6 +76,7 @@ Include these keys where applicable:
 - **Log once**: avoid logging the same error in every layer; log at the boundary with enough context.
 - **Sample intentionally**: if you sample traces, keep error traces at higher priority.
 - **Always end spans**: long-running work should have explicit shutdown and cancellation semantics.
+- **Decision linkage**: no metric without a named decision and action threshold.
 
 ## Minimal TypeScript Snippet (Trace IDs in Logs)
 
@@ -102,6 +112,7 @@ export function getTraceLogFields(): { traceId?: string; spanId?: string } {
 
 When applying this skill, return:
 
+- The decision being informed and the measurement ladder (leading/lagging, owner, cadence, trigger).
 - The instrumentation plan (which boundaries, what telemetry, what fields).
 - The minimal code changes (where to start spans, where to log, what metrics to add).
 - The verification steps (how to reproduce and correlate log → trace → metrics).
