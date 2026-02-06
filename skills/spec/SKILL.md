@@ -86,3 +86,14 @@ Use one (or both) of these:
 - In-process pattern choices: [`design`](../design/SKILL.md)
 - Typed boundaries/errors/lifetimes: [`typescript`](../typescript/SKILL.md)
 - Consumer-visible tests: [`testing`](../testing/SKILL.md)
+
+## Output Template
+
+When using this skill, return:
+
+- **Scope + objective**: boundary, constraints, anti-goals.
+- **Artifacts created/updated**: exact spec files (and contracts/ADRs when relevant).
+- **Decision summary**: options considered, selected option, trade-offs, and kill criteria.
+- **Measurement ladder**: leading + lagging indicators, owner/cadence/action trigger.
+- **Verification plan**: concrete checks/commands that prove acceptance scenarios and failure expectations.
+- **Next implementation tasks**: ordered checklist with observable acceptance per task.

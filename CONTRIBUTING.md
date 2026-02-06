@@ -17,6 +17,7 @@ This repo is an opinionated system. Changes should preserve coherence and prompt
 ## Verification
 
 - Validate changed skills: `python3 .system/skill-creator/scripts/quick_validate.py skills/<skill-folder>`
+- Validate repo-level docs/workflow consistency: `python3 .system/skill-creator/scripts/check_repo_consistency.py`
 - Keep `README.md` and `PROMPTS.md` aligned with the workflow-stage grouping (Define/Standardize/Harden/Verify/Mechanics).
 
 ## Feedback (what helps most)

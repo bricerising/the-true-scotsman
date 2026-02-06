@@ -16,6 +16,12 @@ Validate every skill folder in the repo:
 for f in skills/*/SKILL.md; do python3 .system/skill-creator/scripts/quick_validate.py "${f%/SKILL.md}"; done
 ```
 
+Validate repo-level docs/skill navigation consistency:
+
+```sh
+python3 .system/skill-creator/scripts/check_repo_consistency.py
+```
+
 ## Package Skills (Optional)
 
 Package a skill into `dist/<skill-name>.skill`:
