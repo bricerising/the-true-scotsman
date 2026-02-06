@@ -6,6 +6,7 @@ Use these as “minimum viable observability” for enterprise web apps.
 
 For each external boundary (HTTP handler, gRPC method, job run, message consume, WS action):
 
+- Name the decision this telemetry supports (what action it should trigger).
 - Define the operation name (`op`) using a stable template (route template / RPC method / job name).
 - Create or continue a trace context; start a span for the unit of work.
 - Add child spans around downstream calls (DB/cache/HTTP/gRPC).
@@ -41,9 +42,17 @@ For each external boundary (HTTP handler, gRPC method, job run, message consume,
   - `request_errors_total{route=..., error=...}` (bounded error codes only)
   - `request_duration_seconds_bucket{route=...}`
 - Add a small set of business/domain metrics aligned to product intent.
+- Ensure each metric maps to a specific decision.
 - Cardinality rules:
   - Never label by `userId`, `accountId`, table IDs, UUIDs, emails, etc.
   - Prefer route templates and bounded enums.
+
+## Measurement Ladder Checklist
+
+- 3 leading indicators are defined (move within days).
+- 3 lagging outcomes are defined (move within weeks/months).
+- Instrumentation source is explicit (logs/metrics/traces/tests/event store).
+- Owner, cadence, and action threshold are explicit.
 
 ## Dashboards (Minimum Set)
 
@@ -60,6 +69,7 @@ For each external boundary (HTTP handler, gRPC method, job run, message consume,
   - a dashboard (or Explore query)
   - a runbook note (“what to check next”)
   - relevant logs/traces filters (service + operation)
+- Every alert should map to a specific operator decision (roll back, scale, reroute, ignore, investigate).
 
 ## Triage Flow (Fast Path)
 

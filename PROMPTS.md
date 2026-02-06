@@ -14,6 +14,12 @@ Use workflow (read skills/workflow/SKILL.md).
 Follow the default loop: Define → Standardize → Harden → Verify → Mechanics.
 Keep overhead proportional (tiny changes stay lightweight).
 
+For non-trivial work, externalize first:
+- objective function (goal, constraints, anti-goals)
+- one-page system sketch (boundary/time horizon, actors/incentives, key flows, bottlenecks)
+- compact decision table (options, trade-offs, kill criteria)
+- measurement ladder (leading/lagging indicators, owner/cadence, action trigger)
+
 If you change a boundary contract/semantics (HTTP/gRPC/events/WS), update specs/contracts first and pin behavior with tests.
 
 For non-trivial work, run finish first.
@@ -36,6 +42,7 @@ Before implementing, write or update the relevant spec bundle:
 - Service-level: apps/<service>/spec/ (spec.md, contracts/, plan.md, tasks.md, quickstart.md)
 
 Include: acceptance scenarios, edge cases, failure-mode expectations, and a verification plan.
+Also include: objective function, system sketch, decision table, measurement ladder, and kill criteria.
 ```
 
 ### Create an implementation plan (tasks + verification)
@@ -47,6 +54,7 @@ Task: <what do you want to build/fix?>
 
 Produce an ordered checklist of tasks with acceptance checks and exact verification commands (or ask once if unknown).
 Keep it short and reversible.
+Include: system sketch, decision table, blast-radius check, and measurement ladder.
 ```
 
 ### Choose a system/architecture pattern
@@ -58,6 +66,7 @@ Context: <system pressure(s): partial failures, consistency, cross-service workf
 Constraints: <latency/SLOs, scalability, team boundaries, compliance>
 
 Recommend the smallest viable pattern(s), risks/anti-patterns, and a validation plan.
+Include: options table, what each option worsens, kill criteria, and a failure-propagation map.
 ```
 
 ### Choose an in-process/design pattern
@@ -82,6 +91,7 @@ Problem: We have repeated boundary logic across services (timeouts/retries/error
 Goal: Propose a small shared primitive (two-consumer rule) that removes copy/paste drift.
 
 Include: API shape, error envelope, time budget policy, telemetry field contract, and adoption steps.
+Use adoption maturity tracks (V0/V1/V2) with entry criteria.
 ```
 
 ### TypeScript safety/refactor pass
@@ -126,6 +136,7 @@ Boundary: <HTTP/gRPC/events/jobs>
 Goal: Add correlated logs/traces/metrics and local verification steps (log → trace → metrics).
 
 Define a stable telemetry field contract (IDs, names) and avoid high-cardinality metrics labels.
+Map metrics to a named decision and define a review ritual (owner/cadence/action trigger).
 ```
 
 ### Triage an incident / regression (log → trace → metrics)
@@ -139,6 +150,7 @@ Time window: <start/end>
 Exemplar: <traceId/requestId/log line timestamp/etc>
 
 Guide a systematic investigation and end with: evidence, hypothesis, mitigation, and a fix/follow-up plan.
+Include a failure-propagation map (what breaks next/silently/organizationally).
 ```
 
 ## Verify (prove behavior)
@@ -172,7 +184,9 @@ Use finish (read skills/finish/SKILL.md).
 Before calling the work done:
 - run the best-available verification commands (tests/typecheck/lint/build)
 - spot-check boundary discipline where applicable (timeouts/authz/telemetry)
-- report: what changed, verification, risks/follow-ups
+- report two packets:
+  - executive packet (goal, decision/bet, risks, signals/ritual, next step)
+  - engineer packet (what changed, verification, risks/follow-ups)
 ```
 
 ## Mechanics (in-process building blocks)

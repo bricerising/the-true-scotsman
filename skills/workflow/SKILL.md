@@ -23,11 +23,19 @@ Classify the request:
 
 Rule: only create/expand specs and platform primitives when they reduce future drift for the expected scope.
 
+### 0.5) Externalize the system model (for normal/big changes)
+
+Before pattern/tool selection, write a compact model:
+
+- Objective function: **goal**, **constraints**, and **anti-goals**.
+- System sketch: boundary (in/out), time horizon, actors/incentives, key flows, top bottlenecks.
+- Reversibility signal: what evidence would make you change direction.
+
 ### 1) Define (what are we building?)
 
 Pick the minimal “definition artifacts” needed:
 
-- For **normal/big** changes, consider using `plan` early to produce an executable task list + verification plan.
+- For **normal/big** changes, use `plan` early to produce an executable task list, trade-off table, and measurement ladder.
 - If work changes externally visible behavior (API/WS/event schema, boundary error semantics, auth rules), **use `spec`** first:
   - update the relevant `specs/*.md` and/or `apps/<service>/spec/` bundle
   - update contracts (`contracts/`: OpenAPI/proto/WS docs)
@@ -67,9 +75,11 @@ Only when implementation needs it:
 ## Guardrails
 
 - Don’t create “spec theater”: if the change is tiny, keep docs minimal and move on.
+- Don’t choose architecture/patterns before writing objective function + constraints + anti-goals.
 - Don’t skip specs for boundary/contract changes: pin behavior with contracts + tests.
 - Don’t introduce retries without idempotency.
 - Don’t add telemetry labels with unbounded/high-cardinality values.
+- Don’t define metrics without a named decision, owner, and review ritual.
 - Don’t “helpfully” change response shapes or error semantics unless the spec says so.
 
 ## Output Template
@@ -78,7 +88,9 @@ When you finish work, report:
 
 - For non-trivial changes, run `finish` before reporting.
 - **Skills applied**: which ones you used and why (1 line each).
+- **System model** (non-trivial only): objective function + system sketch + reversal signal.
 - **What changed**: behavior + contract impacts + key files touched.
+- **Decision + measurement** (non-trivial only): chosen option, trade-offs, kill criteria, leading/lagging indicators, and review cadence/owner.
 - **Verification**: commands run and results (or why they couldn’t be run).
 - **Follow-ups**: optional next tasks (if any).
 

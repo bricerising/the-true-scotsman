@@ -36,20 +36,36 @@ Use one (or both) of these:
 1. Decide the scope:
    - One service? write/update the service spec bundle.
    - Cross-service or product-wide? write/update a system spec.
-2. Write acceptance-first:
+2. Write the objective function up front:
+   - goal, constraints, anti-goals
+   - boundary (in/out) and time horizon
+3. Externalize the system sketch:
+   - actors + incentives
+   - key flows (work/data/risk)
+   - top constraints/bottlenecks
+4. Write acceptance-first:
    - user story + “independent test”
    - acceptance scenarios (Given/When/Then)
    - edge cases and invariants (“constitution requirements”)
-3. Lock down contracts:
+5. Lock down contracts:
    - HTTP/gRPC schemas, message types, error codes, idempotency keys
    - versioning rules and backward compatibility expectations
-4. Add non-functional requirements (NFRs) that matter:
+6. Add non-functional requirements (NFRs) that matter:
    - latency budgets, concurrency, durability, audit, privacy
    - observability and resilience requirements (trace/log/metrics, timeouts/retries/idempotency)
-5. Break it into tasks with acceptance:
+7. Add a compact decision table:
+   - options considered (include baseline/no-change)
+   - what is optimized vs knowingly worsened
+   - kill criteria / reversal trigger
+8. Add a measurement ladder:
+   - decision being measured
+   - leading indicators (early signal)
+   - lagging outcomes (business/ops)
+   - instrumentation sources + review ritual (owner/cadence/action trigger)
+9. Break it into tasks with acceptance:
    - keep tasks small and orderable
    - each task has an observable acceptance check
-6. Implement and keep docs honest:
+10. Implement and keep docs honest:
    - if implementation forces a change in behavior, update specs first
    - keep quickstarts and contracts current
 
@@ -59,6 +75,8 @@ Use one (or both) of these:
 - Don’t hide requirements in code; put them in `spec.md` where agents can find them.
 - Keep contracts stable; prefer additive changes and version explicitly when you can’t.
 - Write down **non-goals** to stop scope creep.
+- No metric without a named decision and review ritual.
+- If a design cannot be measured cheaply enough to guide weekly decisions, treat that as a constraint and simplify.
 
 ## References
 

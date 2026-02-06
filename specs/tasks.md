@@ -77,3 +77,12 @@ Keep tasks small, orderable, and testable. Prefer “acceptance” that is obser
 - **Acceptance**:
   - Select `*/references/*.md` files include a short “Optional external reading” section.
   - `SKILL.md` files remain concise; depth stays in `references/`.
+
+## T011: Make system-model and feedback-loop artifacts explicit
+
+- **Status**: Done (2026-02-06)
+- **Acceptance**:
+  - Non-trivial workflows require objective function + compact system sketch.
+  - Decision records/templates include options, trade-offs, kill criteria, and review ritual.
+  - Skills/templates/prompts include measurement ladder and blast-radius/dynamics checks.
+  - Finish reporting supports executive + engineer packet outputs.
