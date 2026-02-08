@@ -96,6 +96,8 @@ These skills bias toward practices that make codebases easier for humans to oper
 - Glossary (for less familiar terms): [`GLOSSARY.md`](GLOSSARY.md)
 - Example walkthrough: [`TUTORIAL.md`](TUTORIAL.md)
 - Repo-level specs (source of truth): [`specs/000-index.md`](specs/000-index.md)
+- Machine-readable skill index: [`specs/skills-manifest.json`](specs/skills-manifest.json)
+- Copy-first templates: [`specs/templates/service-spec-bundle/`](specs/templates/service-spec-bundle/README.md), [`specs/templates/ci/github-actions-quality.yml`](specs/templates/ci/github-actions-quality.yml)
 - App-repo integration: [`specs/005-application-integration.md`](specs/005-application-integration.md)
 - App-repo agent instructions template: [`specs/templates/app-repo/AGENTS.md`](specs/templates/app-repo/AGENTS.md)
 
