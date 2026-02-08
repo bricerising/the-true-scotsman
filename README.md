@@ -173,6 +173,7 @@ Manual install (shell):
 
 1. Vendor this repo into your project (submodule or clone).
 2. Symlink `tools/enterprise-software-playbook/skills/*` into `.agent/skills/*`.
+3. Symlink `tools/enterprise-software-playbook/specs/skills-manifest.json` to `.agent/skills/skills-manifest.json`.
 
 ### Tool-agnostic: vendor it into your project
 
