@@ -130,6 +130,7 @@ mkdir -p ~/.codex/skills
 for f in ~/.codex/enterprise-software-playbook/skills/*/SKILL.md; do
   ln -s "${f%/SKILL.md}" ~/.codex/skills/
 done
+ln -sf ~/.codex/enterprise-software-playbook/specs/skills-manifest.json ~/.codex/skills/skills-manifest.json
 ```
 
 ### Claude Code
@@ -155,6 +156,7 @@ mkdir -p ~/.claude/skills
 for f in ~/.claude/enterprise-software-playbook/skills/*/SKILL.md; do
   ln -s "${f%/SKILL.md}" ~/.claude/skills/
 done
+ln -sf ~/.claude/enterprise-software-playbook/specs/skills-manifest.json ~/.claude/skills/skills-manifest.json
 ```
 
 ### Antigravity

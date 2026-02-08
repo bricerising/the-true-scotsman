@@ -28,7 +28,7 @@
     "design": {
       "path": "skills/design/SKILL.md",
       "stage": "Define",
-      "tags": ["code-patterns", "refactoring", "extensibility", "decoupling", "testability", "GoF", "in-process"],
+      "tags": ["code-patterns", "refactoring", "extensibility", "decoupling", "testability", "gof", "in-process"],
       "trigger": "Need to choose an in-process code pattern (creational/structural/behavioral) for refactoring or extensibility.",
       "related": ["patterns-creational", "patterns-structural", "patterns-behavioral", "architecture", "typescript"],
       "overhead": "minimal"

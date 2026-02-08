@@ -127,5 +127,6 @@ When you finish work, report:
 
 ## References
 
+- Machine-readable skill index (triggers, tags, related, overhead): [`specs/skills-manifest.json`](../../specs/skills-manifest.json)
 - Workflow taxonomy: [`specs/003-taxonomy-and-workflow.md`](../../specs/003-taxonomy-and-workflow.md)
 - Change process: [`specs/004-change-process.md`](../../specs/004-change-process.md)
